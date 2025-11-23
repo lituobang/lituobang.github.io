@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="title_background">- Background</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for academic aesthetic and responsiveness */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+        }
+        /* Tailwind configuration for colors */
+        .primary { background-color: #1d4ed8; }
+        .text-primary { color: #1d4ed8; }
+        .img-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#1d4ed8', /* Blue 700 */
+                        'secondary': '#374151', /* Gray 700 */
+                        'light-bg': '#ffffff',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="p-4 sm:p-8">
+    <div class="container mx-auto">
+        
+        <!-- Language Selector -->
+        <div class="flex justify-end mb-4">
+            <select id="language-selector" class="rounded-md border border-gray-300 p-2 text-sm shadow-sm focus:ring-primary focus:border-primary">
+                <option value="en">English</option>
+                <option value="zh">中文 (Chinese)</option>
+            </select>
+        </div>
+
+        <!-- Header Section -->
+        <header class="text-center py-6 mb-8 bg-light-bg rounded-xl shadow-lg border-t-4 border-primary">
+            <h1 class="text-4xl font-bold text-secondary mb-2" data-key="header_title">)</h1>
+            <p class="text-lg text-gray-500" data-key="header_subtitle">A Novel Quantification Method for Scholarly Output</p>
+        </header>
+
+        <!-- Navigation Bar -->
+        <nav class="flex justify-center mb-8 space-x-4">
+            <a href="index.html" class="py-2 px-4 rounded-lg bg-primary text-white font-semibold shadow-md transition duration-150" data-key="nav_background">
+                1. Background & Motivation
+            </a>
+            <a href="protocol.html" class="py-2 px-4 rounded-lg bg-gray-200 text-secondary hover:bg-gray-300 font-semibold transition duration-150" data-key="nav_protocol">
+                2. Protocol & Computation
+            </a>
+        </nav>
+
+        <!-- Table of Contents (TOC) -->
+        <div class="bg-light-bg p-6 rounded-xl shadow-lg mb-8 border border-gray-200">
+            <h3 class="text-2xl font-semibold text-secondary mb-4 border-b pb-2" data-key="toc_title">Table of Contents</h3>
+            <ul class="space-y-2">
+                <li>
+                    <a href="#background-motivation" class="text-lg font-medium text-primary hover:text-blue-800 transition duration-100" data-key="toc_1">
+                        1. Background and Motivation
+                    </a>
+                    <ul class="ml-4 mt-1 space-y-1 border-l-2 border-gray-200 pl-3">
+                        <li>
+                            <a href="#historical-context" class="text-gray-700 hover:text-secondary transition duration-100" data-key="toc_1_1">
+                                1.1 Historical Context: University Systems and Academic Rules
+                            </a>
+                            <ul class="ml-4 mt-1 space-y-1">
+                                <li><a href="#origin-european-system" class="text-sm text-gray-600 hover:text-secondary transition duration-100" data-key="toc_1_1_1">The Origin of the European University System</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#system-challenge" class="text-gray-700 hover:text-secondary transition duration-100" data-key="toc_1_2">
+                                1.2 The Academic System Under Challenge
+                            </a>
+                            <ul class="ml-4 mt-1 space-y-1">
+                                <li><a href="#attack-rep-works" class="text-sm text-gray-600 hover:text-secondary transition duration-100" data-key="toc_1_2_1">The Attack on Representative Works</a></li>
+                                <li><a href="#flaw-egalitarianism" class="text-sm text-gray-600 hover:text-secondary transition duration-100" data-key="toc_1_2_2">The Flaw in Academic Egalitarianism</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#ir-solution" class="text-gray-700 hover:text-secondary transition duration-100" data-key="toc_1_3">
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- End Table of Contents -->
+
+        <!-- Main Content: Background and Motivation -->
+        <section class="bg-light-bg p-8 rounded-xl shadow-lg">
+            <!-- Added ID for TOC link -->
+            <h2 id="background-motivation" class="text-3xl font-semibold text-primary mb-6" data-key="section_title">1. Background and Motivation</h2>
+
+            <div class="space-y-8 text-gray-700 leading-relaxed">
+                <p data-key="p1_introduction">Traditional metrics for evaluating research contribution—such as raw publication count or basic h-index—often fail to capture the nuanced impact and leadership demonstrated by a scholar. These metrics can inadvertently favor high-volume publishing in lower-tier venues over high-quality, seminal work that drives a field forward. was developed to address this gap.</p>
+
+                <!-- Added ID for TOC link -->
+                <h3 id="historical-context" class="text-2xl font-semibold text-secondary pt-4" data-key="section_academic_rules">Historical Context: University Systems and Academic Rules</h3>
+                
+                <p data-key="p_legal_origin">Due to a general lack of understanding among the public regarding the historical development and operational mechanisms of the international and domestic academic communities, it is necessary to introduce the fundamental background rooted in legal and historical structures.</p>
+
+                <!-- Added ID for TOC link -->
+                <h4 id="origin-european-system" class="text-xl font-medium text-primary pt-2" data-key="subsection_origin">The Origin of the European University System</h4>
+                <p data-key="p_roman_greece">Ancient Roman civilization originated from Ancient Greek civilization, which in turn originated from Ancient Babylonian civilization. The Code of Hammurabi remains the earliest relatively complete written code of law known to date. In the societal structures of the Roman Republic and the Ancient Greek city-states, the social status of <strong>Consuls/Magistrates</strong> exceeded that of the <strong>Nobility</strong>, and the social status of <strong>Scholars</strong>—those responsible for exploring truth—was lower than both. Consuls typically simultaneously served as judges and administrative chiefs.</p>
+                <p data-key="p_theocracy">The Roman Republic transitioned into the Roman Empire in $27$ BC. Around the $4^{th}$ century AD, Constantine I established Christianity as the state religion, transforming the state into a theocracy. From that point until the Renaissance, the social structure in Europe was typically <strong>Clergy</strong> > <strong>Nobility</strong> > <strong>Merchants</strong>. The role of the clergy essentially replaced the role of the judge previously held by the Consuls, which is the origin of the modern separation of administrative and judicial powers. The clergy, having combined law and religion, developed a series of canon laws, and were therefore typically well-versed in Roman law. The clergy, having combined law and religion, developed a series of canon laws, and were therefore typically well-versed in Roman law. During this period, some members of the clergy often utilized their professional convenience to undertake the work of scholars. Consequently, although members of the clergy were not always scholars, most had profound legal backgrounds, and scholars were usually members of the clergy, also possessing deep legal backgrounds. The academic development fostered by the church led to the establishment of the earliest universities in Italy and France during the $11^{th}$ and $12^{th}$ centuries.</p>
+                <p data-key="p_church_scholars">The academic development fostered by the church led to the establishment of the earliest universities in Italy and France during the $11^{th}$ and $12^{th}$ centuries.</p>
+                
+                <!-- Added ID for TOC link -->
+                <h3 id="system-challenge" class="text-2xl font-semibold text-secondary pt-4" data-key="section_system_challenge">The Academic System Under Challenge</h3>
+
+                <p data-key="p_expansion">The academic community has seen a rapid expansion of personnel, resulting in a large number of researchers who lack legal training and an understanding of traditional academic institutions. Meanwhile, the restrictive power of the culture of honor is continuously weakening. Many scholars today are only familiar with the technical methods of their own research fields but lack knowledge of the institutional foundations of the academic community as a whole.</p>
+                <p data-key="p_technical_vs_institutional">This is particularly true in science, technology, and emerging interdisciplinary fields, where many researchers receive <strong>"technical training"</strong> but lack <strong>"institutional training."</strong> They may possess the ability to operate experiments but have not received training in academic norms. This has led some of them to attempt to challenge institutions rooted in Roman law, which have been in use for nearly a thousand years, created countless brilliant achievements, and gave birth to industrial civilization.</p>
+
+                <!-- Added ID for TOC link -->
+                <h4 id="attack-rep-works" class="text-xl font-medium text-primary pt-2" data-key="subsection_attack_rep">The Attack on Representative Works</h4>
+                <p data-key="p_rep_works_tradition">Traditionally, scientists are known for their <strong>representative works</strong> (e.g., Einstein with Relativity; Newton with Universal Gravitation; Yuan Longping with Hybrid Rice; and Tu Youyou with Artemisinin). Various awards and evaluations also center on these representative works.</p>
+                <p data-key="p_academic_egalitarianism">In recent years, however, a voice has emerged within academia suggesting that the representative work system is outdated, claiming that modern scientific achievements rely increasingly on large collective collaborations. They advocate for the promotion of <strong>academic egalitarianism</strong>—that so long as someone is listed as an author, their contribution is equal. This trend has led to various forms of <strong>co-first author</strong> and <strong>co-corresponding author</strong> designations, followed by <strong>all-first author</strong> listings, alphabetical sorting, and even suggestions for circular arrangement of authors.</p>
+
+                <!-- Added ID for TOC link -->
+                <h4 id="flaw-egalitarianism" class="text-xl font-medium text-primary pt-2" data-key="subsection_flaw_egalitarianism">The Flaw in Academic Egalitarianism</h4>
+                <p data-key="p_egalitarianism_flaw">Academic egalitarianism, besides the problems commonly associated with egalitarian systems, carries an additional fatal flaw: even if a scientific result is achieved through collaboration, with the exception of a very small number of perfectly equal two-person collaborations, all other situations involve a degree of <strong>leadership</strong>, which is systematically obscured by these egalitarian practices. <strong>This leadership must be quantified.</strong></p>
+
+                <!-- 
+                  *** IMAGE TAG ***
+                  This is a standard HTML image tag. 
+                  The 'src' attribute points to a placeholder. 
+                  Replace this with the path to your own image in your GitHub repository.
+                -->
+                <div class="img-container">
+                    <img src="https://placehold.co/600x300/eff6ff/1d4ed8?text=Diagram%3A%20CRediT%20Role%20Mapping" 
+                         alt="Diagram showing CRediT roles mapping to Leadership factor"
+                         class="rounded-md shadow-md max-w-full h-auto">
+                    <p class="text-sm text-center text-gray-500 mt-2" data-key="img_caption_credit">
+                        [This is a placeholder. Upload your image to GitHub and update the 'src' path.]
+                    </p>
+                </div>
+                <!-- End Image Tag -->
+
+                <p data-key="p_ir_transparency">This index offers a transparent and weighted approach, ensuring that research leadership (first/last author roles) and publishing in top-tier journals are properly recognized and amplified in the final score. It serves as a superior alternative for tenure review, grant applications, and institutional ranking.</p>
+
+                <!-- 
+                  *** LINK TAG ***
+                  This is a standard HTML link tag.
+                  The 'href' attribute points to an example URL.
+                  Replace this with your own URL. 'target="_blank"' opens it in a new tab.
+                -->
+                <p class="text-center text-lg">
+                    <a href="https://your-paper-link-goes-here.com" 
+                       target="_blank" 
+                       class="font-medium text-primary hover:underline" 
+                       data-key="link_paper">
+                       Read the full published paper here.
+                    </a>
+                </p>
+
+                <div class="mt-8 text-center">
+                    <a href="protocol.html" class="inline-block py-3 px-8 border border-transparent rounded-lg shadow-lg text-white font-medium bg-primary hover:bg-blue-800 transition duration-150 ease-in-out transform hover:scale-[1.02]" data-key="view_protocol_button">
+                        View Protocol and Use the Calculator &rarr;
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center mt-10 pt-4 border-t text-gray-500 text-sm" data-key="footer">
+            &copy; 2025 Research Index Method. Developed for academic dissemination.
+        </footer>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                title_background: "Quantitative Index of Research Contribution based on CRediT (QuIReC)",
+                header_title: "",
+                header_subtitle: "A Novel Quantification Method for Scholarly Output",
+                nav_background: "1. Background & Motivation",
+                nav_protocol: "2. Protocol & Computation",
+                toc_title: "Table of Contents",
+                toc_1: "1. Background and Motivation",
+                toc_1_1: "1.1 Historical Context: University Systems and Academic Rules",
+                toc_1_1_1: "The Origin of the European University System",
+                toc_1_2: "1.2 The Academic System Under Challenge",
+                toc_1_2_1: "The Attack on Representative Works",
+                toc_1_2_2: "The Flaw in Academic Egalitarianism",
+                toc_1_3: "1.3 The Solution: TQuantitative Index of Research Contribution based on CRediT (QuIReC)",
+                section_title: "1. Background and Motivation",
+                p1_introduction: "Traditional metrics for evaluating research contribution—such as raw publication count or basic h-index—often fail to capture the nuanced impact and leadership demonstrated by a scholar. These metrics can inadvertently favor high-volume publishing in lower-tier venues over high-quality, seminal work that drives a field forward. The Quantitative Index of Research Contribution based on CRediT (QuIReC) was developed to address this gap.",
+                section_academic_rules: "Historical Context: University Systems and Academic Rules",
+                p_legal_origin: "Due to a general lack of understanding among the public regarding the historical development and operational mechanisms of the international and domestic academic communities, it is necessary to introduce the fundamental background rooted in legal and historical structures.",
+                subsection_origin: "The Origin of the European University System",
+                p_roman_greece: "Ancient Roman civilization originated from Ancient Greek civilization, which in turn originated from Ancient Babylonian civilization. The Code of Hammurabi remains the earliest relatively complete written code of law known to date. In the societal structures of the Roman Republic and the Ancient Greek city-states, the social status of <strong>Consuls/Magistrates</strong> exceeded that of the <strong>Nobility</strong>, and the social status of <strong>Scholars</strong>—those responsible for exploring truth—was lower than both. Consuls typically simultaneously served as judges and administrative chiefs.",
+                p_theocracy: "The Roman Republic transitioned into the Roman Empire in $27$ BC. Around the $4^{th}$ century AD, Constantine I established Christianity as the state religion, transforming the state into a theocracy. From that point until the Renaissance, the social structure in Europe was typically <strong>Clergy</strong> > <strong>Nobility</strong> > <strong>Merchants</strong>. The role of the clergy essentially replaced the role of the judge previously held by the Consuls, which is the origin of the modern separation of administrative and judicial powers. The clergy, having combined law and religion, developed a series of canon laws, and were therefore typically well-versed in Roman law.",
+                p_church_scholars: "During this period, some members of the clergy often utilized their professional convenience to undertake the work of scholars. Consequently, although members of the clergy were not always scholars, most had profound legal backgrounds, and scholars were usually members of the clergy, also possessing deep legal backgrounds. The academic development fostered by the church led to the establishment of the earliest universities in Italy and France during the $11^{th}$ and $12^{th}$ centuries.",
+                section_system_challenge: "The Academic System Under Challenge",
+                p_expansion: "The academic community has seen a rapid expansion of personnel, resulting in a large number of researchers who lack legal training and an understanding of traditional academic institutions. Meanwhile, the restrictive power of the culture of honor is continuously weakening. Many scholars today are only familiar with the technical methods of their own research fields but lack knowledge of the institutional foundations of the academic community as a whole.",
+                p_technical_vs_institutional: "This is particularly true in science, technology, and emerging interdisciplinary fields, where many researchers receive <strong>\"technical training\"</strong> but lack <strong>\"institutional training.\"</strong> They may possess the ability to operate experiments but have not received training in academic norms. This has led some of them to attempt to challenge institutions rooted in Roman law, which have been in use for nearly a thousand years, created countless brilliant achievements, and gave birth to industrial civilization.",
+                subsection_attack_rep: "The Attack on Representative Works",
+                p_rep_works_tradition: "Traditionally, scientists are known for their <strong>representative works</strong> (e.g., Einstein with Relativity; Newton with Universal Gravitation; Yuan Longping with Hybrid Rice; and Tu Youyou with Artemisinin). Various awards and evaluations also center on these representative works.",
+                p_academic_egalitarianism: "In recent years, however, a voice has emerged within academia suggesting that the representative work system is outdated, claiming that modern scientific achievements rely increasingly on large collective collaborations. They advocate for the promotion of <strong>academic egalitarianism</strong>—that so long as someone is listed as an author, their contribution is equal. This trend has led to various forms of <strong>co-first author</strong> and <strong>co-corresponding author</strong> designations, followed by <strong>all-first author</strong> listings, alphabetical sorting, and even suggestions for circular arrangement of authors.",
+                subsection_flaw_egalitarianism: "The Flaw in Academic Egalitarianism",
+                p_egalitarianism_flaw: "Academic egalitarianism, besides the problems commonly associated with egalitarian systems, carries an additional fatal flaw: even if a scientific result is achieved through collaboration, with the exception of a very small number of perfectly equal two-person collaborations, all other situations involve a degree of <strong>leadership</strong>, which is systematically obscured by these egalitarian practices. <strong>This leadership must be quantified.</strong>",
+                section_ir_solution: "The Solution: Quantitative Index of Research Contribution based on CRediT (QuIReC)",
+                p_ir_composite: "The Quantitative Index of Research Contribution based on CRediT (QuIReC) was designed to re-establish rigorous evaluation by compensating for the flaws of academic egalitarianism. ",
+                img_caption_credit: "[This is a placeholder. Upload your image to GitHub and update the 'src' path.]",
+                p_ir_transparency: "This index offers a transparent and weighted approach, ensuring that research leadership (first/last author roles) and publishing in top-tier journals are properly recognized and amplified in the final score. It serves as a superior alternative for tenure review, grant applications, and institutional ranking.",
+                link_paper: "Read the full published paper here.",
+                view_protocol_button: "View Protocol and Use the Calculator \u2192", // \u2192 is right arrow
+                footer: "\u00a9 2025 Research Index Method. Developed for academic dissemination.",
+            },
+            zh: {
+                title_background: "基于CRediT的研究贡献量化法（QuIReC)",
+                header_title: "",
+                header_subtitle: "一种新颖的学术产出量化方法",
+                nav_background: "1. 背景与动机",
+                nav_protocol: "2. 协议与计算",
+                toc_title: "目录",
+                toc_1: "1. 背景与动机",
+                toc_1_1: "1.1 历史背景：大学制度与学术规则",
+                toc_1_1_1: "欧洲大学制度的起源",
+                toc_1_2: "1.2 受到挑战的学术制度",
+                toc_1_2_1: "对代表作制度的挑战",
+                toc_1_2_2: "学术平均主义的缺陷",
+                toc_1_3: "1.3 解决方案：",
+                section_title: "1. 背景与动机",
+                p1_introduction: "评估研究贡献的传统指标——例如原始出版物数量或基本h指数——往往无法捕捉学者所展示的细微影响和领导力。这些指标可能会无意中偏向于低级期刊的大量出版，而非推动领域发展的高质量、开创性工作。",
+                section_academic_rules: "历史背景：大学制度与学术规则",
+                p_legal_origin: "由于普通公众对国际和国内学术界历史发展和运作机制缺乏普遍了解，有必要介绍根植于法律和历史结构的基础背景，以避免误解。",
+                subsection_origin: "欧洲大学制度的起源",
+                p_roman_greece: "古罗马的文明起源于古希腊文明，古希腊文明又起源于古巴比伦文明。古巴比伦国王颁布的汉谟拉比法典是至今为止最早的较为完整的成文法典。罗马共和国和古希腊城邦的社会结构是执政官大于贵族，负责探索真理的学者的社会地位则低于前两者。执政官通常同时承担法官和行政长官的职责。",
+                p_theocracy: "罗马共和国在公元前$27$年转为罗马帝国，在公元$4$世纪左右，罗马帝国的君士坦丁一世将基督教定为国教，转型为一个政教合一的国家。从那以后，直到文艺复兴，欧洲地区的社会结构都是<strong>神职人员</strong> > <strong>贵族</strong> > <strong>商人</strong>。这里的神职人员其实替代了此前执政官中法官的角色，而行政长官的角色则由贵族担任，也是现代行政权和司法权分立的起源。神职人员将法律和宗教结合，发展出一系列的教法，所以神职人员通常是熟读罗马法的。在这一段时间中，部分神职人员通常也利用职务便利承担着学者的工作。同时由于共和国体制瓦解，普通公民中再难有学者出现，所以虽然神职人员不一定是学者，但大都有深厚的法学背景，而学者通常都是神职人员，也有深厚的法学背景。",
+                p_church_scholars: "教会的学术发展，到了$11-12$世纪，在意大利、法国等地建立了最早的大学。",
+                section_system_challenge: "受到挑战的学术制度",
+                p_expansion: "学术共同体的人员急速膨胀，出现了大量没有经过法律训练、对传统学术制度缺乏理解的研究者。而荣誉文化的约束力在不断减弱。现在很多学者仅熟悉自己研究领域的技术方法，却并不了解整个学术共同体的制度根基。",
+                p_technical_vs_institutional: "尤其是在理工科和新兴交叉学科中，不少研究人员接受的是<strong>“工程式训练”</strong>（technical training），但缺乏<strong>“制度式训练”</strong>（institutional training）。他们可能具备操作实验的能力，但并未接受过学术规范训练。 这导致他们当中的有些人试图去挑战这些源于罗马法的，已经沿用近千年并创造出无数灿烂成果，诞生了工业文明的制度。",
+                subsection_attack_rep: "对代表作制度的挑战",
+                p_rep_works_tradition: "传统上，科学家以<strong>代表作</strong>著称（例如，爱因斯坦的相对论；牛顿的万有引力；袁隆平的杂交水稻；屠呦呦的青蒿素）。各种奖项和评估也围绕这些代表作展开。",
+                p_academic_egalitarianism: "近些年，学术界开始出现一种声音，认为代表作制度是落后的，声称现代科学成果越来越依赖大集体合作。他们提倡推行<strong>学术平均主义</strong>——只要署名了，贡献就一样。这种趋势导致了各种形式的<strong>共同一作</strong>和<strong>共同通讯作者</strong>，随后是<strong>全体一作</strong>，按姓氏字母排序，甚至有人建议作者列表采用环形排列。",
+                subsection_flaw_egalitarianism: "学术平均主义的缺陷",
+                p_egalitarianism_flaw: "学术平均主义，除了平均主义普遍会出现的问题，还有一个额外的致命缺陷：即使科学成果是合作完成的，除了极少数非常平等的两人合作，其他所有情况都存在一定程度的<strong>领导力</strong>，而这些平均主义做法系统性地掩盖了这种领导力。<strong>这种领导力必须被量化。</strong>",
+                section_ir_solution: "",
+                p_ir_composite: "旨在通过弥补学术平均主义的缺陷，重新建立严格的评估体系。。",
+                img_caption_credit: "[这是一个占位符。请将您的图片上传到GitHub并更新'src'路径。]",
+                p_ir_transparency: "该指数提供了一种透明且加权的方法，确保研究领导力（第一/最后作者角色）和在顶级期刊上的发表得到适当的认可和放大。它可作为终身教职评审、项目申请和机构排名的更优替代方案。",
+                link_paper: "点击此处阅读完整的已发表论文。",
+                view_protocol_button: "查看协议和使用计算器 \u2192",
+                footer: "\u00a9 2025 研究指数方法。专为学术传播而开发。",
+            }
+        };
+
+        const languageSelector = document.getElementById('language-selector');
+        languageSelector.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+
+        // Set initial language based on the select element
+        setLanguage(languageSelector.value);
+
+        function setLanguage(lang) {
+            const keys = translations[lang];
+            if (!keys) return;
+
+            // Update title
+            const titleElement = document.querySelector('title');
+            if (titleElement) {
+                titleElement.textContent = keys['title_background'];
+            }
+            
+            // Update other elements
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (keys[key]) {
+                    el.innerHTML = keys[key];
+                }
+            });
+        }
+    </script>
+</body>
+</html>
