@@ -7,9 +7,10 @@
     <!-- 引入 Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 引入 Inter 字体，确保中文显示良好 */
+        /* 引入 Inter 字体，并使用计算器页面的背景色 */
         body {
             font-family: 'Inter', 'Microsoft YaHei', 'SimHei', sans-serif;
+            background-color: #f7f7f7; /* 与计算器页面背景色同步 */
         }
         /* 为卡片添加统一的视觉效果 */
         .card {
@@ -21,29 +22,43 @@
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
     </style>
+    <script>
+        // 定义与计算器页面相同的自定义颜色
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#1d4ed8', 
+                        'secondary': '#374151',
+                        'primary-light': '#eef2ff',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col items-center p-4">
+<body class="min-h-screen flex flex-col items-center p-4">
 
     <!-- 语言切换按钮 (固定在右上角) -->
     <div class="fixed top-4 right-4 z-50">
-        <button id="lang-button" onclick="toggleLanguage()" class="p-3 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transition duration-150 text-sm font-semibold">
+        <button id="lang-button" onclick="toggleLanguage()" class="p-3 bg-primary text-white rounded-full shadow-lg hover:bg-blue-800 transition duration-150 text-sm font-semibold">
             <span data-lang-cn="Switch to English" data-lang-en="切换至中文">Switch to English</span>
         </button>
     </div>
 
     <!-- 头部和导航栏 -->
     <header class="w-full max-w-5xl mb-12">
-        <nav class="bg-white p-6 rounded-2xl shadow-xl flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-            <h1 class="text-3xl font-extrabold text-indigo-700 tracking-tight" data-lang-cn="项目主页" data-lang-en="Project Home">项目主页</h1>
+        <nav class="bg-white p-6 rounded-2xl shadow-xl flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 border-t-4 border-primary">
+            <h1 class="text-3xl font-extrabold text-primary tracking-tight" data-lang-cn="项目主页" data-lang-en="Project Home">项目主页</h1>
             <!-- 响应式导航链接 -->
             <div class="flex flex-wrap justify-center space-x-4">
-                <a href="index.html" class="text-indigo-600 hover:text-indigo-800 font-semibold transition duration-150 p-2 rounded-lg bg-indigo-50">
+                <a href="index.html" class="text-primary hover:text-blue-800 font-semibold transition duration-150 p-2 rounded-lg bg-primary-light">
                     <span data-lang-cn="主页" data-lang-en="Home">主页</span>
                 </a>
-                <a href="protocol.html" class="text-gray-600 hover:text-indigo-800 font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
+                <a href="protocol.html" class="text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
                     <span data-lang-cn="规则协议" data-lang-en="Protocol">规则协议</span>
                 </a>
-                <a href="calculator.html" class="text-gray-600 hover:text-indigo-800 font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
+                <a href="calculator.html" class="text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
                     <span data-lang-cn="计算器" data-lang-en="Calculator">计算器</span>
                 </a>
             </div>
@@ -55,8 +70,8 @@
 
         <!-- 1. 背景介绍 (Background Introduction) -->
         <section id="section-intro" class="card bg-white p-8 rounded-2xl">
-            <h2 class="text-3xl font-extrabold text-indigo-700 mb-4 border-b pb-2" data-lang-cn="项目背景介绍" data-lang-en="Project Background Introduction">项目背景介绍</h2>
-            <div class="text-gray-700 space-y-4 leading-relaxed">
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="项目背景介绍" data-lang-en="Project Background Introduction">项目背景介绍</h2>
+            <div class="text-secondary space-y-4 leading-relaxed">
                 <!-- 占位符 P1 -->
                 <p data-lang-cn="在此处添加关于项目背景的中文介绍..." data-lang-en="Add the Chinese introduction about the project background here..."></p>
                 <!-- 占位符 P2 -->
@@ -66,8 +81,8 @@
 
         <!-- 2. 使用方法 (How to Use) -->
         <section id="section-how-to" class="card bg-white p-8 rounded-2xl">
-            <h2 class="text-3xl font-extrabold text-indigo-700 mb-4 border-b pb-2" data-lang-cn="使用方法指引" data-lang-en="Guide on How to Use">使用方法指引</h2>
-            <div class="text-gray-700 space-y-4 leading-relaxed">
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="使用方法指引" data-lang-en="Guide on How to Use">使用方法指引</h2>
+            <div class="text-secondary space-y-4 leading-relaxed">
                 <!-- 占位符 P1 -->
                 <p data-lang-cn="在此处添加关于平台使用方法的中文描述..." data-lang-en="Add the Chinese description of how to use the platform here..."></p>
                 <!-- 占位符 列表 -->
@@ -80,15 +95,15 @@
         </section>
 
         <!-- 3. 之前开发的计算模型 (Previously Developed Calculation Models) -->
-        <section id="section-models" class="card bg-white p-8 rounded-2xl border-l-4 border-indigo-500">
-            <h2 class="text-3xl font-extrabold text-indigo-700 mb-4 border-b pb-2" data-lang-cn="核心计算模型" data-lang-en="Core Calculation Models">核心计算模型</h2>
-            <div class="text-gray-700 space-y-4 leading-relaxed">
+        <section id="section-models" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="核心计算模型" data-lang-en="Core Calculation Models">核心计算模型</h2>
+            <div class="text-secondary space-y-4 leading-relaxed">
                 <!-- 模型名称占位符 -->
-                <p class="font-bold text-lg text-indigo-800" data-lang-cn="模型名称占位符 (中文)" data-lang-en="Model Name Placeholder (English)"></p>
+                <p class="font-bold text-lg text-blue-800" data-lang-cn="模型名称占位符 (中文)" data-lang-en="Model Name Placeholder (English)"></p>
                 <!-- 模型介绍占位符 -->
                 <p data-lang-cn="在此处添加关于核心计算模型的中文介绍和原理说明。" data-lang-en="Add the Chinese introduction and principles of the core calculation model here."></p>
                 <!-- 链接占位符 -->
-                <a href="calculator.html" class="mt-4 inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-full shadow-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150">
+                <a href="calculator.html" class="mt-4 inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-full shadow-md text-white bg-primary hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150">
                     <span data-lang-cn="前往计算器页面" data-lang-en="Go to Calculator Page">前往计算器页面</span>
                 </a>
             </div>
@@ -97,7 +112,7 @@
     </main>
 
     <!-- 页脚 -->
-    <footer class="mt-16 w-full max-w-5xl border-t pt-8 text-center text-gray-500 text-sm">
+    <footer class="mt-16 w-full max-w-5xl border-t pt-8 text-center text-secondary text-sm">
         <p data-lang-cn="&copy; 2025 示例网站。保留所有权利。" data-lang-en="&copy; 2025 Example Website. All rights reserved.">&copy; 2025 示例网站。保留所有权利。</p>
         <p class="mt-2" data-lang-cn="专为 Canvas Immersive 环境优化。" data-lang-en="Optimized for the Canvas Immersive Environment.">专为 Canvas Immersive 环境优化。</p>
     </footer>
@@ -129,9 +144,9 @@
             if (langButton) {
                 const buttonSpan = langButton.querySelector('span');
                 if (currentLang === 'cn') {
-                    buttonSpan.textContent = "Switch to English";
+                    buttonSpan.textContent = langButton.getAttribute('data-lang-cn') || "Switch to English";
                 } else {
-                    buttonSpan.textContent = "切换至中文";
+                    buttonSpan.textContent = langButton.getAttribute('data-lang-en') || "切换至中文";
                 }
             }
 
