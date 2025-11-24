@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目背景介绍</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 引入 Inter 字体，并使用计算器页面的背景色 */
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', 'SimHei', sans-serif;
+            background-color: #f7f7f7; /* 与计算器页面背景色同步 */
+        }
+        /* 为卡片添加统一的视觉效果 */
+        .card {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border: 1px solid #e5e7eb; /* gray-200 */
+        }
+        .card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .nav-link.active {
+            background-color: #eef2ff; /* primary-light */
+        }
+    </style>
+    <script>
+        // 定义与计算器页面相同的自定义颜色
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#1d4ed8', 
+                        'secondary': '#374151',
+                        'primary-light': '#eef2ff',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4">
+
+    <!-- 语言切换按钮 (固定在右上角) -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="lang-button" onclick="toggleLanguage()" class="p-3 bg-primary text-white rounded-full shadow-lg hover:bg-blue-800 transition duration-150 text-sm font-semibold">
+            <span data-lang-cn="Switch to English" data-lang-en="切换至中文">Switch to English</span>
+        </button>
+    </div>
+
+    <!-- 头部和导航栏 -->
+    <header class="w-full max-w-5xl mb-12">
+        <nav class="bg-white p-6 rounded-2xl shadow-xl flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 border-t-4 border-primary">
+            <h1 class="text-3xl font-extrabold text-primary tracking-tight" data-lang-cn="项目背景" data-lang-en="Project Background">项目背景</h1>
+            <!-- 响应式导航链接 -->
+            <div class="flex flex-wrap justify-center space-x-4">
+                <a href="index.html" class="nav-link text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
+                    <span data-lang-cn="主页" data-lang-en="Home">主页</span>
+                </a>
+                <!-- 当前页面链接设置为 active 样式 -->
+                <a href="background.html" class="nav-link text-primary hover:text-blue-800 font-semibold transition duration-150 p-2 rounded-lg bg-primary-light active">
+                    <span data-lang-cn="项目背景" data-lang-en="Project Background">项目背景</span>
+                </a>
+                <a href="usage_guide.html" class="nav-link text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
+                    <span data-lang-cn="使用指引" data-lang-en="Usage Guide">使用指引</span>
+                </a>
+                <a href="hierarchical_calculator.html" class="nav-link text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
+                    <span data-lang-cn="计算器" data-lang-en="Calculator">计算器</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 主要内容区域：背景介绍详情 - 基于上传的 Word 文档内容 -->
+    <main class="w-full max-w-5xl space-y-12">
+        
+        <!-- 目录 (Table of Contents) -->
+        <section id="table-of-contents" class="card bg-white p-6 rounded-2xl border-l-4 border-secondary/50">
+            <h2 class="text-2xl font-extrabold text-secondary mb-4" data-lang-cn="目录" data-lang-en="Table of Contents">目录</h2>
+            <nav class="text-blue-700 space-y-2">
+                <ul class="list-none p-0 space-y-1">
+                    <li><a href="#section-origin" class="hover:underline transition duration-100" data-lang-cn="1. 学术制度起源：罗马法与教会传统" data-lang-en="1. Origin of Academic System: Roman Law and Ecclesiastical Tradition">1. 学术制度起源：罗马法与教会传统</a></li>
+                    <li><a href="#section-challenge" class="hover:underline transition duration-100" data-lang-cn="2. 当代挑战：平均主义与工程式训练的冲突" data-lang-en="2. Contemporary Challenges: Conflict between Egalitarianism and Technical Training">2. 当代挑战：平均主义与工程式训练的冲突</a></li>
+                    <li><a href="#section-quirec" class="hover:underline transition duration-100" data-lang-cn="3. QuIReC 模型：基于 CRediT 的量化方法" data-lang-en="3. The QuIReC Model: CRediT-Based Quantification Solution">3. QuIReC 模型：基于 CRediT 的量化方法</a>
+                        <ul class="list-disc list-inside ml-6 mt-1 space-y-1 text-sm text-gray-600">
+                            <li><a href="#section-s2-principle" class="hover:underline" data-lang-cn="3.1 核心原理：S²自加权平均法" data-lang-en="3.1 Core Principle: S² Self-Weighted Average Method">3.1 核心原理：S²自加权平均法</a></li>
+                            <li><a href="#section-factors-detail" class="hover:underline" data-lang-cn="3.2 三大贡献因子详解" data-lang-en="3.2 Detailed Explanation of the Three Contribution Factors">3.2 三大贡献因子详解</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+
+        <!-- 1. 大学制度和学术规则的起源 -->
+        <section id="section-origin" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="1. 学术制度起源：罗马法与教会传统" data-lang-en="1. Origin of Academic System: Roman Law and Ecclesiastical Tradition">1. 学术制度起源：罗马法与教会传统</h2>
+            <div class="text-secondary space-y-4 leading-relaxed">
+                <p data-lang-cn="欧洲大学制度可追溯至古希腊和古罗马文明，其制度根基深受罗马法的影响。在罗马帝国转型为政教合一的国家后，神职人员逐渐取代了此前的法官角色，并兼任学者工作。这些神职人员通常熟读罗马法，并将法律与宗教结合发展出教法。因此，早期的学者往往具备深厚的法学背景，这构成了现代学术制度的**制度式训练 (Institutional Training)** 基础。" data-lang-en="The European university system traces its roots back to ancient Greek and Roman civilizations, with its institutional foundations heavily influenced by Roman Law. Following the Roman Empire's shift to a state combining politics and religion, the clergy gradually replaced the former role of judges and often served as scholars. These clergy were typically well-versed in Roman Law, integrating law and religion to develop canon law. Thus, early scholars often possessed a profound legal background, which formed the basis of **Institutional Training** in the modern academic system."></p>
+                <p data-lang-cn="这种传统保证了学术社群内部成员对规则和荣誉文化的尊重与理解，这种**荣誉文化的约束力**在数千年来维护了学术的公正性。" data-lang-en="This tradition ensured that members within the academic community respected and understood the rules and the culture of honor. This **constraining power of honor culture** maintained academic fairness for millennia."></p>
+            </div>
+        </section>
+
+        <!-- 2. 当代学术规则面临的挑战 -->
+        <section id="section-challenge" class="card bg-white p-8 rounded-2xl">
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="2. 当代挑战：平均主义与工程式训练的冲突" data-lang-en="2. Contemporary Challenges: Conflict between Egalitarianism and Technical Training">2. 当代挑战：平均主义与工程式训练的冲突</h2>
+            <div class="text-secondary space-y-4 leading-relaxed">
+                <p data-lang-cn="随着近几十年研究人员数量的急速扩张，出现了大量缺乏制度式训练、只接受**工程式训练 (Technical Training)** 的学者。他们虽然精通技术方法，但对学术共同体的制度根基缺乏了解，导致荣誉文化的约束力减弱。" data-lang-en="With the rapid expansion of researchers in recent decades, a large number of scholars have emerged who lack institutional training and have only received **Technical Training**. Although proficient in technical methods, they lack understanding of the institutional foundation of the academic community, leading to a weakening of the constraining power of the culture of honor."></p>
+                <p data-lang-cn="在这种背景下，学术界开始出现**学术平均主义**思潮，挑战传统的**代表作制度**（如爱因斯坦的相对论，屠呦呦的青蒿素）。平均主义倡导通过共同一作、字母排序甚至圆圈排列来淡化主要贡献者，认为现代科学成果越来越依赖大集体合作，应平均分配贡献。" data-lang-en="Against this backdrop, the trend of **Academic Egalitarianism** has emerged, challenging the traditional **Representative Works System** (e.g., Einstein's theory of relativity, Tu Youyou's artemisinin). Egalitarianism advocates for diluting the role of primary contributors through measures like co-first authorship, alphabetical order, or even circular listing, arguing that modern scientific outcomes increasingly rely on large collective collaboration and contributions should be equally distributed."></p>
+                <p data-lang-cn="然而，平均主义的致命缺陷在于：科学成果的合作并非总是平等的。除了极少数情况，大多数项目都有清晰的**领导和核心贡献**。平均分配贡献不仅不公正，也削弱了创造最大价值的主体动力。" data-lang-en="However, the fatal flaw of egalitarianism is that collaboration in scientific achievement is rarely equal. Except in rare cases, most projects involve clear **leadership and core contributions**. Equal allocation of contribution is not only unjust but also weakens the motivation of those who create the greatest value."></p>
+            </div>
+        </section>
+        
+        <!-- 3. QuIReC 模型的提出：解决方案 -->
+        <section id="section-quirec" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="3. QuIReC 模型：基于 CRediT 的量化方法" data-lang-en="3. The QuIReC Model: CRediT-Based Quantification Solution">3. QuIReC 模型：基于 CRediT 的量化方法</h2>
+            <div class="text-secondary space-y-4 leading-relaxed">
+                <p data-lang-cn="为应对上述挑战，本项目提出了**基于CRediT的研究贡献量化法 (QuIReC)**。QuIReC 不试图取代荣誉制度，而是提供一套客观、透明的量化工具，精确识别和衡量不同层级贡献者的实际价值。" data-lang-en="To address these challenges, this project introduces the **Quantification of Research Contribution based on CRediT (QuIReC)**. QuIReC does not aim to replace the honor system, but rather provides an objective, transparent quantitative tool to accurately identify and measure the actual value of contributors at different levels."></p>
+                
+                <h3 id="section-s2-principle" class="text-xl font-bold text-blue-800 pt-4" data-lang-cn="3.1 核心原理：S²自加权平均法" data-lang-en="3.1 Core Principle: S² Self-Weighted Average Method">3.1 核心原理：S²自加权平均法</h3>
+                <p data-lang-cn="QuIReC 模型的 V4.0 版本采用了创新的 $S^2$ 平均法（分数平方加权平均）。该方法通过将个体的总贡献分数 $S_p$ 进行平方 $(S_p^2)$，作为其在分配贡献时的权重。这确保了高分值主体在下一级分配中获得与其价值相匹配的更高影响力，从而实现**贡献的自我加权**。" data-lang-en="Version 4.0 of the QuIReC model uses the innovative $S^2$ Average method (Score-Squared Weighted Average). This method squares the total contribution score $S_p$ of an individual $(S_p^2)$ to serve as their weighting factor during contribution allocation. This ensures that high-score entities gain a disproportionately higher influence matching their value in the next level of allocation, achieving **self-weighting of contributions**."></p>
+                <p data-lang-cn="**计算平均档位 $S_{avg}$ 的公式如下:**" data-lang-en="**The formula for calculating the Average Tier $S_{avg}$ is as follows:**" class="font-mono"></p>
+                <div class="text-center bg-gray-100 p-4 rounded-lg my-4 overflow-x-auto">
+                    <code class="text-lg font-mono text-red-600">$S_{avg} = \frac{\sum S^2}{\sum S}$</code>
+                </div>
+
+                <h3 id="section-factors-detail" class="text-xl font-bold text-blue-800 pt-4" data-lang-cn="3.2 三大贡献因子详解" data-lang-en="3.2 Detailed Explanation of the Three Contribution Factors">3.2 三大贡献因子详解</h3>
+                <p data-lang-cn="QuIReC 沿用了 CRediT 理念，但聚焦于以下三个关键因子，并采用 1 到 6 的分档定级。" data-lang-en="QuIReC adopts the CRediT philosophy but focuses on the following three key factors, using a tier system from 1 to 6."></p>
+                <ul class="list-disc list-inside space-y-3 pl-4">
+                    <li><strong class="text-blue-800" data-lang-cn="稀缺性 (S):" data-lang-en="Scarcity (S):">稀缺性 (S):</strong> <span data-lang-cn="衡量工作的独特性和不可替代性。代表该贡献在多大程度上需要不可替代的知识、技能或资源。越稀缺，分数越高。" data-lang-en="Measures the uniqueness and irreplaceability of the work. Represents the extent to which the contribution required irreplaceable knowledge, skills, or resources. The scarcer the work, the higher the score."></span></li>
+                    <li><strong class="text-blue-800" data-lang-cn="因果关系 (C):" data-lang-en="Causality (C):">因果关系 (C):</strong> <span data-lang-cn="衡量该贡献对最终成果产生的直接决定性影响。代表该贡献是成果发生的充分且必要条件，还是仅是辅助条件。影响越直接，分数越高。" data-lang-en="Measures the direct, decisive impact of the contribution on the final outcome. Represents whether the contribution was a sufficient and necessary condition for the result or merely an auxiliary condition. The more direct the impact, the higher the score."></span></li>
+                    <li><strong class="text-blue-800" data-lang-cn="突破性 (B):" data-lang-en="Breakthrough (B):">突破性 (B):</strong> <span data-lang-cn="衡量工作在知识、技术或方法论上实现的创新程度或创造性。代表该工作是否带来了实质性的、此前不存在的增量价值。创新度越大，分数越高。" data-lang-en="Measures the degree of innovation or creativity achieved in knowledge, technology, or methodology. Represents whether the work provided substantial, previously non-existent incremental value. The greater the innovation, the higher the score."></span></li>
+                </ul>
+                <p data-lang-cn="每个参与者的总档位 $S_p$ 为三因子之和 $S + C + B$。" data-lang-en="The total tier $S_p$ for each participant is the sum of the three factors: $S + C + B$。" class="font-mono"></p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="mt-16 w-full max-w-5xl border-t pt-8 text-center text-secondary text-sm">
+        <p data-lang-cn="&copy; 2025 示例网站。保留所有权利。" data-lang-en="&copy; 2025 Example Website. All rights reserved.">&copy; 2025 示例网站。保留所有权利。</p>
+        <p class="mt-2" data-lang-cn="专为 Canvas Immersive 环境优化。" data-lang-en="Optimized for the Canvas Immersive Environment.">专为 Canvas Immersive 环境优化。</p>
+    </footer>
+
+    <!-- JavaScript for Language Toggle Logic -->
+    <script>
+        let currentLang = 'cn';
+        
+        const updateText = (lang) => {
+            document.querySelectorAll('[data-lang-cn], [data-lang-en]').forEach(element => {
+                const cnText = element.getAttribute('data-lang-cn');
+                const enText = element.getAttribute('data-lang-en');
+
+                if (cnText && enText) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        if (element.placeholder) {
+                            element.placeholder = lang === 'cn' ? cnText : enText;
+                        }
+                    } else {
+                        element.textContent = lang === 'cn' ? cnText : enText;
+                    }
+                }
+            });
+
+            const langButton = document.getElementById('lang-button');
+            if (langButton) {
+                const buttonSpan = langButton.querySelector('span');
+                const cnLabel = buttonSpan.getAttribute('data-lang-cn') || "Switch to English";
+                const enLabel = buttonSpan.getAttribute('data-lang-en') || "切换至中文";
+                
+                buttonSpan.textContent = lang === 'cn' ? cnLabel : enLabel;
+            }
+
+            document.documentElement.lang = lang === 'cn' ? 'zh-CN' : 'en';
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'cn' ? 'en' : 'cn';
+            updateText(currentLang);
+        }
+
+        window.onload = () => {
+            const path = window.location.pathname.split('/').pop();
+            const links = {
+                'index.html': 'index.html',
+                'background.html': 'background.html',
+                'usage_guide.html': 'usage_guide.html',
+                'hierarchical_calculator.html': 'hierarchical_calculator.html'
+            };
+            
+            // Highlight the correct link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active', 'bg-primary-light', 'font-semibold');
+                link.classList.add('text-secondary', 'font-medium', 'hover:bg-gray-100');
+            });
+
+            const activeLink = document.querySelector(`a[href="${links[path] || 'background.html'}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active', 'bg-primary-light', 'font-semibold');
+                activeLink.classList.remove('text-secondary', 'font-medium', 'hover:bg-gray-100');
+            }
+            updateText(currentLang);
+        };
+    </script>
+</body>
+</html>
