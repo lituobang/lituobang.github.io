@@ -23,6 +23,13 @@
         .nav-link.active {
             background-color: #eef2ff; /* primary-light */
         }
+        /* 确保 KaTeX 字体被正确加载 */
+        @font-face {
+            font-family: 'KaTeX_AMS';
+            src: url('https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/fonts/KaTeX_AMS-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
     </style>
     <script>
         // 定义与计算器页面相同的自定义颜色
@@ -44,7 +51,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-sJ24/7R3vG29l/J+9zW5c5Wp5o/Qo/7t+5d5KqA+7D+jK4qK4Wq2j1Vp4X6p4z4Q6" crossorigin="anonymous"></script>
 
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" 
-        integrity="sha384-sQxXG8R/V5/L+9d4jW5c5Wp5o/Qo/7t+5d5KqA+7D+jK4qK4Wq2j1Vp4X6p4z4Q6" 
+        integrity="sha384-sQxXG8R/V5/L/9d4jW5c5Wp5o/Qo/7t+5d5KqA+7D+jK4qK4Wq2j1Vp4X6p4z4Q6" 
         crossorigin="anonymous" 
         onload="renderMathInElement(document.body, {delimiters: [
             {left: '$$', right: '$$', display: true}, // 块级公式
@@ -127,6 +134,7 @@
                 <div class="text-center bg-gray-100 p-4 rounded-lg my-4 overflow-x-auto text-lg font-mono text-red-600">
                     $$S_{avg} = \frac{\sum S^2}{\sum S}$$
                 </div>
+
                 <h3 id="section-factors-detail" class="text-xl font-bold text-blue-800 pt-4" data-lang-cn="3.2 三大贡献因子详解" data-lang-en="3.2 Detailed Explanation of the Three Contribution Factors">3.2 三大贡献因子详解</h3>
                 <p data-lang-cn="QuIReC 沿用了 CRediT 理念，但聚焦于以下三个关键因子，并采用 1 到 6 的分档定级。" data-lang-en="QuIReC adopts the CRediT philosophy but focuses on the following three key factors, using a tier system from 1 to 6."></p>
                 <ul class="list-disc list-inside space-y-3 pl-4">
