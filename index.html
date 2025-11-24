@@ -21,6 +21,9 @@
         .card:hover {
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
+        .nav-link.active {
+            background-color: #eef2ff; /* primary-light */
+        }
     </style>
     <script>
         // 定义与计算器页面相同的自定义颜色
@@ -52,58 +55,61 @@
             <h1 class="text-3xl font-extrabold text-primary tracking-tight" data-lang-cn="项目主页" data-lang-en="Project Home">项目主页</h1>
             <!-- 响应式导航链接 -->
             <div class="flex flex-wrap justify-center space-x-4">
-                <a href="index.html" class="text-primary hover:text-blue-800 font-semibold transition duration-150 p-2 rounded-lg bg-primary-light">
+                <a href="index.html" class="nav-link text-primary hover:text-blue-800 font-semibold transition duration-150 p-2 rounded-lg bg-primary-light active">
                     <span data-lang-cn="主页" data-lang-en="Home">主页</span>
                 </a>
-                <a href="protocol.html" class="text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
-                    <span data-lang-cn="规则协议" data-lang-en="Protocol">规则协议</span>
+                <a href="background.html" class="nav-link text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
+                    <span data-lang-cn="项目背景" data-lang-en="Project Background">项目背景</span>
                 </a>
-                <a href="calculator.html" class="text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
+                <a href="usage_guide.html" class="nav-link text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
+                    <span data-lang-cn="使用指引" data-lang-en="Usage Guide">使用指引</span>
+                </a>
+                <!-- 移除了 protocol.html 链接 -->
+                <a href="hierarchical_calculator.html" class="nav-link text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
                     <span data-lang-cn="计算器" data-lang-en="Calculator">计算器</span>
                 </a>
             </div>
         </nav>
     </header>
 
-    <!-- 主要内容区域：三个结构化部分 -->
+    <!-- 主要内容区域 -->
     <main class="w-full max-w-5xl space-y-12">
 
-        <!-- 1. 背景介绍 (Background Introduction) -->
+        <!-- 1. 项目简介与最新动态 -->
         <section id="section-intro" class="card bg-white p-8 rounded-2xl">
-            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="项目背景介绍" data-lang-en="Project Background Introduction">项目背景介绍</h2>
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="项目简介与最新动态" data-lang-en="Project Overview & Latest Updates">项目简介与最新动态</h2>
             <div class="text-secondary space-y-4 leading-relaxed">
-                <!-- 占位符 P1 -->
-                <p data-lang-cn="在此处添加关于项目背景的中文介绍..." data-lang-en="Add the Chinese introduction about the project background here..."></p>
-                <!-- 占位符 P2 -->
-                <p data-lang-cn="在此处添加关于项目背景的第二段中文介绍..." data-lang-en="Add the second paragraph of the English introduction about the project background here..."></p>
+                <p data-lang-cn="欢迎来到本项目的核心平台。我们致力于通过**分级贡献指数 (HCI)** 模型，提供一套公正、透明的科研贡献分配机制。" data-lang-en="Welcome to the core platform of this project. We are committed to providing a fair and transparent mechanism for allocating research contributions using the **Hierarchical Contribution Index (HCI)** model."></p>
+                <p data-lang-cn="点击导航栏的“项目背景”以了解模型的理论基础和发展历程。" data-lang-en="Click 'Project Background' in the navigation bar to understand the theoretical basis and development history of the model."></p>
+                <!-- 链接到背景介绍页面 -->
+                <a href="background.html" class="mt-4 inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-full shadow-md text-white bg-primary hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150">
+                    <span data-lang-cn="了解项目背景" data-lang-en="Explore Project Background">了解项目背景</span>
+                </a>
             </div>
         </section>
 
-        <!-- 2. 使用方法 (How to Use) -->
+        <!-- 2. 使用方法指引 (已更新，引导至新页面) -->
         <section id="section-how-to" class="card bg-white p-8 rounded-2xl">
             <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="使用方法指引" data-lang-en="Guide on How to Use">使用方法指引</h2>
             <div class="text-secondary space-y-4 leading-relaxed">
-                <!-- 占位符 P1 -->
-                <p data-lang-cn="在此处添加关于平台使用方法的中文描述..." data-lang-en="Add the Chinese description of how to use the platform here..."></p>
-                <!-- 占位符 列表 -->
-                <ul class="list-disc list-inside space-y-2 pl-4">
-                    <li data-lang-cn="**步骤一:** 在此处填写第一个中文步骤。" data-lang-en="**Step One:** Fill in the first English step here."></li>
-                    <li data-lang-cn="**步骤二:** 在此处填写第二个中文步骤。" data-lang-en="**Step Two:** Fill in the second English step here."></li>
-                    <li data-lang-cn="**步骤三:** 在此处填写第三个中文步骤。" data-lang-en="**Step Three:** Fill in the third English step here."></li>
-                </ul>
+                <p data-lang-cn="本平台旨在通过量化的方式公正评估科研贡献。点击下方链接，查看**详细的使用步骤和案例分析**，了解如何正确地定义层级和进行分档定级。" data-lang-en="This platform aims to fairly evaluate research contributions quantitatively. Click the link below to view **detailed usage steps and case studies** on how to correctly define hierarchies and assign tiers."></p>
+                <!-- 链接到新页面 usage_guide.html -->
+                <a href="usage_guide.html" class="mt-4 inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-full shadow-md text-white bg-primary hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150">
+                    <span data-lang-cn="查看详细案例与步骤" data-lang-en="View Detailed Cases & Steps">查看详细案例与步骤</span>
+                </a>
             </div>
         </section>
 
-        <!-- 3. 之前开发的计算模型 (Previously Developed Calculation Models) -->
+        <!-- 3. 核心计算模型 -->
         <section id="section-models" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
             <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="核心计算模型" data-lang-en="Core Calculation Models">核心计算模型</h2>
             <div class="text-secondary space-y-4 leading-relaxed">
                 <!-- 模型名称占位符 -->
-                <p class="font-bold text-lg text-blue-800" data-lang-cn="模型名称占位符 (中文)" data-lang-en="Model Name Placeholder (English)"></p>
+                <p class="font-bold text-lg text-blue-800" data-lang-cn="分级贡献指数（HCI）模型 V4.0" data-lang-en="Hierarchical Contribution Index (HCI) Model V4.0"></p>
                 <!-- 模型介绍占位符 -->
-                <p data-lang-cn="在此处添加关于核心计算模型的中文介绍和原理说明。" data-lang-en="Add the Chinese introduction and principles of the core calculation model here."></p>
+                <p data-lang-cn="该模型采用 $S^2$ 平均法（分数平方加权平均），旨在消除人为权重干扰，实现贡献的自我加权，确保高分值（高贡献）主体在下一级分配中获得更高的影响力。" data-lang-en="This model uses the $S^2$ Average method (Score-Squared Weighted Average) to eliminate interference from human weights, achieve self-weighting of contributions, and ensure that high-score (high-contribution) entities gain greater influence in the next level of allocation."></p>
                 <!-- 链接占位符 -->
-                <a href="calculator.html" class="mt-4 inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-full shadow-md text-white bg-primary hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150">
+                <a href="hierarchical_calculator.html" class="mt-4 inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-full shadow-md text-white bg-primary hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150">
                     <span data-lang-cn="前往计算器页面" data-lang-en="Go to Calculator Page">前往计算器页面</span>
                 </a>
             </div>
@@ -131,10 +137,13 @@
 
                 // 仅更新有内容的元素，避免更新导航链接等特殊元素
                 if (cnText && enText) {
-                    if (lang === 'cn') {
-                        element.textContent = cnText;
-                    } else if (lang === 'en') {
-                        element.textContent = enText;
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        // For input/textarea, update placeholder if applicable
+                        if (element.placeholder) {
+                            element.placeholder = lang === 'cn' ? cnText : enText;
+                        }
+                    } else {
+                        element.textContent = lang === 'cn' ? cnText : enText;
                     }
                 }
             });
@@ -143,11 +152,10 @@
             const langButton = document.getElementById('lang-button');
             if (langButton) {
                 const buttonSpan = langButton.querySelector('span');
-                if (currentLang === 'cn') {
-                    buttonSpan.textContent = langButton.getAttribute('data-lang-cn') || "Switch to English";
-                } else {
-                    buttonSpan.textContent = langButton.getAttribute('data-lang-en') || "切换至中文";
-                }
+                const cnLabel = buttonSpan.getAttribute('data-lang-cn') || "Switch to English";
+                const enLabel = buttonSpan.getAttribute('data-lang-en') || "切换至中文";
+                
+                buttonSpan.textContent = lang === 'cn' ? cnLabel : enLabel;
             }
 
             // 更新 HTML lang 属性
@@ -162,6 +170,25 @@
 
         // 页面加载完成后，设置初始语言
         window.onload = () => {
+            const path = window.location.pathname.split('/').pop();
+            const links = {
+                'index.html': 'index.html',
+                'background.html': 'background.html',
+                'usage_guide.html': 'usage_guide.html',
+                'hierarchical_calculator.html': 'hierarchical_calculator.html'
+            };
+            
+            // Highlight the correct link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active', 'bg-primary-light', 'font-semibold');
+                link.classList.add('text-secondary', 'font-medium', 'hover:bg-gray-100');
+            });
+
+            const activeLink = document.querySelector(`a[href="${links[path] || 'index.html'}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active', 'bg-primary-light', 'font-semibold');
+                activeLink.classList.remove('text-secondary', 'font-medium', 'hover:bg-gray-100');
+            }
             updateText(currentLang);
         };
     </script>
