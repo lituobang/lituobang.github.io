@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目主页</title>
+    <title data-lang-cn="研究贡献量化法 (QuIReC) 首页" data-lang-en="Quantitative Index of Research Contribution (QuIReC) Home">研究贡献量化法 (QuIReC) 首页</title>
     <!-- 引入 Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Lucide Icons for aesthetic icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* 引入 Inter 字体，并使用计算器页面的背景色 */
+        /* 引入 Inter 字体，并使用统一的背景色 */
         body {
             font-family: 'Inter', 'Microsoft YaHei', 'SimHei', sans-serif;
-            background-color: #f7f7f7; /* 与计算器页面背景色同步 */
+            background-color: #f7f7f7; 
         }
         /* 为卡片添加统一的视觉效果 */
         .card {
@@ -26,7 +28,7 @@
         }
     </style>
     <script>
-        // 定义与计算器页面相同的自定义颜色
+        // 定义统一的自定义颜色
         tailwind.config = {
             theme: {
                 extend: {
@@ -52,9 +54,10 @@
     <!-- 头部和导航栏 -->
     <header class="w-full max-w-5xl mb-12">
         <nav class="bg-white p-6 rounded-2xl shadow-xl flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 border-t-4 border-primary">
-            <h1 class="text-3xl font-extrabold text-primary tracking-tight" data-lang-cn="项目主页" data-lang-en="Project Home">项目主页</h1>
+            <h1 class="text-3xl font-extrabold text-primary tracking-tight" data-lang-cn="QuIReC 项目" data-lang-en="QuIReC Project">QuIReC 项目</h1>
             <!-- 响应式导航链接 -->
             <div class="flex flex-wrap justify-center space-x-4">
+                <!-- 当前页面链接设置为 active 样式 -->
                 <a href="index.html" class="nav-link text-primary hover:text-blue-800 font-semibold transition duration-150 p-2 rounded-lg bg-primary-light active">
                     <span data-lang-cn="主页" data-lang-en="Home">主页</span>
                 </a>
@@ -64,53 +67,53 @@
                 <a href="usage_guide.html" class="nav-link text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
                     <span data-lang-cn="使用指引" data-lang-en="Usage Guide">使用指引</span>
                 </a>
-                <!-- 移除了 protocol.html 链接 -->
-                <a href="calculator.html" class="nav-link text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
+                <a href="hierarchical_calculator.html" class="nav-link text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
                     <span data-lang-cn="计算器" data-lang-en="Calculator">计算器</span>
                 </a>
             </div>
         </nav>
     </header>
 
-    <!-- 主要内容区域 -->
-    <main class="w-full max-w-5xl space-y-12">
-
-        <!-- 1. 项目简介与最新动态 -->
-        <section id="section-intro" class="card bg-white p-8 rounded-2xl">
-            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="项目简介与最新动态" data-lang-en="Project Overview & Latest Updates">项目简介与最新动态</h2>
+    <!-- 主要内容区域：项目介绍 -->
+    <main class="w-full max-w-5xl space-y-8">
+        
+        <!-- 核心理念卡片 -->
+        <section class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
+            <h2 class="text-3xl font-extrabold text-primary mb-4 flex items-center space-x-3">
+                <i data-lucide="scale" class="w-8 h-8"></i>
+                <span data-lang-cn="研究贡献量化法 (QuIReC)" data-lang-en="Quantitative Index of Research Contribution (QuIReC)">研究贡献量化法 (QuIReC)</span>
+            </h2>
             <div class="text-secondary space-y-4 leading-relaxed">
-                <p data-lang-cn="欢迎来到本项目的核心平台。我们致力于通过**分级贡献指数 (HCI)** 模型，提供一套公正、透明的科研贡献分配机制。" data-lang-en="Welcome to the core platform of this project. We are committed to providing a fair and transparent mechanism for allocating research contributions using the **Hierarchical Contribution Index (HCI)** model."></p>
-                <p data-lang-cn="点击导航栏的“项目背景”以了解模型的理论基础和发展历程。" data-lang-en="Click 'Project Background' in the navigation bar to understand the theoretical basis and development history of the model."></p>
-                <!-- 链接到背景介绍页面 -->
-                <a href="background.html" class="mt-4 inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-full shadow-md text-white bg-primary hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150">
-                    <span data-lang-cn="了解项目背景" data-lang-en="Explore Project Background">了解项目背景</span>
-                </a>
+                <p data-lang-cn="QuIReC（Quantitative Index of Research Contribution）是一套旨在解决学术合作中贡献分配争议的量化评估方法。该方法结合了法学中的因果关系判定原则和金融学中的定价原理，将传统的学术评估规则转化为可计算的定量指标。" data-lang-en="QuIReC (Quantitative Index of Research Contribution) is a quantitative assessment method designed to resolve disputes over contribution allocation in academic collaborations. This method integrates causality determination principles from jurisprudence and pricing principles from finance, transforming traditional academic evaluation rules into quantifiable metrics."></p>
+                <p data-lang-cn="在多位合作者共同完成一项研究的背景下，由于人类天然存在的“夸大贡献”倾向，往往导致贡献率总和远超 100%，从而引发难以调和的纠纷。QuIReC 通过引入稀缺性、因果关系定性、以及突破性（成果距离）三大要素，为每项贡献赋予一个客观的档位评分，最终利用 S² 自加权公式（$S_{avg} = (\sum S^2) / (\sum S)$）计算出精确的贡献百分比分配。" data-lang-en="In multi-collaborator research, the natural human tendency to 'exaggerate contribution' often leads to total claimed contributions far exceeding 100%, causing irreconcilable disputes. QuIReC assigns an objective tier score to each contribution based on three main factors: Scarcity, Causality Qualification, and Breakthrough (remoteness). It then uses the S² self-weighted formula ($S_{avg} = (\sum S^2) / (\sum S)$) to calculate a precise percentage distribution of contribution."></p>
+                <p class="font-semibold text-gray-700" data-lang-cn="本网站提供了 QuIReC 的详细背景、使用指引以及一个在线计算器，帮助用户理解和应用这一量化框架。" data-lang-en="This website provides the detailed background, usage guide, and an online calculator for QuIReC, helping users understand and apply this quantitative framework."></p>
             </div>
         </section>
 
-        <!-- 2. 使用方法指引 (已更新，引导至新页面) -->
-        <section id="section-how-to" class="card bg-white p-8 rounded-2xl">
-            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="使用方法指引" data-lang-en="Guide on How to Use">使用方法指引</h2>
-            <div class="text-secondary space-y-4 leading-relaxed">
-                <p data-lang-cn="本平台旨在通过量化的方式公正评估科研贡献。点击下方链接，查看**详细的使用步骤和案例分析**，了解如何正确地定义层级和进行分档定级。" data-lang-en="This platform aims to fairly evaluate research contributions quantitatively. Click the link below to view **detailed usage steps and case studies** on how to correctly define hierarchies and assign tiers."></p>
-                <!-- 链接到新页面 usage_guide.html -->
-                <a href="usage_guide.html" class="mt-4 inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-full shadow-md text-white bg-primary hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150">
-                    <span data-lang-cn="查看详细案例与步骤" data-lang-en="View Detailed Cases & Steps">查看详细案例与步骤</span>
+        <!-- 关键组件链接卡片 -->
+        <section class="card bg-white p-8 rounded-2xl border-l-4 border-secondary/50">
+            <h3 class="text-2xl font-bold text-secondary mb-6" data-lang-cn="快速浏览关键内容" data-lang-en="Quick Access to Key Content">快速浏览关键内容</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- 链接 1: 背景 -->
+                <a href="background.html" class="p-5 bg-primary-light hover:bg-blue-200 rounded-xl shadow-md transition duration-200 flex flex-col items-center text-center">
+                    <i data-lucide="graduation-cap" class="w-10 h-10 text-primary mb-2"></i>
+                    <span class="text-lg font-bold text-primary" data-lang-cn="项目背景" data-lang-en="Project Background">项目背景</span>
+                    <p class="text-sm text-gray-600 mt-1" data-lang-cn="了解 QuIReC 的起源和制度根基。" data-lang-en="Understand the origins and institutional foundation of QuIReC."></p>
                 </a>
-            </div>
-        </section>
 
-        <!-- 3. 核心计算模型 -->
-        <section id="section-models" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
-            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="核心计算模型" data-lang-en="Core Calculation Models">核心计算模型</h2>
-            <div class="text-secondary space-y-4 leading-relaxed">
-                <!-- 模型名称占位符 -->
-                <p class="font-bold text-lg text-blue-800" data-lang-cn="分级贡献指数（HCI）模型 V4.0" data-lang-en="Hierarchical Contribution Index (HCI) Model V4.0"></p>
-                <!-- 模型介绍占位符 -->
-                <p data-lang-cn="该模型采用 $S^2$ 平均法（分数平方加权平均），旨在消除人为权重干扰，实现贡献的自我加权，确保高分值（高贡献）主体在下一级分配中获得更高的影响力。" data-lang-en="This model uses the $S^2$ Average method (Score-Squared Weighted Average) to eliminate interference from human weights, achieve self-weighting of contributions, and ensure that high-score (high-contribution) entities gain greater influence in the next level of allocation."></p>
-                <!-- 链接占位符 -->
-                <a href="calculator.html" class="mt-4 inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-full shadow-md text-white bg-primary hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150">
-                    <span data-lang-cn="前往计算器页面" data-lang-en="Go to Calculator Page">前往计算器页面</span>
+                <!-- 链接 2: 指引 -->
+                <a href="usage_guide.html" class="p-5 bg-primary-light hover:bg-blue-200 rounded-xl shadow-md transition duration-200 flex flex-col items-center text-center">
+                    <i data-lucide="notebook-text" class="w-10 h-10 text-primary mb-2"></i>
+                    <span class="text-lg font-bold text-primary" data-lang-cn="使用指引" data-lang-en="Usage Guide">使用指引</span>
+                    <p class="text-sm text-gray-600 mt-1" data-lang-cn="详细了解五大要素和六档判定的规则。" data-lang-en="Detailed rules for the five factors and six-tier assessment."></p>
+                </a>
+                
+                <!-- 链接 3: 计算器 -->
+                <a href="hierarchical_calculator.html" class="p-5 bg-primary-light hover:bg-blue-200 rounded-xl shadow-md transition duration-200 flex flex-col items-center text-center">
+                    <i data-lucide="calculator" class="w-10 h-10 text-primary mb-2"></i>
+                    <span class="text-lg font-bold text-primary" data-lang-cn="计算器" data-lang-en="Calculator">计算器</span>
+                    <p class="text-sm text-gray-600 mt-1" data-lang-cn="输入档位，计算最终贡献百分比。" data-lang-en="Input tiers to calculate the final contribution percentage."></p>
                 </a>
             </div>
         </section>
@@ -119,36 +122,35 @@
 
     <!-- 页脚 -->
     <footer class="mt-16 w-full max-w-5xl border-t pt-8 text-center text-secondary text-sm">
-        <p data-lang-cn="&copy; 2025 示例网站。保留所有权利。" data-lang-en="&copy; 2025 Example Website. All rights reserved.">&copy; 2025 示例网站。保留所有权利。</p>
+        <p data-lang-cn="&copy; 2025 QuIReC 项目。保留所有权利。" data-lang-en="&copy; 2025 QuIReC Project. All rights reserved.">&copy; 2025 QuIReC 项目。保留所有权利。</p>
         <p class="mt-2" data-lang-cn="专为 Canvas Immersive 环境优化。" data-lang-en="Optimized for the Canvas Immersive Environment.">专为 Canvas Immersive 环境优化。</p>
     </footer>
 
-    <!-- JavaScript for Language Toggle Logic -->
+    <!-- JavaScript for Language Toggle Logic and Nav Highlighting -->
     <script>
-        // 初始化语言状态：默认中文 'cn'
         let currentLang = 'cn';
         
-        // 查找所有带有语言属性的元素
         const updateText = (lang) => {
             document.querySelectorAll('[data-lang-cn], [data-lang-en]').forEach(element => {
-                // 根据当前语言设置文本内容
                 const cnText = element.getAttribute('data-lang-cn');
                 const enText = element.getAttribute('data-lang-en');
+                const cnPlaceholder = element.getAttribute('data-lang-placeholder-cn');
+                const enPlaceholder = element.getAttribute('data-lang-placeholder-en');
 
-                // 仅更新有内容的元素，避免更新导航链接等特殊元素
                 if (cnText && enText) {
                     if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                        // For input/textarea, update placeholder if applicable
-                        if (element.placeholder) {
-                            element.placeholder = lang === 'cn' ? cnText : enText;
-                        }
+                        // Handle input value/text
                     } else {
                         element.textContent = lang === 'cn' ? cnText : enText;
                     }
                 }
+
+                // Handle placeholder updates
+                if (element.tagName === 'INPUT' && cnPlaceholder && enPlaceholder) {
+                    element.placeholder = lang === 'cn' ? cnPlaceholder : enPlaceholder;
+                }
             });
 
-            // 特殊处理按钮文本 (语言名称)
             const langButton = document.getElementById('lang-button');
             if (langButton) {
                 const buttonSpan = langButton.querySelector('span');
@@ -158,35 +160,43 @@
                 buttonSpan.textContent = lang === 'cn' ? cnLabel : enLabel;
             }
 
-            // 更新 HTML lang 属性
             document.documentElement.lang = lang === 'cn' ? 'zh-CN' : 'en';
+            
+            // Update document title
+            const titleElement = document.querySelector('title');
+            const cnTitle = titleElement.getAttribute('data-lang-cn');
+            const enTitle = titleElement.getAttribute('data-lang-en');
+             if (cnTitle && enTitle) {
+                titleElement.textContent = lang === 'cn' ? cnTitle : enTitle;
+            }
         };
 
-        // 语言切换函数
         function toggleLanguage() {
             currentLang = currentLang === 'cn' ? 'en' : 'cn';
             updateText(currentLang);
         }
 
-        // 页面加载完成后，设置初始语言
         window.onload = () => {
+            // Render lucide icons on load
+            lucide.createIcons();
+
             const path = window.location.pathname.split('/').pop();
             const links = {
                 'index.html': 'index.html',
                 'background.html': 'background.html',
                 'usage_guide.html': 'usage_guide.html',
-                'calculator.html': 'calculator.html'
+                'hierarchical_calculator.html': 'hierarchical_calculator.html'
             };
             
             // Highlight the correct link
             document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active', 'bg-primary-light', 'font-semibold');
+                link.classList.remove('active', 'bg-primary-light', 'font-semibold', 'text-primary', 'hover:text-blue-800');
                 link.classList.add('text-secondary', 'font-medium', 'hover:bg-gray-100');
             });
 
             const activeLink = document.querySelector(`a[href="${links[path] || 'index.html'}"]`);
             if (activeLink) {
-                activeLink.classList.add('active', 'bg-primary-light', 'font-semibold');
+                activeLink.classList.add('active', 'bg-primary-light', 'font-semibold', 'text-primary', 'hover:text-blue-800');
                 activeLink.classList.remove('text-secondary', 'font-medium', 'hover:bg-gray-100');
             }
             updateText(currentLang);
