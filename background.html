@@ -52,11 +52,7 @@
 
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" 
         integrity="sha384-sQxXG8R/V5/L/9d4jW5c5Wp5o/Qo/7t+5d5KqA+7D+jK4qK4Wq2j1Vp4X6p4z4Q6" 
-        crossorigin="anonymous" 
-        onload="renderMathInElement(document.body, {delimiters: [
-            {left: '$$', right: '$$', display: true}, // 块级公式
-            {left: '$', right: '$', display: false} // 行内公式
-        ]});">
+        crossorigin="anonymous">
     </script>
     </head>
 <body class="min-h-screen flex flex-col items-center p-4">
@@ -156,6 +152,7 @@
         let currentLang = 'cn';
         
         const updateText = (lang) => {
+            // ... (语言切换逻辑不变) ...
             document.querySelectorAll('[data-lang-cn], [data-lang-en]').forEach(element => {
                 const cnText = element.getAttribute('data-lang-cn');
                 const enText = element.getAttribute('data-lang-en');
@@ -210,6 +207,21 @@
             }
             updateText(currentLang);
         };
+
+        // === 关键修复：使用 DOMContentLoaded 确保 KaTeX 在页面结构加载完毕后执行 ===
+        document.addEventListener("DOMContentLoaded", function() {
+            // 确保 renderMathInElement 函数存在
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true}, // 块级公式
+                        {left: '$', right: '$', display: false}  // 行内公式
+                    ]
+                });
+            } else {
+                console.error("KaTeX auto-render script failed to load or define renderMathInElement.");
+            }
+        });
     </script>
 </body>
 </html>
