@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>项目背景介绍</title>
-    <!-- 引入 Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* 引入 Inter 字体，并使用计算器页面的背景色 */
@@ -39,6 +38,15 @@
             }
         }
     </script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']], // 启用 $...$ 作为行内公式分隔符
+                displayMath: [['$$', '$$'], ['\\[', '\\]']] // 启用 $$...$$ 和 \[...\] 作为块级公式分隔符
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4">
 
