@@ -39,17 +39,18 @@
         }
     </script>
     
-    <script>
-        MathJax = {
-            tex: {
-                // 启用 $...$ 作为行内公式分隔符
-                inlineMath: [['$', '$'], ['\\(', '\\)']], 
-                // 启用 $$...$$ 和 \[...\] 作为块级公式分隔符
-                displayMath: [['$$', '$$'], ['\\[', '\\]']] 
-            }
-        };
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrS44tSwY4YqPz7/7R6b2T+R4c4Wp6m6L0nK7+D+sQ8JkQ3Lz7YJ5dCj5WfO+M+W" crossorigin="anonymous">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-sJ24/7R3vG29l/J+9zW5c5Wp5o/Qo/7t+5d5KqA+7D+jK4qK4Wq2j1Vp4X6p4z4Q6" crossorigin="anonymous"></script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" 
+        integrity="sha384-sQxXG8R/V5/L+9d4jW5c5Wp5o/Qo/7t+5d5KqA+7D+jK4qK4Wq2j1Vp4X6p4z4Q6" 
+        crossorigin="anonymous" 
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true}, // 块级公式
+            {left: '$', right: '$', display: false} // 行内公式
+        ]});">
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </head>
 <body class="min-h-screen flex flex-col items-center p-4">
 
