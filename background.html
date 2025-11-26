@@ -395,7 +395,8 @@
 
     <script>
         // Language toggling logic (kept from original file)
-        let currentLang = 'cn'; // Default language
+        const storedLang = localStorage.getItem('qui-rec-lang');
+        let currentLang = storedLang || (document.documentElement.lang === 'zh-CN' ? 'cn' : 'en');
 
         const allElements = document.querySelectorAll('[data-lang-cn]');
 
