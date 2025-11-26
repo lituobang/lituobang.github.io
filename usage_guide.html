@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>使用指引：研究贡献量化</title>
-    <!-- 引入 Tailwind CSS CDN -->
+    <title data-lang-cn="研究贡献量化法 (QuIReC) 使用指引" data-lang-en="Quantitative Index of Research Contribution (QuIReC) Protocol">研究贡献量化法 (QuIReC) 使用指引</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        /* 引入 Inter 字体，并使用计算器页面的背景色 */
+        /* 引入 Inter 字体，并使用统一的背景色 */
         body {
             font-family: 'Inter', 'Microsoft YaHei', 'SimHei', sans-serif;
             background-color: #f7f7f7; 
@@ -23,6 +24,23 @@
         }
         .nav-link.active {
             background-color: #eef2ff; /* primary-light */
+        }
+        .toc-sub-list {
+            /* 解决方案 A: 将父级的字体大小设置为 0，以消除换行符和空格文本节点的影响 */
+            font-size: 0 !important; 
+            line-height: 0 !important;
+        }
+
+       .toc-sub-list li {
+            /* 解决方案 A 的恢复：将列表项的字体大小恢复正常 */
+            font-size: 0.875rem !important; /* 对应于您的 text-sm (14px) */
+            line-height: 1.5 !important; /* 恢复一个正常的行高 */
+            
+            /* 解决方案 B: 强制清除列表项本身的任何垂直间距 */
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
         }
     </style>
     <script>
@@ -42,202 +60,351 @@
 </head>
 <body class="min-h-screen flex flex-col items-center p-4">
 
-    <!-- 语言切换按钮 (固定在右上角) -->
     <div class="fixed top-4 right-4 z-50">
         <button id="lang-button" onclick="toggleLanguage()" class="p-3 bg-primary text-white rounded-full shadow-lg hover:bg-blue-800 transition duration-150 text-sm font-semibold">
             <span data-lang-cn="Switch to English" data-lang-en="切换至中文">Switch to English</span>
         </button>
     </div>
 
-    <!-- 头部和导航栏 -->
     <header class="w-full max-w-5xl mb-12">
         <nav class="bg-white p-6 rounded-2xl shadow-xl flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 border-t-4 border-primary">
-            <h1 class="text-3xl font-extrabold text-primary tracking-tight" data-lang-cn="使用指引" data-lang-en="Usage Guide">使用指引</h1>
-            <!-- 响应式导航链接 -->
+            <h1 class="text-3xl font-extrabold text-primary tracking-tight" data-lang-cn="QuIReC使用指引" data-lang-en="QuIReC Protocol">QuIReC使用指引</h1>
             <div class="flex flex-wrap justify-center space-x-4">
                 <a href="index.html" class="nav-link text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
                     <span data-lang-cn="主页" data-lang-en="Home">主页</span>
                 </a>
                 <a href="background.html" class="nav-link text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
-                    <span data-lang-cn="项目背景" data-lang-en="Project Background">项目背景</span>
+                    <span data-lang-cn="传统学术评价规则" data-lang-en="Traditional Research Evaluation Rules">传统学术评价规则</span>
                 </a>
-                <!-- 当前页面链接设置为 active 样式 -->
                 <a href="usage_guide.html" class="nav-link text-primary hover:text-blue-800 font-semibold transition duration-150 p-2 rounded-lg bg-primary-light active">
-                    <span data-lang-cn="使用指引" data-lang-en="Usage Guide">使用指引</span>
+                    <span data-lang-cn="QuIReC使用指引" data-lang-en="QuIReC Protocol">QuIReC使用指引</span>
                 </a>
                 <a href="hierarchical_calculator.html" class="nav-link text-secondary hover:text-primary font-medium transition duration-150 p-2 rounded-lg hover:bg-gray-100">
-                    <span data-lang-cn="计算器" data-lang-en="Calculator">计算器</span>
+                    <span data-lang-cn="QuIReC计算器" data-lang-en="QuIReC Calculator">QuIReC计算器</span>
                 </a>
             </div>
         </nav>
     </header>
 
-    <!-- 主要内容区域：使用指引详情 -->
     <main class="w-full max-w-5xl space-y-12">
 
-        <!-- 目录 (Table of Contents) -->
         <section id="table-of-contents" class="card bg-white p-6 rounded-2xl border-l-4 border-secondary/50">
             <h2 class="text-2xl font-extrabold text-secondary mb-4" data-lang-cn="目录" data-lang-en="Table of Contents">目录</h2>
             <nav class="text-blue-700 space-y-2">
                 <ul class="list-none p-0 space-y-1">
-                    <li><a href="#section-overview" class="hover:underline transition duration-100" data-lang-cn="1. 研究贡献的量化：QIRC/QuIReC 的提出背景" data-lang-en="1. Quantifying Research Contribution: The Context of QIRC/QuIReC">1. 研究贡献的量化：QIRC/QuIReC 的提出背景</a></li>
-                    <li><a href="#section-exaggeration" class="hover:underline transition duration-100" data-lang-cn="2. 夸大贡献的普遍性与量化的必要性" data-lang-en="2. Ubiquity of Contribution Exaggeration and the Need for Quantification">2. 夸大贡献的普遍性与量化的必要性</a></li>
+                    <li><a href="#section-overview" class="hover:underline transition duration-100" data-lang-cn="1. QuIReC的提出背景" data-lang-en="1. The Background of QuIReC's Proposal">1. QuIReC的提出背景</a></li>
+                    <li><a href="#section-exaggeration" class="hover:underline transition duration-100" data-lang-cn="2. 夸大贡献的普遍性" data-lang-en="2. Ubiquity of Contribution Exaggeration">2. 夸大贡献的普遍性</a></li>
                     <li><a href="#section-check-rules" class="hover:underline transition duration-100" data-lang-cn="3. 核对现有披露规则 (第一步骤)" data-lang-en="3. Checking Existing Disclosure Rules (Step 1)">3. 核对现有披露规则 (第一步骤)</a></li>
-                    <li><a href="#section-combine-items" class="hover:underline transition duration-100" data-lang-cn="4. 合并现有贡献项目 (五大要素)" data-lang-en="4. Consolidating Existing Contribution Items (Five Major Factors)">4. 合并现有贡献项目 (五大要素)</a></li>
-                    <li><a href="#section-causality-sizing" class="hover:underline transition duration-100" data-lang-cn="5. 原因力大小的判定 (三因素考量)" data-lang-en="5. Determining the Magnitude of Causality (Three Factor Consideration)">5. 原因力大小的判定 (三因素考量)</a>
-                        <ul class="list-disc list-inside ml-6 mt-1 space-y-1 text-sm text-gray-600">
-                            <li><a href="#subsection-scarcity" class="hover:underline" data-lang-cn="5.1 稀缺性定档与计算方式" data-lang-en="5.1 Scarcity Tiering and Calculation Methods">5.1 稀缺性定档与计算方式</a></li>
-                            <li><a href="#subsection-causality" class="hover:underline" data-lang-cn="5.2 因果关系定性（六档划分）" data-lang-en="5.2 Causality Qualification (Six Tiers)">5.2 因果关系定性（六档划分）</a></li>
-                            <li><a href="#subsection-breakthrough" class="hover:underline" data-lang-cn="5.3 成果产出的突破性（六档划分）" data-lang-en="5.3 Breakthrough in Outcome Production (Six Tiers)">5.3 成果产出的突破性（六档划分）</a></li>
+                    <li><a href="#section-combine-items" class="hover:underline transition duration-100" data-lang-cn="4. 合并现有贡献项目 (五大要素)" data-lang-en="4. Consolidating Existing Contribution Items (Five Major Roles)">4. 合并现有贡献项目 (五大要素)</a></li>
+                    <li>
+                        <a href="#section-causality-sizing" class="hover:underline transition duration-100" data-lang-cn="5. 原因力大小的判定 (三因素考量)" data-lang-en="5. Determining the Magnitude of Causality (Three Factor Consideration)">5. 原因力大小的判定 (三因素考量)</a>
+                        <ul class="ml-4 mt-1 space-y-0 text-sm list-disc pl-5 toc-sub-list"> 
+                            <li><a href="#subsection-scarcity" class="hover:underline transition duration-100" data-lang-cn="5.1 稀缺性定档与计算方式" data-lang-en="5.1 Scarcity Tiering and Calculation Methods">5.1 稀缺性定档与计算方式</a></li>
+                            <li><a href="#subsection-causality" class="hover:underline transition duration-100" data-lang-cn="5.2 因果关系定性（六档划分）" data-lang-en="5.2 Causality Qualification (Six Tiers)">5.2 因果关系定性（六档划分）</a></li>
+                            <li><a href="#subsection-influence" class="hover:underline transition duration-100" data-lang-cn="5.3 突破性定档与计算方式" data-lang-en="5.3 Breakthrough Tiering and Calculation Methods">5.3 突破性定档与计算方式</a></li>
                         </ul>
                     </li>
+                    <li>
+                        <a href="#section-score-determine" class="hover:underline transition duration-100" data-lang-cn="6. 贡献比例的确定" data-lang-en="6. Determining the Contribution Proportion">6. 贡献比例的确定</a>
+                        <ul class="ml-4 mt-1 space-y-0 text-sm list-disc pl-5 toc-sub-list"> 
+                            <li><a href="#subsection-calculate" class="hover:underline transition duration-100" data-lang-cn="6.1 列表总结" data-lang-en="6.1 List Summary">6.1 列表总结</a></li>
+                            <li><a href="#subsection-weight" class="hover:underline transition duration-100" data-lang-cn="6.2 使用QuIReC计算器" data-lang-en="6.2 Using the QuIReC Calculator">6.2 使用QuIReC计算器</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#section-ranking" class="hover:underline transition duration-100" data-lang-cn="7. 结果解读" data-lang-en="7. Interpretation of Results">7. 结果解读</a></li>
+                    <li><a href="#section-calculator" class="hover:underline transition duration-100" data-lang-cn="8. QuIReC声明" data-lang-en="8. QuIReC Statement">8. QuIReC声明</a></li>
                 </ul>
             </nav>
         </section>
 
-        <!-- 1. 研究贡献的量化：QIRC/QuIReC 的提出背景 -->
         <section id="section-overview" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
-            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="1. 研究贡献的量化：QIRC/QuIReC 的提出背景" data-lang-en="1. Quantifying Research Contribution: The Context of QIRC/QuIReC">1. 研究贡献的量化：QIRC/QuIReC 的提出背景</h2>
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="1. QuIReC的提出背景" data-lang-en="1. The Background of QuIReC's Proposal">1. QuIReC的提出背景</h2>
             <div class="text-secondary space-y-4 leading-relaxed">
-                <p data-lang-cn="学术平均主义虽然在国际学术界并非主流，但其影响对中国等发展中国家的学术发展可能带来严重的危害。现有的学术规则并非不能对大集体合作进行评估（如屠呦呦的青蒿素案例），但量化难度较大。为解决这一挑战，本项目结合法学和金融学的原理，开发了一套研究贡献量化法（QIRC，后更名为 QuIReC），旨在通过定量计算，将传统的学术评估规则进行细化和应用。" data-lang-en="Although academic egalitarianism is not mainstream internationally, its influence poses serious threats to academic development in developing countries like China. Existing academic rules can evaluate large collective collaborations (e.g., Tu Youyou's artemisinin case), but quantification is difficult. To address this, this project combined principles from law and finance to develop the Quantitative Index of Research Contribution (QIRC, later QuIReC), aiming to refine and apply traditional academic evaluation rules through quantitative calculation."></p>
-                <p data-lang-cn="QuIReC 在 2025 年 7-10 月经过重要补充和完善，形成了现有的量化模型。" data-lang-en="QuIReC underwent significant updates and refinement between July and October 2025, resulting in the current quantitative model."></p>
+                <p data-lang-cn="在传统学术评价规则中，我们介绍了当前学术平均主义兴起对现行学术规则的挑战。它对于中国等发展中国家的学术发展危害非常大。作者在2022年的时候就思考过这种来自学术平均主义的挑战。其结论有两点：1，现有的学术规则并不是不能对大集体合作做出评估的。比如在传统学术评价规则中讨论的523项目，屠呦呦很明显还是占优的，只不过这个优势没有那些小团体的领导那么清晰而已。但是在能清晰判断的部分，屠呦呦显然还是占优的。所以学术平均主义的支持者所鼓吹的问题其实本身就没有那么严重；2，现有学术评价规则确实存在细节上的缺陷，主要是缺乏定量。在一番思考后，结合法学和金融学，作者开发了一套研究贡献量化法（Quantitative Index of Research Contribution, QuIReC）。在2024年-2025年，为应对中国学术合作中日益突出的贡献争议及权力失衡问题而进行了重大修正与公开。" data-lang-en="In the Traditional Research Evaluation Rules, we introduced the challenge posed by the rise of academic egalitarianism to current academic rules. This poses a great threat to the academic development of developing countries like China. The author contemplated this challenge from academic egalitarianism in 2022. The conclusion has two points: 1. Existing academic rules are not incapable of evaluating large-collective collaborations. For instance, in the 523 project discussed in the Traditional Research Evaluation Rules, Tu Youyou still clearly holds the advantage, although this advantage is not as distinct as that of leaders in smaller teams. However, in the parts that can be clearly judged, Tu Youyou is clearly dominant. Thus, the problem advocated by supporters of academic egalitarianism is not as serious as claimed; 2. Existing academic evaluation rules indeed have shortcomings in details, mainly the lack of quantification. After careful consideration, combining jurisprudence and finance, the author developed a set of Quantitative Index of Research Contribution (QuIReC). Major revisions and public release were made in 2024-2025 to address the increasingly prominent disputes over contribution and power imbalance in Chinese academic collaborations."></p>
+                <p data-lang-cn="QuIReC旨在通过开发一套针对学术领域的研究贡献度计算方法，将传统的学术评价进行量化，从而有效避免纠纷、化解矛盾。它的核心理念是将学术贡献类比于民法中的侵权行为，采用民法中对原因力的分析方法，结合金融中的常见的定价方法，通过一套多因素的公式来计算相关方在研究成果产出中的贡献度。QuIReC并不取代现有的定性规则，而是作为一种补充工具，为学术评价的透明化提供支持。" data-lang-en="QuIReC aims to effectively avoid disputes and resolve conflicts by developing a method for calculating research contribution in the academic field, quantifying traditional research evaluation. Its core philosophy is to analogize academic contribution to tort in civil law, adopting the analysis method for causality force from civil law, combined with common pricing methods in finance, to calculate the contribution of relevant parties to the research outcome through a multi-factor formula. QuIReC does not replace existing qualitative rules but serves as a supplementary tool to support the transparency of research evaluation."></p>
             </div>
         </section>
 
-        <!-- 2. 夸大贡献的普遍性与量化的必要性 -->
-        <section id="section-exaggeration" class="card bg-white p-8 rounded-2xl">
-            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="2. 夸大贡献的普遍性与量化的必要性" data-lang-en="2. Ubiquity of Contribution Exaggeration and the Need for Quantification">2. 夸大贡献的普遍性与量化的必要性</h2>
+        <section id="section-exaggeration" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="2. 夸大贡献的普遍性" data-lang-en="2. Ubiquity of Contribution Exaggeration">2. 夸大贡献的普遍性</h2>
             <div class="text-secondary space-y-4 leading-relaxed">
-                <p data-lang-cn="在金融学中，对贡献的计算（俗称定价）有成熟的方法。但学术领域目前的贡献度计算主要基于作者排序等**倒推**方式，缺乏基于原始资料的直接计算。这导致实践中贡献争议频发。" data-lang-en="In finance, there are mature methods for calculating contribution (often called pricing). However, current academic contribution calculation primarily relies on **reverse engineering** from author order, lacking direct calculation based on primary sources. This frequently leads to disputes over contribution in practice."></p>
-                <p data-lang-cn="研究表明，由于每个人对自身贡献的天然扭曲评估，当合作者数量增多（例如从 3 人增至 6 人）时，作者自我宣称的贡献率总和会从 205% 上升至 260% 甚至更高。这种高达 2-3 倍的偏差是导致纠纷难以调和的主要原因。" data-lang-en="Research shows that due to everyone's natural distorted assessment of their own contribution, the sum of authors' self-reported contributions increases from about 205% to 260% or more as the number of collaborators grows (e.g., from 3 to 6). This deviation, often reaching 2-3 times the actual contribution, is the main reason why disputes are hard to reconcile."></p>
-                <p data-lang-cn="QuIReC 旨在通过开发一套针对学术领域的研究贡献度计算方法，将传统的学术评估进行量化，从而有效避免纠纷、化解矛盾。" data-lang-en="QuIReC aims to avoid disputes and resolve conflicts by developing a quantitative method for academic contribution, formalizing traditional academic assessment."</p>
+                <p data-lang-cn="除了来自大集体合作的挑战，学术评价还面临一个来自人性的天敌：每个人的感观都会天然扭曲对贡献的评估。来自果壳的一篇科普文章《为什么每一个小组成员都觉得自己做的贡献最大？》介绍：“芝加哥大学商学院的Nicholas Epley就和他的同事一起，在论文作者、MBA学员和游客身上挖出了夸大贡献的现象。他们还首次发现，团体规模还会影响夸大贡献的程度：团体越大（合作者越多）夸大贡献就越普遍。他们的研究已于2020年2月发表在期刊《实验心理学：应用》（Journal of Experimental Psychology: Applied）上。平均而言，随着论文合作者数量逐渐增多（从3人增加至6人），作者自我宣称的贡献率总和也会节节攀升，大致从205%上升至260%。也就是依据感觉评估的贡献经常会有高达2-3倍的偏差。”" data-lang-en="In addition to the challenges from large-collective collaborations, academic evaluation faces a natural adversary from human nature: everyone's perception naturally distorts the assessment of contribution. A popular science article from Guokr, 'Why does every group member feel their own contribution is the largest?', introduced: 'Nicholas Epley from the University of Chicago Booth School of Business and his colleagues uncovered the phenomenon of contribution exaggeration among paper authors, MBA students, and tourists. They also first discovered that group size affects the degree of exaggeration: the larger the group (the more collaborators), the more widespread the exaggeration. Their research was published in the Journal of Experimental Psychology: Applied in February 2020. On average, as the number of paper collaborators gradually increases (from 3 to 6), the sum of the authors' self-reported contribution rates also steadily rises, roughly from 205% to 260%. This means that contribution assessed by feeling often has a deviation of up to 2-3 times.'"></p>
+                <p data-lang-cn="既然大家都觉得自己贡献大，那么吵起来，有争端，就很正常了。因为大家所认为的贡献率总和通常高达200%-300%。这就产生了很多难以调和的纠纷，相当于每完成一份工作，可能就多出了两份工作的纠纷。虽然现有的学术规则已经足以对大多数贡献做出定性的评价，但面对这种偏差仍然存在难以服众的情况，而社会学实践证明，提供一种数量化的指标常能有效提升管理水平。" data-lang-en="Since everyone believes their contribution is large, it is normal for arguments and disputes to arise. This is because the sum of contribution rates everyone perceives often reaches 200%-300%. This leads to many irreconcilable disputes, equivalent to two extra disputes for every one piece of work completed. Although existing research rules are sufficient to make qualitative evaluations of most contributions, it remains difficult to convince everyone in the face of this deviation, and sociological practice proves that providing a quantitative index can often effectively improve management level."></p>
             </div>
         </section>
 
-        <!-- 3. 核对现有披露规则 -->
-        <section id="section-check-rules" class="card bg-white p-8 rounded-2xl border-l-4 border-secondary/50">
+        <section id="section-check-rules" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
             <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="3. 核对现有披露规则 (第一步骤)" data-lang-en="3. Checking Existing Disclosure Rules (Step 1)">3. 核对现有披露规则 (第一步骤)</h2>
             <div class="text-secondary space-y-4 leading-relaxed">
-                <p data-lang-cn="研究贡献量化法（QIRC/QuIReC）不与现有的学术论文披露规则冲突。认定研究贡献有三个基本要件：" data-lang-en="The Quantitative Index of Research Contribution (QIRC/QuIReC) does not conflict with existing academic disclosure rules. There are three essential elements for determining research contribution:"></p>
-                <ol class="list-decimal list-inside space-y-1 pl-4">
-                    <li data-lang-cn="实施了有助于研究的行为；" data-lang-en="Action was taken that aided the research;"></li>
-                    <li data-lang-cn="促成了研究成果的产出；" data-lang-en="The action contributed to the research outcome;"></li>
-                    <li data-lang-cn="行为和成果之间存在因果关系。" data-lang-en="A causal link exists between the action and the outcome."></li>
-                </ol>
-                <p data-lang-cn="在计算贡献的第一步骤，必须核对该行为是否符合现有披露规则（包括对引文的要求）。不符合要求者，不应列入计算。" data-lang-en="In the first step of calculating contribution, the action must be verified against existing disclosure rules (including requirements for citations). If requirements are not met, the contribution should not be included in the calculation."></p>
+                <p data-lang-cn="QuIReC不与现有的学术论文披露规则冲突。在传统学术评价规则中介绍，认定研究贡献有三个基本要件：1. 实施了有助于研究的行为；2. 促成了研究成果的产出；3. 行为和成果之间存在因果关系。三个要件是缺一不可的。而这些要件同样是量化评估的基础。" data-lang-en="QuIReC does not conflict with existing research paper disclosure rules. As introduced in the Traditional Research Evaluation Rules, determining a research contribution requires three fundamental elements: 1. The performance of an act conducive to the research; 2. The facilitation of the research output; and 3. The existence of a causal link between the act and the output. All three elements are indispensable. These elements are also the foundation for quantitative assessment."></p>
+                <p data-lang-cn="在进行QuIReC计算之前，第一步就是核对该有助于研究的行为是否符合现有披露规则的要求，包括对引文的要求。如果不符合相关要求，就不应列入计算。只有满足了这些定性的、基础的合规性要求，才能进入后续的量化评估阶段。因此QuIReC的使用者应对传统学术评价规则十分熟悉，对每一个CRediT贡献角色的要求，是否构成法律因果关系，以及引文的相关性，时间戳，所涉学科分类，都应进行仔细查对。" data-lang-en="Before conducting a QuIReC calculation, the first step is to check whether the research-conducive act complies with the requirements of existing disclosure rules, including requirements for citations. If it does not meet the relevant requirements, it should not be included in the calculation. Only by satisfying these qualitative, fundamental compliance requirements can one proceed to the subsequent quantitative assessment phase. Therefore, QuIReC users should be very familiar with the Traditional Research Evaluation Rules, carefully checking the requirements for each CRediT contribution role, whether a legal causal relationship is formed, and the relevance of citations, the timestamp, and the involved discipline classification."></p>
             </div>
         </section>
 
-        <!-- 4. 合并现有贡献项目 -->
-        <section id="section-combine-items" class="card bg-white p-8 rounded-2xl">
-            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="4. 合并现有贡献项目 (五大要素)" data-lang-en="4. Consolidating Existing Contribution Items (Five Major Factors)">4. 合并现有贡献项目 (五大要素)</h2>
+        <section id="section-combine-items" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="4. 合并现有贡献角色 (五大要素)" data-lang-en="4. Consolidating Existing Contribution Roles (Five Major Roles)">4. 合并现有贡献角色 (五大要素)</h2>
             <div class="text-secondary space-y-4 leading-relaxed">
-                <p data-lang-cn="基于 CRediT 的 14 种贡献项，QuIReC 将其进一步合并为五大核心要素，并纳入了致谢、资金来源和引文等其他披露项目。此合并旨在确保合并后的要素在同等稀缺条件下，其重要性大体是相等的。" data-lang-en="Based on the 14 CRediT contribution roles, QuIReC further consolidates them into five core factors, incorporating other disclosure items like Acknowledgments, Funding, and References. This consolidation aims to ensure that the merged factors have approximately equal importance under conditions of equal scarcity."></p>
-                <ul class="list-none space-y-3 pl-4">
-                    <li><strong class="text-blue-800" data-lang-cn="组织 (Organization):" data-lang-en="Organization:">组织 (Organization):</strong> <span data-lang-cn="包括数据管理、写作 - 初稿、写作 - 审阅和编辑、监督指导和项目管理。" data-lang-en="Includes Data Curation, Writing - Original Draft, Writing - Review & Editing, Supervision, and Project Administration."></span></li>
-                    <li><strong class="text-blue-800" data-lang-cn="技术 (Technology):" data-lang-en="Technology:">技术 (Technology):</strong> <span data-lang-cn="包括可视化、形式分析、确认、软件、调查研究（仅技术部分）和技术类引文（Technical References）。" data-lang-en="Includes Visualization, Formal analysis, Validation, Software, Investigation (technical aspects only), and Technical References."></span></li>
-                    <li><strong class="text-blue-800" data-lang-cn="劳动 (Labor):" data-lang-en="Labor:">劳动 (Labor):</strong> <span data-lang-cn="主要包含调查研究（Investigation）中大量的执行性工作。" data-lang-en="Primarily includes the substantial execution work within Investigation."></span></li>
-                    <li><strong class="text-blue-800" data-lang-cn="创新 (Innovation):" data-lang-en="Innovation:">创新 (Innovation):</strong> <span data-lang-cn="包括概念化（Conceptualization）、方法论（Methodology）和创新类引文（Innovation References）。" data-lang-en="Includes Conceptualization, Methodology, and Innovation References."></span></li>
-                    <li><strong class="text-blue-800" data-lang-cn="外部支持 (External Support):" data-lang-en="External Support:">外部支持 (External Support):</strong> <span data-lang-cn="包括资金获取（Funding Acquisition）和资金来源（Funding）。" data-lang-en="Includes Funding Acquisition and Funding."></span></li>
+                <p data-lang-cn="CRediT提供了 14 种贡献角色。这里将这些贡献角色进一步合并为组织（Organization）、技术（Technology）、劳动（Labor）、创新（Innovation）、外部支持（External Support）五大要素。并且其他的应披露项目，和CRediT有关的致谢（Acknowledgment），资金来源（Funding），引文（References）也纳入其中。**" data-lang-en="CRediT provides 14 contribution roles. Here, these roles are further consolidated into five major roles: Organization, Technology, Labor, Innovation, and External Support. Other items that should be disclosed, including Acknowledgment, Funding, and References related to CRediT, are also included."></p>
+
+                <ul class="list-disc pl-5 space-y-2">
+                    <li data-lang-cn="组织要素包括：数据管理（Data Curation）、写作 - 初稿（Writing - Original Draft）、写作 - 审阅和编辑（Writing - Review & Editing）、监督，指导和管理（Supervision）和项目管理（Project administration）。" data-lang-en="Organization includes: Data Curation, Writing - Original Draft, Writing - Review & Editing, Supervision, and Project administration.">组织要素包括：数据管理（Data Curation）、写作 - 初稿（Writing - Original Draft）、写作 - 审阅和编辑（Writing - Review & Editing）、监督，指导和管理（Supervision）和项目管理（Project administration）。</li>
+                    <li data-lang-cn="技术要素包括：可视化（Visualization）‌、形式分析（Formal analysis）、确认（Validation）、软件（Software）、调查研究（Investigation），技术类引文（Technical References）。" data-lang-en="Technology includes: Visualization, Formal analysis, Validation, Software, Investigation, and Technical References.">技术要素包括：可视化（Visualization）‌、形式分析（Formal analysis）、确认（Validation）、软件（Software）、调查研究（Investigation），技术类引文（Technical References）。</li>
+                    <li data-lang-cn="劳动要素包括：调查研究（Investigation）。" data-lang-en="Labor includes: Investigation.">劳动要素包括：调查研究（Investigation）。</li>
+                    <li data-lang-cn="创新要素包括：概念化（Conceptualization），方法论（Methodology），创新类引文（Innovation References）。" data-lang-en="Innovation includes: Conceptualization, Methodology, and Innovation References.">创新要素包括：概念化（Conceptualization），方法论（Methodology），创新类引文（Innovation References）。</li>
+                    <li data-lang-cn="外部支持（external support）包括：资金获取（Funding acquisition），资金来源（Funding），资源提供（Resources）。" data-lang-en="External Support includes: Funding acquisition, Funding, and Resources.">外部支持（external support）包括：资金获取（Funding acquisition），资金来源（Funding），资源提供（Resources）。</li>
                 </ul>
-                <p class="pt-2 italic text-sm text-gray-500" data-lang-cn="注：所有的贡献项都被简化，只计算其主要性质。例如，劳动量差异大的贡献统一划入调查研究（Investigation）的计算范畴。" data-lang-en="Note: All contribution items are simplified to count only their primary nature. For instance, contributions with high variance in labor are uniformly classified under the calculation scope of Investigation."></p>
+
+                <p data-lang-cn="我们在这里对每个贡献项的性质，都做了简化。每个贡献项只计算他们主要的性质。例如，所有的贡献项肯定都包含劳动，没有劳动不可能完成相关的贡献，但由于他们的劳动量差异很大，所以统一划分到调查研究（Investigation）里计算。而确认（Validation）可能也包括方法论上的创新，但如果有的话，直接列入方法论（Methodology）进行计算。数据管理可能也包含技术，但如果有的话，直接列入形式分析（Formal analysis）来进行计算。而和和CRediT有关的致谢（Acknowledgment），就包含在这些项目里面，不另外列出。引文根据类别分为技术类引文（Technical References）和创新类引文（Innovation References）。" data-lang-en="Here, we have simplified the nature of each contribution role. Each contribution role only calculates its primary nature. For example, all contributions certainly involve labor, without which the relevant contribution cannot be completed, but because their labor amount varies greatly, they are uniformly classified under Investigation for calculation. Validation might also include methodological innovation, but if so, it is directly included in Methodology for calculation. Data Curation might also include Technology, but if so, it is directly included in Formal analysis for calculation. Acknowledgment related to CRediT is included within these items and not listed separately. References are categorized into Technical References and Innovation References."></p>
+
+                <p class="text-sm text-gray-500" data-lang-cn="注：之所以要对不同贡献项进行合并，主要是为了确保合并后的要素在相似原因力条件下重要性大体是相等的。这对于避免偏倚非常重要。" data-lang-en="Note: The reason for merging different contribution items is mainly to ensure that the merged factors have similar importance under equivalent causality force conditions. This is very important for avoiding bias."></p>
+
+
+
             </div>
         </section>
-        
-        <!-- 5. 原因力大小的判定 -->
+
         <section id="section-causality-sizing" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
-            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="5. 原因力大小的判定 (三因素考量)" data-lang-en="5. Determining the Magnitude of Causality (Three Factor Consideration)">5. 原因力大小的判定 (三因素考量)</h2>
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="5. 原因力大小的判定 (三因素考量)" data-lang-en="5. Determining the Magnitude of Causality Forces (Three Factor Consideration)">5. 原因力大小的判定 (三因素考量)</h2>
             <div class="text-secondary space-y-4 leading-relaxed">
-                <p data-lang-cn="QuIReC 仿照民法惯例，对原因力（贡献对成果的决定性程度）的判定主要考量三个因素：" data-lang-en="QuIReC follows civil law conventions, primarily considering three factors when determining the magnitude of causality (the decisive degree of contribution to the outcome):"></p>
-                <ol class="list-decimal list-inside space-y-1 pl-4 font-bold">
-                    <li data-lang-cn="因果关系的定性 (Causality Qualification)" data-lang-en="Causality Qualification"></li>
-                    <li data-lang-cn="研究贡献与成果产出的距离（突破性）(Breakthrough / Remoteness)" data-lang-en="Breakthrough / Remoteness of Contribution to Outcome"></li>
-                    <li data-lang-cn="稀缺性比较 (Scarcity Comparison)" data-lang-en="Scarcity Comparison"></li>
-                </ol>
-                <p data-lang-cn="在实践中，这三个因素不一定都有足够的证据进行考量，通常是根据现有证据进行选择性评估。" data-lang-en="In practice, there may not be sufficient evidence for all three factors, so the assessment is usually selective based on available evidence."></p>
+                <p data-lang-cn="QuIReC仿照民法中的惯例，对因果关系的判定主要考量三个因素：" data-lang-en="QuIReC follows the convention in civil law, considering three main factors in determining causality forces:"></p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li data-lang-cn="1. 稀缺性，有现实和时间戳两种算法，后者也可称为开创性。其对应的民法概念是概率比较。" data-lang-en="1. Scarcity: Has two algorithms, reality-based and timestamp-based (the latter can also be called pioneering). Its corresponding civil law concept is probability comparison.">1. 稀缺性，有现实和时间戳两种算法，后者也可称为开创性。其对应的民法概念是概率比较。</li>
+                    <li data-lang-cn="2. 因果关系的定性：必然因果关系，相当因果关系和因果关系推定。前者大于后者。如果都不构成的话，就不应该纳入计算。当然通常在核对现有披露规则的时候就会做基础的检查，确保满足三要件，构成法律因果关系才进入下一步骤的。" data-lang-en="2. Causality Qualification: Necessary Causality, Adequate Causality, and Presumptive Causality. The former is greater than the latter. If none are formed, it should not be included in the calculation. Of course, a basic check is usually done when reviewing existing disclosure rules to ensure the three elements are met and a legal causality is formed before proceeding to the next step.">2. 因果关系的定性：必然因果关系，相当因果关系和因果关系推定。前者大于后者。如果都不构成的话，就不应该纳入计算。当然通常在核对现有披露规则的时候就会做基础的检查，确保满足三要件，构成法律因果关系才进入下一步骤的。</li>
+                    <li data-lang-cn="3. 研究贡献与成果产出的距离（Remoteness）。由于距离这个词汇太过法学了，所以我们将其命名为突破性。这其中主要考量相似度。传统学术规则中认为学科分类是一个重要指标，但是分类其实也是相似度问题，因为类别都不同的话，肯定相似度很低。" data-lang-en="3. Remoteness between the research contribution and the outcome. Because the term 'Remoteness' is too jurisprudential, we name it 'Breakthrough'. This mainly considers similarity. Traditional research rules consider discipline classification an important index, but classification is also a similarity issue, because if the categories are different, the similarity must be very low.">3. 研究贡献与成果产出的距离（Remoteness）。由于距离这个词汇太过法学了，所以我们将其命名为突破性。这其中主要考量相似度。传统学术规则中认为学科分类是一个重要指标，但是分类其实也是相似度问题，因为类别都不同的话，肯定相似度很低。</li>
 
-                <!-- 5.1 稀缺性定档与计算方式 -->
-                <h3 id="subsection-scarcity" class="text-xl font-bold text-blue-800 pt-6 border-t" data-lang-cn="5.1 稀缺性定档与计算方式" data-lang-en="5.1 Scarcity Tiering and Calculation Methods">5.1 稀缺性定档与计算方式</h3>
-                <p data-lang-cn="稀缺性衡量贡献的独特性和不可替代性，分为六档，采用对数方法分档，有平均主义的考量。稀缺性定档有两种主要方式：" data-lang-en="Scarcity measures the uniqueness and irreplaceability of the contribution, divided into six logarithmic tiers with egalitarian considerations. There are two main methods for tiering scarcity:"></p>
-                <ul class="list-disc list-inside space-y-1 pl-4">
-                    <li data-lang-cn="**基于基数法：** 确定相关基数（如同期相关研究结果数量），计算该项贡献的占比（例如 523 项目中疟疾研究的稀缺性分析）。" data-lang-en="**Base Number Method:** Determine the relevant base number (e.g., number of contemporary related research results) and calculate the proportion of the contribution."></li>
-                    <li data-lang-cn="**基于时间法：** 根据问题悬疑的时间长度来定档，例如解决悬疑一年以上的问题为第二档，二十年以上为第六档。" data-lang-en="**Time-Based Method:** Tiering based on the length of time the problem has remained unresolved (e.g., problems unresolved for over one year are Tier 2, over twenty years are Tier 6)."></li>
                 </ul>
-                <p data-lang-cn="如果一个贡献项有多个变量需要考虑，将相关变量根据档位作加权平均处理。**稀缺性六档划分（基于基数法，对数递减）**如下：" data-lang-en="If a contribution involves multiple variables, a weighted average is applied based on the tier levels. **The six scarcity tiers (Base Number Method, logarithmically decreasing)** are as follows:"></p>
-                <div class="mt-2 text-sm text-gray-700 space-y-1">
-                    <p data-lang-cn="**第一档：** 稀缺性 $\in (50\%, 100\%]$" data-lang-en="**Tier 1:** Scarcity $\in (50\%, 100\%]$"></p>
-                    <p data-lang-cn="**第二档：** 稀缺性 $\in (10\%, 50\%]$" data-lang-en="**Tier 2:** Scarcity $\in (10\%, 50\%]$"></p>
-                    <p data-lang-cn="**第三档：** 稀缺性 $\in (1\%, 10\%]$" data-lang-en="**Tier 3:** Scarcity $\in (1\%, 10\%]$"></p>
-                    <p data-lang-cn="**第四档：** 稀缺性 $\in (0.1\%, 1\%]$" data-lang-en="**Tier 4:** Scarcity $\in (0.1\%, 1\%]$"></p>
-                    <p data-lang-cn="**第五档：** 稀缺性 $\in (0.01\%, 0.1\%]$" data-lang-en="**Tier 5:** Scarcity $\in (0.01\%, 0.1\%]$"></p>
-                    <p data-lang-cn="**第六档：** 稀缺性 $\in (0, 0.01\%]$" data-lang-en="**Tier 6:** Scarcity $\in (0, 0.01\%]$"></p>
+
+                <h3 id="subsection-scarcity" class="text-xl font-bold text-blue-800 pt-6 border-t" data-lang-cn="5.1 稀缺性定档与计算方式" data-lang-en="5.1 Scarcity Tiering and Calculation Methods">5.1 稀缺性定档与计算方式</h3>
+                <p data-lang-cn="稀缺性（Scarcity）指的是贡献者所付出的劳动或成果产出在和同类劳动或成果产出比较后确定的稀有程度。它的关键在于确定相关基数。例如在523项目中，屠呦呦项目组从几百种中药中发现菊科蒿属植物含有高效抗疟药物，其稀缺性应为几百分之一。稀缺性定档，S，的计算方式为：" data-lang-en="Scarcity refers to the rarity of the labor or output contributed by the contributor, determined by comparison with similar labor or output. The key is to determine the relevant base number. For example, in the 523 project, Tu Youyou's team discovered that plants of the genus Artemisia in the family Asteraceae contain highly effective antimalarial drugs from hundreds of traditional Chinese medicines; its scarcity should be one in several hundred. The calculation method for the Scarcity tier, S, is:"></p>
+                <div class="my-4 p-4 bg-gray-50 rounded-lg text-center">
+                    <p class="text-xl font-mono text-secondary">$$ S =\lceil -\log_{10}(\text{Scarcity in percentage} / 100)\rceil.$$</p>
                 </div>
 
-                <!-- 5.2 因果关系定性 -->
+                <p data-lang-cn="之所以向上取整，有两个原因：1，在实践中相关基数的常常是不能精确计算的，误差不可避免，而取整可以避免精度问题带来的争议；2，如果不取整的话，那些没有稀缺性的劳动将不会有任何档位，有失公平。类似地，我们采用了对数的算法，也是出于平均主义的考量。" data-lang-en="There are two reasons for rounding up: 1. In practice, the relevant base number often cannot be calculated precisely, and errors are inevitable; rounding can avoid disputes caused by precision issues; 2. If not rounded, labor with no scarcity would receive no tier, which is unfair. Similarly, we adopted the logarithmic algorithm also in consideration for egalitarianism."></p>
+
+                <p data-lang-cn="有时候确实缺乏相关数据，基数难以认定，或争议较大的时候，可以采用时间戳法。例如在张益唐的案例中，孪生素数猜想是一个悬疑超百年的猜想，这种猜想的解决，稀缺性就非常高。而在张益唐解决之后七个月，出现了更好的结果，这一稀缺性就低很多。按照时间法，稀缺性定档，S，的计算方式为：" data-lang-en="Sometimes, when relevant data is lacking, the base number is difficult to determine, or there are disputes about the base number, the timestamp method can be adopted. For example, in the case of Zhang Yitang, the Twin Prime Conjecture was a conjecture that had been suspended for more than a century; solving this conjecture makes its scarcity very high. However, seven months after Zhang Yitang's solution, better results appeared, making the scarcity much lower. According to the time method, the calculation method for the Scarcity tier, S, is:"></p>
+                <div class="my-4 p-4 bg-gray-50 rounded-lg text-center">
+                    <p class="text-xl font-mono text-secondary">$$ S =\lceil \log_{2}(\text{Time in year} )\rceil+1.$$</p>
+                </div>
+
+                <p data-lang-cn="由于这个对数的底为2，单位是年，所以如果该问题从提出到解决的时间短于1年，很容易计算为负值，即使向上取整，也是0。所以额外加上1，确保从公平角度，确保即使没有稀缺性的劳动也能有一个档位。" data-lang-en="Since the base of this logarithm is 2 and the unit is years, if the time from the proposal to the solution of the problem is less than 1 year, it is easily calculated as a negative value, which is 0 even if rounded up. Therefore, 1 is added to ensure, from a fairness perspective, that even labor with no scarcity can have a tier."></p>
+
                 <h3 id="subsection-causality" class="text-xl font-bold text-blue-800 pt-6 border-t" data-lang-cn="5.2 因果关系定性（六档划分）" data-lang-en="5.2 Causality Qualification (Six Tiers)">5.2 因果关系定性（六档划分）</h3>
-                <p data-lang-cn="因果关系定性分为六档，考量因素包括因果关系类型（推定、相当、必然）和作用方式（多因一果、一因一果）。" data-lang-en="Causality qualification is divided into six tiers, considering the type of causality (Presumption, Adequate, Necessary) and the mode of action (Multiple Causes, Single Cause)."></p>
-                <div class="mt-2 text-sm text-gray-700 space-y-1">
-                    <p data-lang-cn="**第一档 (最低):** 因果关系推定，多因一果。" data-lang-en="**Tier 1 (Lowest):** Presumption of Causality, Multiple Causes."></p>
-                    <p data-lang-cn="**第二档:** 因果关系推定，一因一果。" data-lang-en="**Tier 2:** Presumption of Causality, Single Cause."></p>
-                    <p data-lang-cn="**第三档:** 相当因果关系，多因一果（不可或缺性 + 显著增加可能性）。" data-lang-en="**Tier 3:** Adequate Causality, Multiple Causes (Indispensability + Significantly Increased Possibility)."></p>
-                    <p data-lang-cn="**第四档:** 相当因果关系，一因一果（满足第三档条件 + 不存在其他因果关系）。" data-lang-en="**Tier 4:** Adequate Causality, Single Cause (Tier 3 conditions + No other causal relationship)."></p>
-                    <p data-lang-cn="**第五档:** 必然因果关系，多因一果（不可或缺性 + 看起来有很大帮助 + 规律性转化）。" data-lang-en="**Tier 5:** Necessary Causality, Multiple Causes (Indispensability + Apparent High Utility + Regular Conversion)."></p>
-                    <p data-lang-cn="**第六档 (最高):** 必然因果关系，一因一果（满足第五档条件 + 不存在其他因果关系）。" data-lang-en="**Tier 6 (Highest):** Necessary Causality, Single Cause (Tier 5 conditions + No other causal relationship)."></p>
+                <p data-lang-cn="在初步考量因果关系类型（推定、相当、必然）后，还要考量是一因一果还是多因一果。其判定的核心标准为，该行为对成果产出的帮助，是否是唯一的且必要的直接因素，有无其他同时发生的，具有相似重要性的贡献介入。如果有的话，就是多因一果。这样一来将因果关系的定性（Causality），C，分为6档：" data-lang-en="After primarily considering the type of causality (Presumptive, Adequate, Necessary), it is also necessary to consider whether it is Single-Cause-Single-Effect or Multi-Cause-Single-Effect. The core criterion for its determination is whether the act's assistance to the outcome is the sole and necessary direct factor, and whether other simultaneous contributions with similar importance have intervened. If so, it is Multi-Cause-Single-Effect. Thus, the Causality Qualification, C, is divided into 6 tiers:"></p>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li data-lang-cn="第一档：因果关系推定，多因一果。在这种情况下，敏感主体可以构造出其提供的相关教育或资金支持有可能促进成果产出的场景，且有相关实证。而另一方无法提供相关反驳证据。" data-lang-en="Tier 1: Presumptive Causality, Multi-Cause-Single-Effect. In this case, the sensitive subject can construct a scenario where the relevant education or financial support provided might have promoted the research outcome, and there is related empirical evidence. The other party is unable to provide related rebuttal evidence.">第一档：因果关系推定，多因一果。在这种情况下，敏感主体可以构造出其提供的相关教育或资金支持有可能促进成果产出的场景，且有相关实证。而另一方无法提供相关反驳证据。</li>
+                    <li data-lang-cn="第二档：因果关系推定，一因一果。在这种情况下，敏感主体可以构造出其提供的相关教育或资金支持是导致成果产出的唯一因素的场景，且有相关实证。而另一方无法提供相关反驳证据。" data-lang-en="Tier 2: Presumptive Causality, Single-Cause-Single-Effect. In this case, the sensitive subject can construct a scenario where the relevant education or financial support provided is the sole factor leading to the research outcome, and there is related empirical evidence. The other party is unable to provide related rebuttal evidence.">第二档：因果关系推定，一因一果。在这种情况下，敏感主体可以构造出其提供的相关教育或资金支持是导致成果产出的唯一因素的场景，且有相关实证。而另一方无法提供相关反驳证据。</li>
+                    <li data-lang-cn="第三档：相当因果关系，多因一果。在这种情况下。行为人可以论证，1，有助于研究的行为对研究成果产出之间有不可或缺性。即排除该行为后，成果不能以相似形式、相似时间、相似规模的方式产生；2，有助于研究的行为显著增加了研究成果产出的可能性。" data-lang-en="Tier 3: Adequate Causality, Multi-Cause-Single-Effect. In this case, the actor can argue that: 1. The research-conducive act is indispensable to the research outcome, meaning that after excluding this act, the outcome cannot be produced in a similar form, similar time, or similar scale; 2. The research-conducive act significantly increased the possibility of the research outcome being produced.">第三档：相当因果关系，多因一果。在这种情况下。行为人可以论证，1，有助于研究的行为对研究成果产出之间有不可或缺性。即排除该行为后，成果不能以相似形式、相似时间、相似规模的方式产生；2，有助于研究的行为显著增加了研究成果产出的可能性。</li>
+                    <li data-lang-cn="第四档：相当因果关系，一因一果。在这种情况下。行为人可以论证，1，有助于研究的行为对研究成果产出之间有不可或缺性；2，有助于研究的行为显著增加了研究成果产出的可能性；3，没有其他相似重要的贡献介入。" data-lang-en="Tier 4: Adequate Causality, Single-Cause-Single-Effect. In this case, the actor can argue that: 1. The research-conducive act is indispensable to the research outcome; 2. The research-conducive act significantly increased the possibility of the research outcome being produced; 3. No other contribution with similar importance intervened.">第四档：相当因果关系，一因一果。在这种情况下。行为人可以论证，1，有助于研究的行为对研究成果产出之间有不可或缺性；2，有助于研究的行为显著增加了研究成果产出的可能性；3，没有其他相似重要的贡献介入。</li>
+                    <li data-lang-cn="第五档：必然因果关系，多因一果。在这种情况下。行为人可以论证，1，有助于研究的行为对研究成果产出之间有不可或缺性；2，有助于研究的行为客观上看起来可能有很大帮助（例如给了一笔很大的资金支持，不管有没有实际帮助，至少是看起来可能会有很大帮助）；3，行为向研究成果产出的规律性转化。也就是排除偶然介入因素后，行为向成果产出的转化是否具备高度的可预见性。同时排除该行为后，其成果产出是否会受到重要影响。" data-lang-en="Tier 5: Necessary Causality, Multi-Cause-Single-Effect. In this case, the actor can argue that: 1. The research-conducive act is indispensable to the research outcome; 2. The research-conducive act objectively appears to be very helpful (e.g., provided a large amount of financial support, regardless of actual help, at least it appears potentially very helpful); 3. The act transforms into the research outcome with regularity. That is, after excluding accidental intervening factors, the transformation from act to outcome possess a high degree of foreseeability. Also, whether the outcome be significantly affected after excluding this act.">第五档：必然因果关系，多因一果。在这种情况下。行为人可以论证，1，有助于研究的行为对研究成果产出之间有不可或缺性；2，有助于研究的行为客观上看起来可能有很大帮助（例如给了一笔很大的资金支持，不管有没有实际帮助，至少是看起来可能会有很大帮助）；3，行为向研究成果产出的规律性转化。也就是排除偶然介入因素后，行为向成果产出的转化是否具备高度的可预见性。同时排除该行为后，其成果产出是否会受到重要影响。</li>
+                    <li data-lang-cn="第六档：必然因果关系，一因一果。在这种情况下。行为人可以论证，1，有助于研究的行为对研究成果产出之间有不可或缺性；2，有助于研究的行为客观上看起来可能有很大帮助（例如给了一笔很大的资金支持，不管有没有实际帮助，至少是看起来可能会有很大帮助）；3，行为向研究成果产出的规律性转化；4，不存在其他的相似重要的因果关系。" data-lang-en="Tier 6: Necessary Causality, Single-Cause-Single-Effect. In this case, the actor can argue that: 1. The research-conducive act is indispensable to the research outcome; 2. The research-conducive act objectively appears to be very helpful; 3. The act transforms into the research outcome with regularity; 4. No other contribution with similar importance intervened.">第六档：必然因果关系，一因一果。在这种情况下。行为人可以论证，1，有助于研究的行为对研究成果产出之间有不可或缺性；2，有助于研究的行为客观上看起来可能有很大帮助（例如给了一笔很大的资金支持，不管有没有实际帮助，至少是看起来可能会有很大帮助）；3，行为向研究成果产出的规律性转化；4，不存在其他的相似重要的因果关系。</li>
+
+
+                </ul>
+
+                <h3 id="subsection-influence" class="text-xl font-bold text-blue-800 pt-6 border-t" data-lang-cn="5.3 突破性定档与计算方式" data-lang-en="5.3 Breakthrough Tiering and Calculation Methods">5.3 突破性定档与计算方式</h3>
+                <p data-lang-cn="突破性（Breakthrough），B，主要基于相似度，同样分为6档：" data-lang-en="Breakthrough, B, is mainly based on similarity and is also divided into 6 tiers:"></p>
+
+               <ul class="list-disc pl-5 space-y-2">
+    <li data-lang-cn="第一档：创意A推导到创意B的方案、路径在业界有相似度在80%以上的报道；或技术A和技术B的相似度在80%以上。" 
+        data-lang-en="Tier 1: The solution and path from Idea A to Idea B have been reported in the industry with a similarity of over 80%; OR the similarity between Technology A and Technology B is over 80%.">
+        第一档：创意A推导到创意B的方案、路径在业界有相似度在80%以上的报道；或技术A和技术B的相似度在80%以上。
+    </li>
+    <li data-lang-cn="第二档：创意A推导到创意B的方案、路径在业界有相似度在三分之二以上的报道，且这些方案被广泛采纳；或技术A和技术B的相似度在三分之二以上。" 
+        data-lang-en="Tier 2: The solution and path from Idea A to Idea B have been reported in the industry with a similarity of over two-thirds, and these solutions are widely adopted; OR the similarity between Technology A and Technology B is over two-thirds.">
+        第二档：创意A推导到创意B的方案、路径在业界有相似度在三分之二以上的报道，且这些方案被广泛采纳；或技术A和技术B的相似度在三分之二以上。
+    </li>
+    <li data-lang-cn="第三档：从创意A推导到创意B的方案、路径在业界有相似度在三分之一到三分之二之间的报道，且这些方案被广泛采纳；或在业界有相似度在三分之二以上的报道，但这些方案没有被广泛采纳；或技术A和技术B的相似度在三分之一到三分之二之间。" 
+        data-lang-en="Tier 3: The solution and path from Idea A to Idea B have been reported in the industry with a similarity between one-third and two-thirds, and these solutions are widely adopted; OR the solution and path have been reported in the industry with a similarity of over two-thirds, but these solutions are not widely adopted; OR the similarity between Technology A and Technology B is between one-third and two-thirds.">
+        第三档：从创意A推导到创意B的方案、路径在业界有相似度在三分之一到三分之二之间的报道，且这些方案被广泛采纳；或在业界有相似度在三分之二以上的报道，但这些方案没有被广泛采纳；或技术A和技术B的相似度在三分之一到三分之二之间。
+    </li>
+    <li data-lang-cn="第四档：从创意A推导到创意B的方案、路径在业界有相似度低于三分之一但存在10%以上高度雷同的报道，且这些方案被广泛采纳；或在业界有相似度在三分之一到三分之二之间的报道，但这些方案没有被广泛采纳；或技术A和技术B的相似度低于三分之一，但存在10%以上高度雷同的情况。" 
+        data-lang-en="Tier 4: The solution and path from Idea A to Idea B have been reported in the industry with a similarity below one-third but with over 10% highly identical content, and these solutions are widely adopted; OR the solution and path have been reported in the industry with a similarity between one-third and two-thirds, but these solutions are not widely adopted; OR the similarity between Technology A and Technology B is below one-third but with over 10% highly identical content.">
+        第四档：从创意A推导到创意B的方案、路径在业界有相似度低于三分之一但存在10%以上高度雷同的报道，且这些方案被广泛采纳；或在业界有相似度在三分之一到三分之二之间的报道，但这些方案没有被广泛采纳；或技术A和技术B的相似度低于三分之一，但存在10%以上高度雷同的情况。
+    </li>
+    <li data-lang-cn="第五档：从创意A推导到创意B的方案、路径在业界有相似度低于10%的报道，且这些方案被广泛采纳；或从创意A推导到创意B的方案、路径在业界有相似度低于三分之一但存在10%以上高度雷同的报道，但这些方案没有被广泛采纳；或技术A和技术B的相似度低于三分之一，且不存在10%以上高度雷同的情况。" 
+        data-lang-en="Tier 5: The solution and path from Idea A to Idea B have been reported in the industry with a similarity below 10%, and these solutions are widely adopted; OR the solution and path have been reported in the industry with a similarity below one-third but with over 10% highly identical content, but these solutions are not widely adopted; OR the similarity between Technology A and Technology B is below one-third, and there is no over 10% highly identical content.">
+        第五档：从创意A推导到创意B的方案、路径在业界有相似度低于10%的报道，且这些方案被广泛采纳；或从创意A推导到创意B的方案、路径在业界有相似度低于三分之一但存在10%以上高度雷同的报道，但这些方案没有被广泛采纳；或技术A和技术B的相似度低于三分之一，且不存在10%以上高度雷同的情况。
+    </li>
+    <li data-lang-cn="第六档：从创意A推导到创意B的方案、路径在业界有相似度低于10%的报道，但这些方案没有被广泛采纳；或技术A和技术B的相似度低于10%。" 
+        data-lang-en="Tier 6: The solution and path from Idea A to Idea B have been reported in the industry with a similarity below 10%, but these solutions are not widely adopted; OR the similarity between Technology A and Technology B is below 10%.">
+        第六档：从创意A推导到创意B的方案、路径在业界有相似度低于10%的报道，但这些方案没有被广泛采纳；或技术A和技术B的相似度低于10%。
+    </li>
+</ul>
+<p data-lang-cn="需要注意的是，这里的相似性，指的是实质核心相似，对于采用不同语言、不同风格所导致的差异不予认定。这里对不同的条件，是“或”的关系。只要符合其中一个条件即可。" data-lang-en="It should be noted that the similarity here refers to substantive core similarity, and differences caused by different languages or styles are not recognized. The relationship between different conditions here is 'OR'. Meeting any one of the conditions is sufficient."></p>
+            </div>
+
+
+        </section>
+
+        <section id="section-score-determine" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="6. 贡献比例的确定" data-lang-en="6. Determining the Contribution Percentage">6. 贡献比例的确定</h2>
+            <div class="text-secondary space-y-4 leading-relaxed">
+
+                <h3 id="subsection-calculate" class="text-xl font-bold text-blue-800 pt-6 border-t" data-lang-cn="6.1 列表总结" data-lang-en="6.1 List Summary">6.1 列表总结</h3>
+                <p data-lang-cn="以523项目为例。首先要核对现有学术评价规则，对所有参与方的贡献角色进行列表汇总。然后再对各方的稀缺性，因果关系和突破性定档。" data-lang-en="Take the 523 project as an example. First, check the current Research Evaluation Rules and summarize the contribution roles of all participants. Then, tier the scarcity, causality, and breakthrough for each participant's role."></p>
+                             <p data-lang-cn="在523项目中。按照百度百科中523项目的词条。其研制历史和背景如下：" data-lang-en="In the 523 project, according to the description of  the 523 project in Baidu wiki, its development history and background are as follows:"></p>
+                <p data-lang-cn="20世纪60年代初，全球疟疾疫情难以控制。此时，正值美越交战，两军深受其害。美国政府曾公开，1967至1970年，在越美军因疟疾减员数十万人。疟疾同样困扰越军。拥有抗疟特效药，成为决定美越两军胜负的重要因素。美国不惜投入大量财力人力，筛选出20多万种化合物，最终也未找到理想的抗疟新药。越南则求助于中国。" data-lang-en="In the early 1960s, the global malaria epidemic was difficult to control. At this time, the US-Vietnam War was ongoing, and both armies were deeply affected. The US government publicly stated that from 1967 to 1970, US forces in Vietnam were reduced by hundreds of thousands due to malaria. Malaria also plagued the Vietnamese army. Possessing an effective antimalarial drug became a crucial factor in determining the outcome of the US-Vietnam War. The US invested vast financial and human resources, screening over 200,000 compounds, but ultimately failed to find an ideal new antimalarial drug. Vietnam sought help from China."></p>
+                <p data-lang-cn="1967年的中国，正值“文化大革命”期间，全国几乎所有的科研工作都受到冲击。但毛主席和周总理下令，一个旨在援外备战的紧急军事项目启动（资金获取；在谷歌学术上搜索疟疾的英文名（malaria），将时间范围设定为1960-1970，得到大约15,900 个结果，而在知网检索这一结果为172个。也就是同时期大于有一万至两万个疟疾项目研究。而这种全国性的大规模筛查，提供的资金量在同类比较中肯定是数一数二的。考虑到同时期美国也有大规模抗疟药筛查，这一资金获取的稀缺性大致为数千分之一。稀缺性定档为第四档。因果关系定性为必然因果关系，多因一果。第五档。因为排除该行为后，成果显然会受到重大影响。该资金支持客观上看起来有很大帮助。这种大规模筛选最后找到青蒿素，具有相当的可预见性。但做出大规模筛选这一决定，有明显的外部因素，所以定为多因一果。突破性为第一档，因为提供资金本身是常规操作，在报道中并没有什么特别之处。），目的要集中全国科技力量（资源提供；资金来源；稀缺性、因果性和突破性都和资金获取一样），联合研发抗疟新药（创新类引文；大规模药物筛选从20世纪40年代开始，到了60年代的时候已经没有什么稀缺性了，定位第一档；因果关系定性为相当因果关系，多因一果，第三档，因为缺乏高度的可预见性；突破性也为第一档。因为大规模人工的筛选是化学实验中的常见操作。）。由国家科委与总后勤部牵头，组成 “疟疾防治研究领导小组”（项目管理；该项目涉及人数，在同类项目中应为第一。其稀缺性小于万分之一，定档为第五档。因果关系定性为必然因果关系，多因一果。第五档。突破性为第一档，因为其管理为常规操作。），1967年5月23日在北京召开 “全国疟疾防治研究协作会议”。作为一个秘密的军事科研任务，“523”，成了当时研究防治疟疾新药项目的代号（概念化；这一概念化其实是没有创新性的，前面也提到过，属于只能放在致谢里的概念化。对于这种只能致谢的情况，在三个因素上都定一个档。）。" data-lang-en="In China, 1967, during the 'Cultural Revolution,' almost all scientific research work was impacted. However, Chairman Mao and Premier Zhou ordered the launch of an urgent military project aimed at foreign aid and war preparation (Funding Acquisition; searching for the English name of malaria on Google Scholar, setting the time range to 1960-1970, yields about 15,900 results, while searching on CNKI yields 172 results. This means there were more than ten to twenty thousand malaria projects being studied concurrently. The amount of funding provided for such a nationwide large-scale screening is certainly one of the largest in comparison with similar projects. Considering that the US also had a large-scale antimalarial drug screening at the same time, the scarcity of this funding acquisition is roughly one in several thousand, tiered as Tier 4. Causality Qualification is Necessary Causality, Multi-Cause-Single-Effect, Tier 5, because the outcome would obviously be significantly affected if this act were excluded. The financial support objectively appears to be very helpful. The eventual finding of artemisinin through this large-scale screening has considerable foreseeability. However, the decision to undertake large-scale screening was partically due to external factors, so it is set as Multi-Cause-Single-Effect. Breakthrough is Tier 1, as providing funds is a routine operation with nothing special reported.). Its purpose was to concentrate the nation's scientific and technological forces (Resources, Funding; Scarcity, Causality, and Breakthrough are the same as Funding Acquisition) to jointly research and develop new antimalarial drugs (Innovation References; large-scale drug screening began in the 1940s, and by the 1960s, there was no scarcity, tiered as Tier 1; Causality Qualification is Adequate Causality, Multi-Cause-Single-Effect, Tier 3, due to the lack of high foreseeability; Breakthrough is also Tier 1 because large-scale manual screening is a common operation in chemical experiments.). The State Science and Technology Commission and the General Logistics Department took the lead in forming the 'Malaria Prevention and Treatment Research Leading Group' (Project Administration; the number of people involved in this project should be the highest among similar projects. Its scarcity is less than one in ten thousand, tiered as Tier 5. Causality Qualification is Necessary Causality, Multi-Cause-Single-Effect, Tier 5. Breakthrough is Tier 1, as its management is a routine operation.), which held the 'National Malaria Prevention and Treatment Research Collaboration Meeting' in Beijing on May 23, 1967. As a secret military scientific research task, '523' became the code name for the new antimalarial drug research project at that time (Conceptualization; this conceptualization is not innovative, as mentioned before, it belongs to conceptualization that can only be placed in the acknowledgment. For this type of acknowledgment-only contribution role, all three factors are set to Tier 1.)."></p>
+
+                <p data-lang-cn="李国桥从1964年就开始了针灸治疗疟疾的课题研究（概念化；这一概念化是有创新性的；在知网检索“疟疾 中医”，在1964年以前只有10个结果。李国桥对疟疾的中医治疗引起了523项目的重视，从而提出了在中医药中进行大规模筛选这一选题。这一选题的稀缺性的基数应该是（15900+172）/10=1607.2。大约为千分之一，所以定档在第四档；因果关系定性为相当因果关系，一因一果，第四档。因为李国桥是对让523项目转向中医药筛选的主要因素，没有其他相似重要的贡献介入。但这种转化具有一定的偶然性，针灸和大规模中药筛选是非常不一样的；突破性为第一档，因为中医治疗疟疾由来已久，而即使是采用现代化的手段研究中医，在20世纪50年代的时候也有相关报道。），1967年，他被点名组织一个针灸小组，加入523项目。随后，李国桥带着小组成员深入疟疾高发地区进行治疗。1969年，李国桥故意感染疟疾，“以身试法”实验针灸疗法。" data-lang-en="Li Guoqiao began research on acupuncture treatment for malaria in 1964 (Conceptualization; this conceptualization is innovative; a search for 'malaria Traditional Chinese Medicine' on CNKI shows only 10 results before 1964. Li Guoqiao's traditional Chinese medicine treatment of malaria drew the attention of the 523 project, leading to the proposal of large-scale screening in traditional Chinese medicine. The Scarcity base number of this topic should be (15900+172)/10=1607.2, about one in a thousand, so it is tiered as Tier 4; Causality Qualification is Adequate Causality, Single-Cause-Single-Effect, Tier 4. This is because Li Guoqiao was the main factor in turning the 523 project towards traditional Chinese medicine screening, with no other contribution with similar importance intervening. However, this transition has a certain randomness; acupuncture and large-scale Chinese herbal medicine screening are very different; Breakthrough is Tier 1, because traditional Chinese medicine treatment of malaria has a long history, and there were related reports about modern methods used to study traditional Chinese medicine in the 1950s.), in 1967, he was named to organize an acupuncture group to join the 523 project. Subsequently, Li Guoqiao led group members to high-incidence malaria areas for treatment. In 1969, Li Guoqiao intentionally infected himself with malaria to 'test with his own body' for the acupuncture therapy."></p>
+
+                <p data-lang-cn="1969年，屠呦呦以中国中医研究院科研组组长的身份加入523项目（监督、指导和管理；这里的稀缺性应为第二档，因为当时全国有六十多个科研单位。突破性应为第一档。因果关系定性为必然因果关系，多因一果，第五档。因为从中医药中筛选这一选题不是屠呦呦提出的。）。屠呦呦与同事一起查阅了大量药方（方法论；屠呦呦采取查阅药方，询问专家方式，都是常规操作。其稀缺性和突破性都是第一档。因果关系定性为必然因果关系，一因一果。第六档。因为如果排除该行为，显然成果会受到重大影响。而总结药方提供了基本的筛选目录，客观上看起来有很大帮助。在药方中包含青蒿，因此最终发现青蒿素具有高度的可预见性。并且不存在其他相似重要的因果关系。而其同事的因果关系定性为相当因果关系，多因一果，第三档），从中找出了出现频率较高的抗疟中草药或方剂（形式分析；对频率的分析是常规操作，其稀缺性和突破性都是第一档。因果关系定性为相当因果关系，多因一果。第三档。因为对频率的考察缩小了筛选范围，提高了可能性。），其中，青蒿提取物有明显的抗疟效果，对鼠疟原虫曾有过60%~80%的抑制率（调查研究，形式分析；这里的分析都是常规操作，稀缺性和突破性都是第一档。调查研究的因果关系定性为必然因果关系，一因一果。第六档。因为不存在其他相似重要的因果关系，排除该行为会受到重大影响。形式分析的因果关系为第三档）。" data-lang-en="In 1969, Tu Youyou joined the 523 project as the head of the research group at the China Academy of Traditional Chinese Medicine (Supervision; scarcity here should be Tier 2, as there were more than sixty research units nationwide at the time. Breakthrough should be Tier 1. Causality Qualification is Necessary Causality, Multi-Cause-Single-Effect, Tier 5, because the topic of screening from traditional Chinese medicine was not proposed by Tu Youyou.). Tu Youyou and her colleagues consulted a large number of prescriptions (Methodology; Tu Youyou's methods of consulting prescriptions and experts are routine operations. Both scarcity and breakthrough are Tier 1. Causality Qualification is Necessary Causality, Single-Cause-Single-Effect, Tier 6. This is because if this act were excluded, the outcome would obviously be significantly affected. Summarizing prescriptions provided a basic screening list, which objectively appears to be very helpful. Artemisia annua was included in the prescriptions, so the eventual discovery of artemisinin possesses a high degree of foreseeability. And no other causal relationship of similar importance exists. The causality qualification for her colleagues is Adequate Causality, Multi-Cause-Single-Effect, Tier 3), and from them, identified antimalarial traditional Chinese herbs or prescriptions with high frequency (Formal analysis; analysis of frequency is a routine operation, with both scarcity and breakthrough being Tier 1. Causality Qualification is Adequate Causality, Multi-Cause-Single-Effect, Tier 3, because examining frequency narrowed the screening scope and increased possibility.), among which, Artemisia annua extract showed obvious antimalarial effects, with a 60%~80% inhibition rate against murine malaria parasites (Investigation, Formal analysis; the analysis here is a routine operation, with both scarcity and breakthrough being Tier 1. Causality Qualification for Investigation is Necessary Causality, Single-Cause-Single-Effect, Tier 6, because no other causal relationship of similar importance exists, and excluding this act would be significantly affected. The Causality Qualification for Formal Analysis is Tier 3)."></p>
+                <p data-lang-cn="1971年下半年，屠呦呦从东晋葛洪所著的《肘后备急方》一书中受到了启发。书中记载了“青蒿一握，以水二升渍，绞取汁，尽服之”的内容，屠呦呦由此认为高温有可能对青蒿有效成分造成破坏，从而影响疗效。于是，她降低了提取温度，由乙醇提取改为用沸点更低的乙醚提取（方法论；这里的分析都是常规操作，稀缺性和突破性都是第一档。因果关系定性为必然因果关系，一因一果。第六档。因为不存在其他相似重要的因果关系。），结果发现，乙醚提取法的提取物对于鼠疟和猴疟的抑制率均达到100%（调查研究，确认，技术类引文；这里的调查研究和确认都是常规操作，稀缺性和突破性都是第一档。因果关系定性为必然因果关系，多因一国。第五档。形式分析的因果关系为第三档。技术类引文的稀缺性和突破性也是第一档，因果关系定性为必然因果关系，一因一果。第六档。）。" data-lang-en="In the second half of 1971, Tu Youyou was inspired by the book 'Zhou Hou Bei Ji Fang' (A Handbook of Prescriptions for Emergencies) by Ge Hong (283-363) of the Eastern Jin Dynasty. The book recorded the content of 'A handful of Qinghao (Artemisia annua), soak in two sheng of water, wring out the juice, and take all of it.' Tu Youyou thus believed that high temperatures might destroy the active components of Artemisia annua, thereby affecting the therapeutic effect. Consequently, she lowered the extraction temperature, changing from ethanol extraction to ether extraction, which has a lower boiling point (Methodology; the analysis here is a routine operation, with both scarcity and breakthrough being Tier 1. Causality Qualification is Necessary Causality, Single-Cause-Single-Effect, Tier 6, because no other causal relationship of similar importance exists.), and the result showed that the extract obtained by the ether extraction method achieved a 100% inhibition rate against both murine and simian malaria (Investigation, Validation, Technical References; the investigation and validation here are routine operations, with both scarcity and breakthrough being Tier 1. Causality Qualification is Necessary Causality, Multi-Cause-Single-Effect, Tier 5. The causality qualification for Formal analysis is Tier 3. Scarcity and breakthrough for Technical References are also Tier 1, and Causality Qualification is Necessary Causality, Single-Cause-Single-Effect, Tier 6.)."></p>
+                <p data-lang-cn="1972年3月，全国523办公室在南京召开中草药专业组会议，屠呦呦作为中国中医研究院中药研究所的代表，报告了青蒿对鼠疟原虫近期抑制率可达100%的实验结果，引起全体与会者的关注（概念化；屠呦呦的贡献主要在于，在1972年3月，南京中草药专业组会议上报告了青蒿对鼠疟原虫近期抑制率可达100%的实验结果。这让大家意识到菊科蒿属植物中可能含有高效抗疟药物，应该用乙醚提取。从几百种中药中发现菊科蒿属植物，这一贡献的稀缺性应该是第三档。如果考虑乙醚提取，可以再加一档，也就是第四档。因果关系定性为必然因果关系，一因一果，第六档。突破性为第六档，因为该方案和从中药中筛选的相似度在10%以下）。参与523项目的云南省药物研究所和山东省中医药研究所的工作人员开始着手利用当地的植物资源，分别开展分离有效单体的研究（概念化，方法论，形式分析，调查研究，监督，指导和管理；从菊科蒿属植物中发现黄花蒿、艾蒿等都含有高效抗疟药物，这一发现的稀缺性应该是第一档。因为当地的的蒿属植物应该不会超过十种，稀缺性很难低于十分之一。突破性是第二档，因为在同属植物中筛选是常规操作，业界已有相似度很高的报道，而且黄花蒿和艾蒿和青蒿在名字上的相似度也都在三分之一以上。因果关系定性为相当因果关系，多因一果，第三档。因为这里有两个不同的植物，显然属于有相似重要的贡献介入。而且排除该行为后，其影响程度很难算得上重要。但这些定档只是针对概念化，方法论，而言，对于形式分析，调查研究，稀缺性和突破性都是第一档，因果关系定性是相当因果关系，多因一果，第三档。监督，指导和管理的稀缺性和突破性都是第一档，因果关系定性是相当因果关系，多因一果，第三档）。" data-lang-en="In March 1972, the National 523 Office convened a traditional Chinese medicine professional group meeting in Nanjing, where Tu Youyou, as the representative of the Institute of Materia Medica, China Academy of Traditional Chinese Medicine, reported the experimental result that Artemisia annua had an immediate inhibition rate of 100% against murine malaria parasites, drawing the attention of all attendees (Conceptualization; Tu Youyou's main contribution was reporting the experimental result that Artemisia annua had an immediate inhibition rate of 100% against murine malaria parasites at the Nanjing Traditional Chinese Medicine Professional Group meeting in March 1972. This made everyone realize that plants of the genus Artemisia in the family Asteraceae might contain highly effective antimalarial drugs and should be extracted with ether. The scarcity of this contribution—discovering the genus Artemisia from hundreds of traditional Chinese medicines—should be Tier 3. If the ether extraction is considered, one more tier can be added, which is Tier 4. Causality Qualification is Necessary Causality, Single-Cause-Single-Effect, Tier 6. Breakthrough is Tier 6, because the similarity of this solution to screening from traditional Chinese medicine is below 10%). Staff from the Yunnan Provincial Institute of Materia Medica and the Shandong Provincial Institute of Traditional Chinese Medicine, who were participating in the 523 project, began to utilize local plant resources to conduct research on isolating effective single compounds (Conceptualization, Methodology, Formal analysis, Investigation, Supervision; the scarcity of this discovery—finding that Artemisia apiacea, Artemisia scoparia, etc., in the genus Artemisia contain highly effective antimalarial drugs—should be Tier 1. This is because there should be no more than ten species of Artemisia in the local area, so the scarcity is unlikely to be less than one-tenth. Breakthrough is Tier 2, because screening within the same genus is a routine operation, with highly similar reports already existing in the industry, and the similarity in names between Artemisia apiacea, Artemisia scoparia, and Artemisia annua is over one-third. Causality Qualification is Adequate Causality, Multi-Cause-Single-Effect, Tier 3, because there are two different plants here, which clearly involve contributions of similar importance. Furthermore, the degree of impact after excluding this act can hardly be considered significant. However, these tiers are only for Conceptualization and Methodology. For Formal Analysis and Investigation, scarcity and breakthrough are Tier 1, and Causality Qualification is Adequate Causality, Multi-Cause-Single-Effect, Tier 3. Scarcity and breakthrough for Supervision are Tier 1, and Causality Qualification is Adequate Causality, Multi-Cause-Single-Effect, Tier 3)."></p>
+                <p data-lang-cn="1974年10月~12月，先后用黄蒿素治疗疟疾18例，初步结果表明，黄蒿素对疟原虫的毒杀效果快于氯喹（调查研究，确认；这里的稀缺性和突破性都是第一档，因果关系定性是相当因果关系，多因一果，第三档。虽然这一过程还涉及形式分析和技术性引文，比如氯喹，但其在因果关系上并没有达到相应的标准。这些人体实验主要确定了黄蒿素的安全性和有效性）。" data-lang-en="From October to December 1974, artemisinine was used to treat 18 cases of malaria, and preliminary results showed that artemisinine had a faster toxic effect on malaria parasites than chloroquine (Investigation, Validation; scarcity and breakthrough here are Tier 1, and Causality Qualification is Adequate Causality, Multi-Cause-Single-Effect, Tier 3. Although this process also involves Formal analysis and Technical references, such as chloroquine, they do not meet the corresponding standards in terms of causality. These human experiments mainly determined the safety and effectiveness of artemisinine)."></p>
+                <p data-lang-cn="此后，经过两年的三次“大会战”，广东、江苏、四川等地用青蒿素和青蒿简易制剂临床治疗疟疾2000例，其中青蒿素治疗800例，有效率100%；青蒿素简易制剂治疗1200例，有效率在90%以上（调查研究，确认；这里的稀缺性和突破性都是第一档，因果关系定性是相当因果关系，多因一果，第三档。这一部分是进一步确认了青蒿素相关制剂的安全性和有效性，其他的项目都没达到因果关系的标准）。" data-lang-en="Thereafter, after three 'major campaigns' over two years, artemisinin and simplified Artemisia annua preparations were used for clinical treatment of 2,000 cases of malaria in Guangdong, Jiangsu, Sichuan, and other places. Among them, artemisinin treated 800 cases with a 100% effective rate; simplified Artemisia annua preparations treated 1,200 cases with an effective rate of over 90% (Investigation, Validation; scarcity and breakthrough here are Tier 1, and Causality Qualification is Adequate Causality, Multi-Cause-Single-Effect, Tier 3. This part further confirmed the safety and effectiveness of artemisinin-related preparations; other roles did not meet the causality standard)."></p>
+                <p data-lang-cn="一系列的实验证明青蒿素是好药，上级要求必须要用最快的速度研发新药（项目管理；到了这一阶段，只能属于致谢中的贡献项，都算一个档）。新药于1975年研制成功，并于1979年通过全国鉴定（确认；到了这一阶段，只能属于致谢中的贡献项，都算一个档）。" data-lang-en="A series of experiments proved that artemisinin was a good drug, and superiors required the development of this new drug as quickly as possible (Project Administration; at this stage, it can only be a acknowledgment-contribution role, all tiered as Tier 1). The new drug was successfully developed in 1975 and passed national appraisal in 1979 (Validation; at this stage, it can only be a acknowledgment-contribution role, all tiered as Tier 1)."></p>
+                <p data-lang-cn="523项目持续了13年，聚集了全国60多个科研单位（资源提供，资金来源；除了前面提到的科研单位，其他单位在因果关系上只能构成因果关系推定。因为难以找到实证说明其存在相当因果关系，但由于都是一个项目团队的，综合来说还是属于敏感主体，所以都算一个档），参加项目的常规工作人员有五六百人，加上中途轮换的，参与者总计有两三千人之多（调查研究，这一块涉及人数众多，稀缺性可以算第五档。因果关系是第五档。突破性是第一档）。" data-lang-en="The 523 project lasted 13 years, gathering more than 60 research units nationwide (Resources, Funding; besides the research units mentioned earlier, other units can only form Presumptive Causality. Because it is difficult to find empirical evidence to prove the existence of Adequate Causality, but since they are all part of one project team, overall they still belong to sensitive subjects, so they are all tiered as Tier 1), with five to six hundred regular staff participating in the project, and a total of two to three thousand participants including those rotated in the middle (Investigation; this area involves a large number of people, scarcity can be counted as Tier 5. Causality is Tier 5. Breakthrough is Tier 1)."></p>
+
+                <p data-lang-cn="以下是对上述贡献角色定档汇总而成的表格。如果同一个参与者在同一个贡献角色中多次提及，取最高档位进行定档。" data-lang-en="The table below summarizes the tiers for the contribution roles mentioned above. If the same participant is mentioned multiple times for the same contribution role, the highest tier is used."></p>
+
+
+
+  <section class="card bg-white p-8 rounded-xl">
+    <h3 class="text-xl font-bold text-gray-800 flex items-center mb-4">
+        <i data-lucide="layout-grid" class="w-6 h-6 mr-3"></i>
+        <span data-lang-cn="贡献角色定档汇总表" data-lang-en="Summary Table of Contribution Role Tiering">贡献角色定档汇总表</span>
+    </h3>
+    <div class="overflow-x-auto border rounded-lg">
+<iframe src="https://1drv.ms/x/c/79b1915ffe18ec84/IQSOmPlmWhknTrq0RjYhjbzHAYEfuQOzSGac0Bu0fO_2CRA" width="1402" height="346" frameborder="0" scrolling="no"></iframe>
+        </iframe>
+    </div>
+</section>
+
+                <h3 id="subsection-weight" class="text-xl font-bold text-blue-800 pt-6 border-t" data-lang-cn="6.2 使用QuIReC计算器" data-lang-en="6.2 Using the QuIReC Calculator">6.2 使用QuIReC计算器</h3>
+                <p data-lang-cn="QuIReC计算器只需要将上述列表汇总的结果输入即可自动得出各参与者的最终贡献比例。该模型采用三层分级结构（大贡献项 - 小贡献项 - 参与者）进行贡献计算。" data-lang-en="The QuIReC calculator only requires inputting the summarized results from the list above to automatically obtain the final contribution proportion of each participant. This model uses a three-level hierarchical structure (Major Contribution Role - Minor Contribution Role - Participant) for contribution calculation."></p>
+
+                <h3 data-lang-cn="步骤 1: 参与者所在贡献角色的档位计算（T）" data-lang-en="Step 1: Calculating the Participant's Contribution Role Tier (T)">步骤 1: 参与者所在贡献角色的档位计算（T）</h3>
+
+                <p data-lang-cn="参与者的档位计算模式为累加模式。" data-lang-en="The calculation mode for the participant's tier is the cumulative mode."></p>
+
+                <p data-lang-cn="累加模式将三因素，稀缺性（S），因果关系定性（C)，和突破性(B）所确定的档位累加，得到所在贡献角色的最终档位（T）。" data-lang-en="The cumulative mode sums the tiers determined by the three factors—Scarcity (S), Causality Qualification (C), and Breakthrough (B)—to obtain the final tier (T) for the contribution role."></p>
+ <div class="my-4 p-4 bg-gray-50 rounded-lg text-center">
+                    <p class="text-xl font-mono text-secondary">$$T_{\text{Participant}} = S + C + B$$</p>
                 </div>
 
-                <!-- 5.3 成果产出的突破性 -->
-                <h3 id="subsection-breakthrough" class="text-xl font-bold text-blue-800 pt-6 border-t" data-lang-cn="5.3 成果产出的突破性（六档划分）" data-lang-en="5.3 Breakthrough in Outcome Production (Six Tiers)">5.3 成果产出的突破性（六档划分）</h3>
-                <p data-lang-cn="突破性（即研究贡献与成果产出的距离）主要基于相似度进行划分，其中相似度指的是实质核心相似。" data-lang-en="Breakthrough (or Remoteness) is mainly tiered based on similarity, where similarity refers to substantive core similarity."></p>
-                <div class="mt-2 text-sm text-gray-700 space-y-1">
-                    <p data-lang-cn="**第一档 (最低):** 方案/技术相似度在 80% 以上，且被广泛采纳。" data-lang-en="**Tier 1 (Lowest):** Solution/Technology similarity $\ge 80\%$, and widely adopted."></p>
-                    <p data-lang-cn="**第二档:** 方案/技术相似度在 $2/3$ 以上，且被广泛采纳。" data-lang-en="**Tier 2:** Solution/Technology similarity $\ge 2/3$, and widely adopted."></p>
-                    <p data-lang-cn="**第三档:** 方案/技术相似度在 $1/3$ 到 $2/3$ 之间，且被广泛采纳；或相似度 $\ge 2/3$ 但未被广泛采纳。" data-lang-en="**Tier 3:** Solution/Technology similarity between $1/3$ and $2/3$, and widely adopted; OR similarity $\ge 2/3$ but not widely adopted."></p>
-                    <p data-lang-cn="**第四档:** 相似度低于 $1/3$ 但有 $10\%$ 以上高度雷同报道，且被广泛采纳；或相似度在 $1/3$ 到 $2/3$ 之间但未被广泛采纳。" data-lang-en="**Tier 4:** Similarity $< 1/3$ but $\ge 10\%$ high resemblance, and widely adopted; OR similarity between $1/3$ and $2/3$ but not widely adopted."></p>
-                    <p data-lang-cn="**第五档:** 相似度低于 $10\%$，且被广泛采纳；或相似度低于 $1/3$ 但有 $10\%$ 以上高度雷同报道，但未被广泛采纳。" data-lang-en="**Tier 5:** Similarity $< 10\%$, and widely adopted; OR similarity $< 1/3$ but $\ge 10\%$ high resemblance, but not widely adopted."></p>
-                    <p data-lang-cn="**第六档 (最高):** 相似度低于 $10\%$，且未被广泛采纳。" data-lang-en="**Tier 6 (Highest):** Similarity $< 10\%$, and not widely adopted."></p>
+                <h3 data-lang-cn="步骤 2: 小贡献项档位计算（Minor Roles Tiers）" data-lang-en="Step 2: Calculating Minor Contribution Role Tiers">步骤 2: 小贡献项档位计算（Minor Roles Tiers）</h3>
+    <p data-lang-cn="小贡献项（例如“数据管理”）的档位采用自加权平方计算，即所有参与者档位平方总和除以原始档位总和。" data-lang-en="The tier for the minor contribution role (e.g., 'Data Curation') is calculated using self-weighted squaring, which is the sum of the squares of all participants' tiers divided by the sum of the original tiers.">小贡献项（例如“数据管理”）的档位采用自加权平方计算，即所有参与者档位平方总和除以原始档位总和。</p>
+     <div class="my-4 p-4 bg-gray-50 rounded-lg text-center">
+                    <p class="text-xl font-mono text-secondary">$$T_{\text{minor}} = \frac{\sum_{\text{Participant}} T_{\text{Participant}}^2}{\sum_{\text{Participant}} T_{\text{Participant}}}$$</p>
                 </div>
+
+                <h3 data-lang-cn="步骤 3: 大贡献项档位计算（Major Roles Tiers）" data-lang-en="Step 3: Calculating Major Contribution Role Tiers">步骤 3: 大贡献项档位计算（Major Roles Tiers）</h3>
+    <p data-lang-cn="大贡献项（例如“组织”）的档位同样采用自加权平方计算。" data-lang-en="The tier for the major contribution role (e.g., 'Organization') is also calculated using self-weighted squaring.">大贡献项（例如“组织”）的档位同样采用自加权平方计算。</p>
+    <div class="my-4 p-4 bg-gray-50 rounded-lg text-center">
+                    <p class="text-xl font-mono text-secondary">$$T_{\text{major}} = \frac{\sum_{\text{minor}} T_{\text{minor}}^2}{\sum_{\text{minor}} T_{\text{minor}}}$$</p>
+                </div>
+
+<h3 data-lang-cn="步骤 4: 贡献比例计算" data-lang-en="Step 4.: Computations of Contribution Percentage">步骤 4: 最终贡献比例</h3>
+    <h4 data-lang-cn="步骤 4.1 大贡献项相对比例" data-lang-en="Step 4.1: Relative Proportion of Major Contribution Roles">步骤 4.1 大贡献项相对比例</h4>
+    <p data-lang-cn="首先，计算每个大贡献项在整个项目中的相对比例。" data-lang-en="First, calculate the relative proportion of each major contribution role in the entire project.">首先，计算每个大贡献项在整个项目中的相对比例。</p>
+    <div class="my-4 p-4 bg-gray-50 rounded-lg text-center">
+                    <p class="text-xl font-mono text-secondary">$$\text{Ratio}_{\text{major}} = \frac{T_{\text{major}}}{\sum_{\text{major}} T_{\text{major}}} \times 100\%$$</p>
+                </div>
+
+    <h4 data-lang-cn="步骤 4.2: 小贡献项相对比例" data-lang-en="Step 4.2: Relative Proportion of Minor Contribution Roles">步骤 4.2: 小贡献项相对比例</h4>
+    <p data-lang-cn="计算每个小贡献项的比例，基于其档位相对于同一大贡献项下所有小贡献项档位总和的比例。" data-lang-en="Calculate the proportion that should be distributed to each minor contribution role, based on its tier relative to the sum of all minor contribution role tiers under the same major contribution role.">计算每个小贡献项的比例，基于其档位相对于同一大贡献项下所有小贡献项档位总和的比例。</p>
+<div class="my-4 p-4 bg-gray-50 rounded-lg text-center">
+                    <p class="text-xl font-mono text-secondary">$$\text{Ratio}_{\text{minor}} = \text{Ratio}_{\text{major}} \times \frac{T_{\text{minor}}}{\sum_{\text{minor in major}} T_{\text{minor}}}$$
+</p>
+                </div>
+
+    <h4 data-lang-cn="步骤 4.3: 参与者在小贡献项中的贡献比例" data-lang-en="Step 4.3: Participant's Contribution Proportion within the Minor Item">步骤 4.3: 参与者在小贡献项中的贡献比例</h4>
+    <p data-lang-cn="计算每个参与者的比例，基于其档位相对于同一小贡献项下所有参与者档位总和的比例。" data-lang-en="Calculate the proportion that should be distributed to each participant, based on their tier relative to the sum of all participants' tiers under the same minor contribution role.">计算每个参与者的比例，基于其档位相对于同一小贡献项下所有参与者档位总和的比例。</p>
+<div class="my-4 p-4 bg-gray-50 rounded-lg text-center">
+                    <p class="text-xl font-mono text-secondary">$$\text{Ratio}_{\text{Participant}} = \text{Ratio}_{\text{minor}} \times \frac{T_{\text{Participant}}}{\sum_{\text{participants in minor}} T_{\text{Participant}}}$$
+</p>
+                </div>
+
+    <h4 data-lang-cn="步骤 4.4: 参与者最终贡献比例汇总" data-lang-en="Step 4.4: Summation of the Participant's Contribution Proportion">步骤 4.4: 参与者最终贡献比例汇总</h4>
+    <p data-lang-cn="最终结果是将具有相同姓名的参与者在所有不同小贡献项中获得的比例进行累加，得出其在整个项目中的总贡献比例。" data-lang-en="The final result is the accumulation of the proportions obtained by participants with the same name across all different minor contribution roles to derive their total contribution proportion in the entire project.">最终结果是将具有相同姓名的参与者在所有不同小贡献项中获得的比例进行累加，得出其在整个项目中的总贡献比例。</p>
+
+        </section>
+
+        <section id="section-ranking" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="7. 结果解读" data-lang-en="7. Interpretation of Results">7. 结果解读</h2>
+            <div class="text-secondary space-y-4 leading-relaxed">
+
+                <p data-lang-cn="将上述列表汇总的结果输入QuIReC后得出的结果为：" data-lang-en="The result obtained after inputting the summarized list above into QuIReC is:">将上述列表汇总的结果输入QuIReC后得出的结果为：</p>
+
+                <img src="images/屏幕截图_26-11-2025_95157_.JPEG" alt="屏幕截图_26-11-2025_95157_" style="max-width: 100%; height: auto;">
+
+                <p data-lang-cn="这里的第一项，全国各地地方政府，是需要按照参与度再细分的，只是由于百度百科中有关523项目的介绍缺乏具体数据，所以只能算做一个项目。考虑到有六十多个单位参与，每个单位分配到的比例应该不到1%。所以总体来说，屠呦呦确实是贡献最突出的那个技术人员。而李国桥应该就是排名第二的技术人员。这一计算结果和澎湃新闻有关报道，《同行谈屠呦呦获奖争议：如果要挑选一个突出贡献者，那就是她》，也是一致的。百度百科有关523项目的介绍中只提了毛主席，周总理，李国桥，和屠呦呦四个人名，是没有问题的。如果相关介绍篇幅更长，具体提及的人数更多，那么，就要更小心分配介绍篇幅，否则有失公允。" data-lang-en="The first item here, 'Local governments across the country,' needs to be distributed to each unit according to the degree of participation, but due to the lack of related data in the Baidu wiki's introduction to the 523 project, it can only be counted as one item. Considering that more than sixty units participated, the proportion allocated to each unit should be less than 1%. Therefore, overall, Tu Youyou is indeed the most prominent technical contributor. And Li Guoqiao should be the second-ranked technical contributor. This calculation result is also consistent with the related report from News Peach Uptide, 'Colleagues talk about Tu Youyou's award controversy: If one were to pick a prominent contributor, it would be her.' It is fair that the Baidu wiki introduction to the 523 project only mentioned four names—Chairman Mao, Premier Zhou, Li Guoqiao, and Tu Youyou. If the related introduction were longer and more specific individuals were mentioned, then the allocation of the introductory space would need to be more careful, or it would be unfair.">这里的第一项，全国各地地方政府，是需要按照参与度再细分的，只是由于百度百科中有关523项目的介绍缺乏具体数据，所以只能算做一个项目。考虑到有六十多个单位参与，每个单位分配到的比例应该不到1%。所以总体来说，屠呦呦确实是贡献最突出的那个技术人员。而李国桥应该就是排名第二的技术人员。这一计算结果和澎湃新闻有关报道，《同行谈屠呦呦获奖争议：如果要挑选一个突出贡献者，那就是她》，也是一致的。百度百科有关523项目的介绍中只提了毛主席，周总理，李国桥，和屠呦呦四个人名，是没有问题的。如果相关介绍篇幅更长，具体提及的人数更多，那么，就要更小心分配介绍篇幅，否则有失公允。</p>
+<p>（澎湃新闻 (News Peach Uptide)；URL：<a href="https://www.thepaper.cn/newsDetail_forward_1382223" target="_blank">https://www.thepaper.cn/newsDetail_forward_1382223</a>）</p>
+
+                <p data-lang-cn="屠呦呦还有一个重要的优势在于，她得到了政府的大力支持。虽然屠呦呦贡献最突出，但她也只占15.78%。要提名她，肯定也要得到各方多数同意才行。而因为这个项目本来就是政府占大头，所以得到政府支持就基本没问题了。" data-lang-en="Another important advantage for Tu Youyou is that she received strong government support. Although Tu Youyou's contribution is the most prominent, she only accounts for 15.78%. To nominate her, she would certainly need majority agreement from all parties. Since the government held the largest share in this project, there is no obsticle after obtaining government support.">屠呦呦还有一个重要的优势在于，她得到了政府的大力支持。虽然屠呦呦贡献最突出，但她也只占15.78%。要提名她，肯定也要得到各方多数同意才行。而因为这个项目本来就是政府占大头，所以得到政府支持就基本没问题了。</p>
+
+                <p data-lang-cn="QuIReC算法将学术界目前用来评估贡献的方法进行了量化处理。得到的结果和现行主流国际学术界的评估结果是基本一致的。而且这种算法还能直接回应很多争议。" data-lang-en="QuIReC quantifies the evaluation methods currently used by the academic community to evaluate contributions. The results obtained are basically consistent with the current mainstream international academic evaluation results. Moreover, this algorithm can directly address many disputes.">我们这一算法将学术界目前用来评估贡献的方法进行了量化处理。得到的结果和现行主流国际学术界的评估结果是基本一致的。而且这种算法还能直接回应很多争议。</p>
+
+                <p data-lang-cn="例如，有些争议认为，屠呦呦最初公布的是青蒿，而最后广泛使用的是黄花蒿。可是，这些都是菊科蒿属植物。屠呦呦在选题上的主要贡献，就是在1972年3月在会议上公布青蒿对鼠疟原虫近期抑制率可达100%这一结果，引起了大家对于菊科蒿属植物的关注。后来大家发现菊科蒿属植物下的黄花蒿、艾蒿效果更好，就用了这个。发现黄花蒿、艾蒿的贡献是属于云南省药物研究所和山东省中医药研究所的，在整个项目中占比约为1.1%，可这怎么可能否定屠呦呦在发现菊科蒿属植物含有高效抗疟药物上，占比约为7.83%的贡献呢？至于政府为了捧屠呦呦，把黄花蒿的名字改成青蒿，这是当时对国际学术规则缺乏了解。事实上诺奖委员会对这一事显然是非常清楚的，他们也不认为这会影响到屠呦呦的诺奖评比。而政府去改名虽然本意上肯定是为了捧屠呦呦，也显示出对屠呦呦的支持，但这实际上是无端给屠呦呦本身没有问题的贡献增添了更多不必要的争议。" data-lang-en="For example, some disputes argue that Tu Youyou initially announced Artemisia annua, but the plant later widely used was Artemisia apiacea. However, these are all plants of the genus Artemisia in the family Asteraceae. Tu Youyou's main contribution to the topic selection was announcing the result that Artemisia annua had an immediate inhibition rate of 100% against murine malaria parasites at the conference in March 1972, which drew attention to the genus Artemisia. Later, someone found that Artemisia apiacea and Artemisia scoparia in the genus Artemisia had better effects, so they were widely used. The contribution of discovering Artemisia apiacea and Artemisia scoparia belongs to the Yunnan Provincial Institute of Materia Medica and the Shandong Provincial Institute of Traditional Chinese Medicine, accounting for about 1.1% of the entire project. How could this possibly negate Tu Youyou's contribution of about 7.83% in discovering that the genus Artemisia contains highly effective antimalarial drugs? As for the government changing the Chinese name of Artemisia apiacea to Artemisia annua to promote Tu Youyou, this was due to a lack of understanding of international academic rules at the time. They worried that such an issue would impact the evaluation Tu Youyou's contribution, while in fact, the Nobel Committee was obviously very clear about this and did not think it would affect Tu Youyou's Nobel Prize evaluation. While the government's intention in changing the Chinese name was certainly to promote Tu Youyou and demonstrate support for her, this actually needlessly added more unnecessary controversy to Tu Youyou's undisputed contribution.">例如，有些争议认为，屠呦呦最初公布的是青蒿，而最后广泛使用的是黄花蒿。可是，这些都是菊科蒿属植物。屠呦呦在选题上的主要贡献，就是在1972年3月在会议上公布青蒿对鼠疟原虫近期抑制率可达100%这一结果，引起了大家对于菊科蒿属植物的关注。后来大家发现菊科蒿属植物下的黄花蒿、艾蒿效果更好，就用了这个。发现黄花蒿、艾蒿的贡献是属于云南省药物研究所和山东省中医药研究所的，在整个项目中占比约为1.1%，可这怎么可能否定屠呦呦在发现菊科蒿属植物含有高效抗疟药物上，占比约为7.83%的贡献呢？至于政府为了捧屠呦呦，把黄花蒿的名字改成青蒿，这是当时对国际学术规则缺乏了解。事实上诺奖委员会对这一事显然是非常清楚的，他们也不认为这会影响到屠呦呦的诺奖评比。而政府去改名虽然本意上肯定是为了捧屠呦呦，也显示出对屠呦呦的支持，但这实际上是无端给屠呦呦本身没有问题的贡献增添了更多不必要的争议。</p>
+                <p data-lang-cn="类比青霉素的发现史。最早弗莱明发现青霉素，是没有提纯单体的，相关的工作是英国病理学家弗洛里（Howard Walter Florey）和德国化学家钱恩 (Ernst Boris Chain) 做的。后来青霉素又经过了大量的化学改造。现在用的头孢，西林，都是青霉素的衍生品。可这些衍生品对弗莱明的历史地位是推动，而不是削弱。" data-lang-en="Let's draw a parallel with the discovery of penicillin. When Fleming first discovered penicillin, the monomer wasn't purified; the work was done by British pathologist Howard Walter Florey and German chemist Ernst Boris Chain. Later, penicillin underwent extensive chemical modifications. The cephalosporins and penicillin we use today are all derivatives of penicillin. But these derivatives had promoted Fleming's historical standing, not diminished it.">类比青霉素的发现史。最早弗莱明发现青霉素，是没有提纯单体的，相关的工作是英国病理学家弗洛里（Howard Walter Florey）和德国化学家钱恩 (Ernst Boris Chain) 做的。后来青霉素又经过了大量的化学改造。现在用的头孢，西林，都是青霉素的衍生品。可这些衍生品对弗莱明的历史地位有什么影响吗？</p>
+
+                <p data-lang-cn="还有争议认为，其组内的学生才是最早发现青蒿有作用的，可这一部分的贡献属于技术中的调查研究，一共就2.84%，已经归到中国中医研究院科研组其他人员（Other researchers in the Chinese Academy of Traditional Chinese Medicine research group）当中了。" data-lang-en="There is also a dispute that the students in her group were the first to discover the effect of Artemisia annua. However, this part of the contribution belongs to Investigation in Technology, totaling only 2.84%, which has already been attributed to 'Other researchers in the Chinese Academy of Traditional Chinese Medicine research group.'">还有争议认为，其组内的学生才是最早发现青蒿有作用的，可这一部分的贡献属于技术中的调查研究，一共就2.84%，已经归到中国中医研究院科研组其他人员（Other researchers in the Chinese Academy of Traditional Chinese Medicine research group）当中了。</p>
+
+                <p data-lang-cn="总的来说，尽管屠呦呦的贡献比例看起来只有15.78%，QuIReC的计算结果清晰显示，那些争议是丝毫不会影响其诺奖评比的。" data-lang-en="In summary, although Tu Youyou's contribution proportion appears to be only 15.78%. The QuIReC's result clearly show that those disputes will not affect her Nobel Prize evaluation in the slightest.">总的来说，屠呦呦的贡献比例看起来只有15.78%，QuIReC的计算结果清晰显示，那些争议是丝毫不会影响其诺奖评比的。</p>
+
             </div>
         </section>
 
+        <section id="section-calculator" class="card bg-white p-8 rounded-2xl border-l-4 border-primary">
+            <h2 class="text-3xl font-extrabold text-primary mb-4 border-b pb-2" data-lang-cn="8. QuIReC声明" data-lang-en="8. QuIReC Statement">8. QuIReC声明</h2>
+            <div class="text-secondary space-y-4 leading-relaxed">
+                <p data-lang-cn="QuIReC的唯一目标是为解决论文贡献争议提供一个客观且可量化的依据，它不为任何作者排名提供依据。QuIReC充分承认并尊重在特定学科领域和国家中存在的约定俗成的排名习惯。例如，在某些情况下，贡献比例较低的研究人员可能会担任第一作者或通讯作者。QuIReC充分尊重这些既有惯例。QuIReC的设立仅为增强研究贡献的透明度。它是一个计算工具，而非一套指导规则，因此不寻求、也不会倡导改变任何现有的学术署名习惯。" data-lang-en="The sole goal of QuIReC is to provide an objective and quantifiable basis for resolving disputes over paper contributions; it does not provide a basis for any author ranking. QuIReC fully acknowledges and respects customary ranking practices that exist in specific disciplinary fields and countries. For instance, in some cases, a researcher with a lower contribution proportion may serve as the first author or corresponding author. QuIReC fully respects these existing conventions. QuIReC is established merely to enhance the transparency of research contributions. It is a calculation tool, not a set of guiding rules, and thus does not seek, nor will it advocate for, changes to any existing academic authorship habits.">QuIReC的唯一目标是为解决论文贡献争议提供一个客观且可量化的依据，它不为任何作者排名提供依据。QuIReC充分承认并尊重在特定学科领域和国家中存在的约定俗成的排名习惯。例如，在某些情况下，贡献比例较低的研究人员可能会担任第一作者或通讯作者。QuIReC充分尊重这些既有惯例。QuIReC的设立仅为增强研究贡献的透明度。它是一个计算工具，而非一套指导规则，因此不寻求、也不会倡导改变任何现有的学术署名习惯。</p>
+            </div>
+        </section>
+
+        <footer class="w-full max-w-5xl text-center text-sm text-gray-500 py-6 border-t mt-12">
+            <p data-lang-cn="&copy; All rights reserved. Thanks for the assist and support by the Google Gemini large language model for the development and generation of the English translation of this website." data-lang-en="&copy; 2025 QuIReC. All rights reserved. Thanks for the assist and support by the Google Gemini large language model for the development and generation of the English translation of this website.">&copy; All rights reserved. Thanks for the assist and support by the Google Gemini large language model for the development and generation of the English translation of this website.</p>
+        </footer>
 
     </main>
 
-    
-    <!-- 页脚 -->
-    <footer class="mt-16 w-full max-w-5xl border-t pt-8 text-center text-secondary text-sm">
-        <p data-lang-cn="&copy; 2025 QuIReC. All rights reserved. Thanks for the assist and support by the Google Gemini large language model for the development of this website." data-lang-en="&copy; 2025 QuIReC. All rights reserved. Thanks for the assist and support by the Google Gemini large language model for the development of this website.">&copy; 2025 QuIReC. All rights reserved. Thanks for the assist and support by the Google Gemini large language model for the development of this website.</p>
-    </footer>
-
-    <!-- JavaScript for Language Toggle Logic and Nav Highlighting -->
     <script>
-        let currentLang = 'cn';
-        
+        let currentLang = 'cn'; // 默认语言为中文
+
         const updateText = (lang) => {
             document.querySelectorAll('[data-lang-cn], [data-lang-en]').forEach(element => {
                 const cnText = element.getAttribute('data-lang-cn');
                 const enText = element.getAttribute('data-lang-en');
-
+                // 检查元素是否有可翻译文本
                 if (cnText && enText) {
-                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                        if (element.placeholder) {
-                            element.placeholder = lang === 'cn' ? cnText : enText;
-                        }
+                    // 仅更新文本节点内容，如果元素包含其他子元素（如图标），则保持子元素不变
+                    // 简单粗暴的方式：如果元素内有其他子元素，就只更新文本内容，否则更新整个textContent
+                    
+                    const textContent = lang === 'cn' ? cnText : enText;
+                    
+                    // 特别处理那些包含图标的元素 (例如 6.1 的 h3 里的 span)
+                    if (element.tagName.toLowerCase() === 'span' && element.parentElement.querySelector('i[data-lucide]')) {
+                        element.textContent = textContent;
+                    } else if (element.querySelector('i[data-lucide]')) {
+                        // 如果是带有图标的父元素（如 h3），我们假定图标放在前面，并且在 HTML 中已手动处理了图标和文本的分割
+                        // 由于我们采用的 HTML 结构中，所有标题都只包含文本或图标+文本，我们让它覆盖文本，这要求图标在非 translatable 元素内或用其他方式处理。
+                        // 在此修正中，我们已将 6.1 的文本移到 span 内，所以这里保持原有逻辑，让其他纯文本标签继续工作
+                        element.textContent = textContent;
                     } else {
-                        element.textContent = lang === 'cn' ? cnText : enText;
+                        // 对于大部分纯文本标签 (如 h2, p, li, h3, h4)，直接更新整个 textContent
+                        element.textContent = textContent;
                     }
                 }
             });
 
-            const langButton = document.getElementById('lang-button');
-            if (langButton) {
-                const buttonSpan = langButton.querySelector('span');
+            const buttonSpan = document.getElementById('lang-button').querySelector('span');
+            if (buttonSpan) {
                 const cnLabel = buttonSpan.getAttribute('data-lang-cn') || "Switch to English";
                 const enLabel = buttonSpan.getAttribute('data-lang-en') || "切换至中文";
                 
                 buttonSpan.textContent = lang === 'cn' ? cnLabel : enLabel;
             }
 
-            document.documentElement.lang = lang === 'cn' ? 'zh-CN' : 'en';
+            // 更新标题
+            const titleElement = document.querySelector('title');
+            if (titleElement) {
+                const cnTitle = titleElement.getAttribute('data-lang-cn');
+                const enTitle = titleElement.getAttribute('data-lang-en');
+                titleElement.textContent = lang === 'cn' ? cnTitle : enTitle;
+            }
+            document.documentElement.lang = lang === 'cn' ? 'zh-CN' : 'en'; // 确保 HTML lang 属性更新
         };
 
         function toggleLanguage() {
@@ -246,6 +413,9 @@
         }
 
         window.onload = () => {
+            // Render lucide icons on load
+            lucide.createIcons();
+            
             const path = window.location.pathname.split('/').pop();
             const links = {
                 'index.html': 'index.html',
@@ -256,13 +426,15 @@
             
             // Highlight the correct link
             document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active', 'bg-primary-light', 'font-semibold');
+                // 清除 background.html 中的完整高亮样式
+                link.classList.remove('active', 'bg-primary-light', 'font-semibold', 'text-primary', 'hover:text-blue-800');
                 link.classList.add('text-secondary', 'font-medium', 'hover:bg-gray-100');
             });
 
-            const activeLink = document.querySelector(`a[href="${links[path] || 'usage_guide.html'}"]`);
+            const activeLink = document.querySelector(`a[href=\"${links[path] || 'usage_guide.html'}\"]`);
             if (activeLink) {
-                activeLink.classList.add('active', 'bg-primary-light', 'font-semibold');
+                // 添加 background.html 中的完整高亮样式
+                activeLink.classList.add('active', 'bg-primary-light', 'font-semibold', 'text-primary', 'hover:text-blue-800');
                 activeLink.classList.remove('text-secondary', 'font-medium', 'hover:bg-gray-100');
             }
             updateText(currentLang);
