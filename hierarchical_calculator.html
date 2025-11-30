@@ -59,7 +59,7 @@
 
         <header class="text-center py-6 mb-8 bg-white rounded-xl shadow-lg border-t-4 border-primary">
             <h1 class="text-4xl font-bold text-secondary mb-2" data-key="header_title">研究贡献量化法计算器</h1>
-            <p class="text-lg text-gray-500" data-key="header_subtitle">V5.0 - 基于CRediT的三因素分档法</p>
+            <p class="text-lg text-gray-500" data-key="header_subtitle">V5.0 - 基于CROTs的三因素分档法</p>
         </header>
 
         <div class="grid grid-cols-1 lg:cols-3 gap-8">
@@ -67,6 +67,29 @@
             <section class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
                 <h2 class="text-2xl font-semibold text-primary mb-4 border-b pb-2" data-key="section_input_title">1. 输入参与者姓名与三因素档位</h2>
                 
+                <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <p class="font-bold text-secondary mb-2" data-key="csv_upload_label">导入贡献项结构 (CSV 文件；如果使用CRediT则不需要):</p>
+                    <div class="flex items-center space-x-3">
+                        
+                        <input type="file" id="csvFile" accept=".csv" class="hidden" onchange="updateFileInputLabel(this)"/>
+                        
+                        <label for="csvFile" id="customFileInputLabel" data-key="file_input_placeholder" class="py-2 px-4 rounded-full border border-gray-400 text-sm font-semibold bg-white text-gray-700 hover:bg-gray-100 cursor-pointer transition duration-150">
+                            </label>
+
+                        <button onclick="handleFileUpload()" class="py-2 px-4 border border-primary rounded-md shadow-sm text-white font-medium bg-primary hover:bg-blue-800 transition duration-150" data-key="button_upload_csv">
+                            上传并替换
+                        </button>
+                    </div>
+                    
+                    <div class="flex justify-between items-center mt-2">
+                         <p id="fileSelectedName" class="text-xs text-gray-500 italic" data-key="no_file_selected">（未选择任何文件）</p> 
+                        <button onclick="downloadExampleFile()" class="py-1 px-3 text-xs border border-dashed border-gray-400 rounded-full text-gray-700 hover:bg-gray-100 transition duration-150" data-key="button_download_example">
+                            下载示例文件 (UTF-8 格式)
+                        </button>
+                    </div>
+                    <p id="uploadStatus" class="text-sm text-green-600 hidden mt-2"></p>
+                    <p class="text-xs text-gray-500 mt-2" data-key="csv_upload_format_note">格式：第一列为大贡献项，第二列为小贡献项（例如：组织，数据管理）。请确保文件编码为UTF-8。</p>
+                </div>
                 <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <p class="font-bold text-secondary mb-2" data-key="mode_label">计算模式 / Calculation Mode:</p>
                     <div class="flex space-x-6">
@@ -125,6 +148,9 @@
     <script>
         // --- Data Model and Rendering Functions ---
 
+        // CSV 示例文件的内容，使用用户提供的中文内容
+        const EXAMPLE_CSV_CONTENT = `组织（Organization）,数据管理（Data Curation）\r\n组织（Organization）,写作 - 初稿（Writing - Original Draft）\r\n组织（Organization）,写作 - 审阅和编辑（Writing - Review & Editing）\r\n组织（Organization）,监督，指导和管理（Supervision）\r\n组织（Organization）,项目管理（Project administration）\r\n技术（Technology）,可视化（Visualization）\r\n技术（Technology）,形式分析（Formal analysis）\r\n技术（Technology）,确认（Validation）\r\n技术（Technology）,软件（Software）\r\n技术（Technology）,调查研究（Investigation）\r\n技术（Technology）,技术类引文（Technical References）\r\n劳动（Labor）,调查研究（Investigation）\r\n创新（Innovation）,概念化（Conceptualization）\r\n创新（Innovation）,方法论（Methodology）\r\n创新（Innovation）,创新类引文（Innovation References）\r\n外部支持（External Support）,资金获取（Funding acquisition）\r\n外部支持（External Support）,资金来源（Funding）\r\n外部支持（External Support）,资源提供（Resources）\r\n`;
+
         let largeOrgs = []; // Global array to hold the entire hierarchical structure
         let nextParticipantId = 1000;
         let nextSmallOrgId = 100;
@@ -138,36 +164,40 @@
         let currentDetailedResults = []; // 新增：用于存储详细结果，包括 S, C, B 档位
 
         // 中文版默认结构: 中文 (English)
-        const hierarchyStructureZH = {
-            "组织 (Organization)": [
-                "数据管理 (Data Curation)",
-                "写作 - 初稿 (Writing - Original Draft)",
-                "写作 - 审阅和编辑 (Writing - Review & Editing)",
-                "监督，指导和管理 (Supervision)",
-                "项目管理 (Project administration)"
-            ],
-            "技术 (Technology)": [
-                "可视化 (Visualization)",
-                "形式分析 (Formal analysis)",
-                "确认 (Validation)",
-                "软件 (Software)",
-                "调查研究 (Investigation)",
-                "技术类引文 (Technical References)"
-            ],
-            "劳动 (Labor)": [
-                "调查研究 (Investigation)"
-            ],
-            "创新 (Innovation)": [
-                "概念化 (Conceptualization)",
-                "方法论 (Methodology)",
-                "创新类引文 (Innovation References)"
-            ],
-            "外部支持 (External Support)": [
-                "资金获取 (Funding acquisition)",
-                "资金来源 (Funding)",
-                "资源提供 (Resources)"
-            ]
-        };
+        // 使用用户提供的示例内容作为默认结构
+        function getDefaultStructureZH() {
+             return {
+                "组织（Organization）": [
+                    "数据管理（Data Curation）",
+                    "写作 - 初稿（Writing - Original Draft）",
+                    "写作 - 审阅和编辑（Writing - Review & Editing）",
+                    "监督，指导和管理（Supervision）",
+                    "项目管理（Project administration）"
+                ],
+                "技术（Technology）": [
+                    "可视化（Visualization）",
+                    "形式分析（Formal analysis）",
+                    "确认（Validation）",
+                    "软件（Software）",
+                    "调查研究（Investigation）",
+                    "技术类引文（Technical References）"
+                ],
+                "劳动（Labor）": [
+                    "调查研究（Investigation）"
+                ],
+                "创新（Innovation）": [
+                    "概念化（Conceptualization）",
+                    "方法论（Methodology）",
+                    "创新类引文（Innovation References）"
+                ],
+                "外部支持（External Support）": [
+                    "资金获取（Funding acquisition）",
+                    "资金来源（Funding）",
+                    "资源提供（Resources）"
+                ]
+            };
+        }
+
 
         // 英文版默认结构: English (中文)
         const hierarchyStructureEN = {
@@ -201,17 +231,21 @@
             ]
         };
 
+        // 新增：用于存储和加载自定义 CSV 结构的全局变量
+        let customHierarchyStructure = null;
+
 
         const translations = {
             zh: {
                 title: "研究贡献量化法 (QuIReC) 计算器",
                 header_title: "研究贡献量化法 (QuIReC) 计算器",
-                header_subtitle: "V5.0 - 基于CRediT的三因素分档法",
+                header_subtitle: "V5.0 - 基于CROTs的三因素分档法",
                 section_input_title: "1. 输入参与者姓名与三因素档位",
                 section_output_title: "2. 计算与结果",
                 button_add_large_org: "+ 添加大贡献项",
                 button_calculate: "计算最终贡献比例",
                 button_download_report: "下载汇总报告 (.csv)", // 修改为.csv
+                button_download_example: "下载示例文件 (UTF-8 格式)", // 新增
                 error_message_validation: "请确保至少有两个大贡献项，且所有组织的档位均已计算完成，且总档位不为零。",
                 result_header_org: "1. 大贡献项相对平均档位比例:",
                 result_header_participant: "2. 最终参与者贡献比例 (明细):",
@@ -261,17 +295,28 @@
                 report_detail_score: "原始分值",
                 report_detail_squared: "平方贡献",
 
+                // 新增翻译键
+                csv_upload_label: "导入贡献项结构 (CSV 文件；如果使用CRediT则不需要):",
+                button_upload_csv: "上传并替换",
+                csv_upload_success: "成功导入贡献项结构！请继续输入参与者数据。",
+                csv_upload_error: "导入失败。请检查文件格式（确保至少有两列：大贡献项,小贡献项），并确认文件编码为 UTF-8。",
+                csv_upload_format_note: "格式：第一列为大贡献项，第二列为小贡献项（例如：组织,数据管理）。请确保文件编码为UTF-8。",
+                file_input_placeholder: "选择 CSV 文件", // 文件选择按钮的文本
+                file_ready: "已选择文件", // 文件选择后按钮的文本
+                no_file_selected: "（未选择任何文件）", // 未选择文件时的提示
+
             },
             en: {
                 // Corrected English Translations & Formats
                 title: "QuIReC Calculator",
                 header_title: "QuIReC Calculator",
-                header_subtitle: "V5.0 - Three-Factor Tiering Method based on CRediT",
+                header_subtitle: "V5.0 - Three-Factor Tiering Method based on CROTs",
                 section_input_title: "1. Input Participants and Three-Factor Tiers",
                 section_output_title: "2. Calculation and Results",
                 button_add_large_org: "+ Add Major Contribution Role",
                 button_calculate: "Calculate Final Ratios",
                 button_download_report: "Download Summary Report (.csv)", // 修改为.csv
+                button_download_example: "Download Example File (UTF-8 Format)", // 新增
                 error_message_validation: "Please ensure at least two Major Roles exist, all Tiers are not zero.",
                 result_header_org: "1. Major Role Relative Average Tier Ratio:",
                 result_header_participant: "2. Participant Contribution Ratios (Detail):",
@@ -322,6 +367,16 @@
                 report_detail_tier: "Three-Factor Tiers (S, C, B)",
                 report_detail_score: "Raw Score",
                 report_detail_squared: "Squared Contribution",
+
+                // 新增翻译键
+                csv_upload_label: "Import Contribution Structure (CSV File; Unnecessary if use CRediT):",
+                button_upload_csv: "Upload & Replace",
+                csv_upload_success: "Successfully imported contribution structure! Please proceed with participant data.",
+                csv_upload_error: "Import failed. Please check the file format (ensure at least two columns: Major Role, Minor Role), and confirm file encoding is UTF-8.",
+                csv_upload_format_note: "Format: First column is the Major Role, second is the Minor Role (e.g., Organization, Data Curation). Please ensure file encoding is UTF-8.",
+                file_input_placeholder: "Choose CSV File", // 文件选择按钮的文本
+                file_ready: "File Selected", // 文件选择后按钮的文本
+                no_file_selected: "(No file selected)", // 未选择文件时的提示
             }
         };
 
@@ -509,7 +564,10 @@
                 });
                 renderHierarchy(); 
             } else {
-                addSmallOrganization(newId); 
+                // Only add a default small organization if no list is provided (for manual addition)
+                if (nameOverride === undefined) { 
+                    addSmallOrganization(newId); 
+                }
             }
         }
 
@@ -983,6 +1041,180 @@
             }, 100); 
         }
 
+        /**
+         * 更新自定义文件输入按钮的文本和状态。
+         * @param {HTMLInputElement} input - 文件输入元素。
+         */
+        function updateFileInputLabel(input) {
+            const fileNameDisplay = document.getElementById('fileSelectedName');
+            const label = document.getElementById('customFileInputLabel');
+            const keys = translations[getLang()];
+            
+            if (!fileNameDisplay || !label) return;
+
+            if (input.files.length > 0) {
+                // 显示文件名，并改变按钮样式/文本
+                fileNameDisplay.textContent = input.files[0].name;
+                label.textContent = keys.file_ready;
+                label.classList.remove('text-gray-700', 'bg-white', 'border-gray-400');
+                label.classList.add('text-green-700', 'bg-green-50', 'border-green-400', 'font-bold');
+            } else {
+                // 未选择文件时，恢复默认文本和样式
+                label.textContent = keys.file_input_placeholder;
+                fileNameDisplay.textContent = keys.no_file_selected;
+                label.classList.remove('text-green-700', 'bg-green-50', 'border-green-400', 'font-bold');
+                label.classList.add('text-gray-700', 'bg-white', 'border-gray-400');
+            }
+        }
+
+
+        // --- CSV Upload Logic ---
+
+        /**
+         * 处理 CSV 文件上传，解析文件内容，并更新 hierarchyStructure。
+         */
+        function handleFileUpload() {
+            const fileInput = document.getElementById('csvFile');
+            const statusElement = document.getElementById('uploadStatus');
+            const keys = translations[getLang()];
+            
+            if (fileInput.files.length === 0) {
+                statusElement.textContent = keys.no_file_selected;
+                statusElement.className = "mt-2 text-sm text-red-600";
+                statusElement.classList.remove('hidden');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const csvText = e.target.result;
+                const newHierarchy = parseCsvToHierarchy(csvText);
+                
+                // 检查解析结果是否有效
+                const totalLargeOrgs = Object.keys(newHierarchy).length;
+                if (totalLargeOrgs > 0) {
+                    customHierarchyStructure = newHierarchy;
+                    initializeHierarchy(customHierarchyStructure); // 重新初始化结构
+                    
+                    statusElement.textContent = keys.csv_upload_success;
+                    statusElement.className = "mt-2 text-sm text-green-600";
+                } else {
+                    customHierarchyStructure = null; // 重置自定义结构
+                    statusElement.textContent = keys.csv_upload_error;
+                    statusElement.className = "mt-2 text-sm text-red-600";
+                }
+                statusElement.classList.remove('hidden');
+                updateFileInputLabel(fileInput); // 更新文件选择状态
+            };
+
+            reader.onerror = function() {
+                statusElement.textContent = keys.csv_upload_error;
+                statusElement.className = "mt-2 text-sm text-red-600";
+                statusElement.classList.remove('hidden');
+                updateFileInputLabel(fileInput); // 更新文件选择状态
+            };
+
+            // *** 仅使用 UTF-8 编码读取文件 ***
+            reader.readAsText(file, 'UTF-8'); 
+        }
+
+        /**
+         * 将 CSV 文本解析为 { "大贡献项": ["小贡献项1", "小贡献项2"], ... } 结构。
+         * @param {string} csvText - CSV 文件的全部内容。
+         * @returns {Object} 解析后的层级结构。
+         */
+        function parseCsvToHierarchy(csvText) {
+            const structure = {};
+            // 使用更健壮的方式分割行，处理各种换行符
+            const lines = csvText.split(/\r\n|\n|\r/).filter(line => line.trim() !== '');
+
+            for (let line of lines) {
+                // 简单 CSV 解析：根据逗号分割，取前两列。
+                // 忽略行首的 BOM (\ufeff)
+                if (line.startsWith('\ufeff')) {
+                    line = line.substring(1);
+                }
+
+                // 尝试用逗号分割，并清理空白
+                const parts = line.split(',').map(part => part.trim().replace(/^"|"$/g, '').replace(/""/g, '"'));
+                
+                if (parts.length >= 2) {
+                    const largeOrg = parts[0];
+                    const smallOrg = parts[1];
+                    
+                    if (largeOrg && smallOrg) {
+                        if (!structure[largeOrg]) {
+                            structure[largeOrg] = [];
+                        }
+                        // 避免重复的小贡献项
+                        if (!structure[largeOrg].includes(smallOrg)) {
+                            structure[largeOrg].push(smallOrg);
+                        }
+                    }
+                }
+            }
+            return structure;
+        }
+
+        /**
+         * 初始化层级结构，无论是默认的还是自定义的。
+         * @param {Object} structureToUse - 要使用的层级结构对象。
+         */
+        function initializeHierarchy(structureToUse) {
+             // 重置计数器和数据
+            largeOrgs = [];
+            nextLargeOrgId = 1;
+            nextSmallOrgId = 100;
+            nextParticipantId = 1000;
+            
+            for (const largeOrgName in structureToUse) {
+                if (Object.hasOwnProperty.call(structureToUse, largeOrgName)) {
+                    const smallOrgNames = structureToUse[largeOrgName];
+                    addLargeOrganization(largeOrgName, smallOrgNames); 
+                }
+            }
+
+            // 确保渲染
+            renderHierarchy(); 
+            
+            // 隐藏结果和下载按钮
+            document.getElementById('resultsContainer').classList.add('hidden'); 
+            document.getElementById('downloadReportButton').classList.add('hidden'); 
+
+            // 初始计算，更新分数显示（但不会显示最终结果）
+            largeOrgs.forEach(org => {
+                org.smallOrgs.forEach(sub => calculateSmallOrgScore(org.id, sub.id));
+                calculateLargeOrgScore(org.id);
+            });
+        }
+        
+        // --- 新增：下载示例文件函数 ---
+        function downloadExampleFile() {
+            const dateString = new Date().toISOString().split('T')[0];
+            
+            // BOM (Byte Order Mark) 确保 Excel 正确识别 UTF-8 编码
+            const BOM = "\ufeff"; 
+            const finalContent = BOM + EXAMPLE_CSV_CONTENT;
+
+            // 创建 Blob 对象并下载
+            const blob = new Blob([finalContent], { type: 'text/csv;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `QuIReC_Example_Roles_${dateString}.csv`;
+            
+            // 执行下载
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            setTimeout(() => {
+                URL.revokeObjectURL(link.href);
+            }, 100); 
+        }
+
+
         // --- Utility and Initialization ---
         
         function setLanguage(lang) {
@@ -996,6 +1228,14 @@
                         document.title = keys[key];
                     } else if (element.tagName === 'INPUT' && element.placeholder) {
                         element.placeholder = keys[key];
+                    } else if (element.tagName === 'LABEL' && element.id === 'customFileInputLabel') {
+                        // 特殊处理自定义文件选择标签的文本
+                        const fileInput = document.getElementById('csvFile');
+                        if (fileInput && fileInput.files.length > 0) {
+                            element.textContent = keys.file_ready;
+                        } else {
+                            element.textContent = keys.file_input_placeholder;
+                        }
                     } else if (element.tagName === 'BUTTON') { 
                         // Update button text for all buttons including the download button
                         element.textContent = keys[key];
@@ -1005,6 +1245,16 @@
                 }
             });
             
+            // 确保文件未选择状态的文本被翻译
+            const fileSelectedName = document.getElementById('fileSelectedName');
+            if (fileSelectedName) {
+                const fileInput = document.getElementById('csvFile');
+                 if (!fileInput || fileInput.files.length === 0) {
+                    fileSelectedName.textContent = keys.no_file_selected;
+                }
+            }
+
+
             // Re-render hierarchy to apply the new language formatting to input values
             renderHierarchy(); 
         }
@@ -1013,54 +1263,35 @@
             const selector = document.getElementById('language-selector');
             const currentLang = selector.value || 'zh';
             
-            // 初始隐藏下载按钮
+            // 初始隐藏按钮和状态信息
             document.getElementById('downloadReportButton').classList.add('hidden'); 
+            document.getElementById('uploadStatus').classList.add('hidden'); 
 
             // Select the correct default structure based on language
-            const initialStructure = currentLang === 'en' ? hierarchyStructureEN : hierarchyStructureZH;
-
-            // Initial setup: Add the predefined hierarchical structure
-            if (largeOrgs.length === 0) {
-                for (const largeOrgName in initialStructure) {
-                    if (Object.hasOwnProperty.call(initialStructure, largeOrgName)) {
-                        const smallOrgNames = initialStructure[largeOrgName];
-                        addLargeOrganization(largeOrgName, smallOrgNames); 
-                    }
-                }
-            }
+            const initialDefaultStructure = currentLang === 'en' ? hierarchyStructureEN : getDefaultStructureZH();
+            
+            // Initial setup: Use the default structure if no custom structure is loaded
+            initializeHierarchy(initialDefaultStructure);
 
             selector.addEventListener('change', (event) => {
-                // To force re-render with new language strings, we must clear and reload data
                 const newLang = event.target.value;
-                const newStructure = newLang === 'en' ? hierarchyStructureEN : hierarchyStructureZH;
                 
-                // Reset everything to reload defaults in the correct language format
-                largeOrgs = [];
-                nextLargeOrgId = 1;
-                nextSmallOrgId = 100;
-                nextParticipantId = 1000;
+                const newStructure = customHierarchyStructure || (newLang === 'en' ? hierarchyStructureEN : getDefaultStructureZH());
+
+                // 重新初始化结构
+                initializeHierarchy(newStructure);
                 
-                for (const largeOrgName in newStructure) {
-                    if (Object.hasOwnProperty.call(newStructure, largeOrgName)) {
-                        const smallOrgNames = newStructure[largeOrgName];
-                        addLargeOrganization(largeOrgName, smallOrgNames); 
-                    }
-                }
-                
-                setLanguage(newLang); // Re-render and set text
-                document.getElementById('resultsContainer').classList.add('hidden'); // 切换语言后隐藏结果
-                document.getElementById('downloadReportButton').classList.add('hidden'); // 切换语言后隐藏按钮
+                // 设置新语言
+                setLanguage(newLang); 
             });
             
             // Set initial language and render
-            setLanguage(localStorage.getItem('qui-rec-lang') || 'zh');
+            setLanguage(currentLang);
             
-            // Run initial calculation
-            largeOrgs.forEach(org => {
-                org.smallOrgs.forEach(sub => calculateSmallOrgScore(org.id, sub.id));
-                calculateLargeOrgScore(org.id);
-            });
-            calculateContributions(); 
+            // 确保文件选择标签和未选择状态的文本被正确设置
+            updateFileInputLabel(document.getElementById('csvFile'));
+
+            // Run initial calculation (already handled in initializeHierarchy)
         });
     </script>
     
