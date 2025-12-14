@@ -322,8 +322,8 @@ const EXAMPLE_CSV_CONTENT = `# 二、 贡献计算基础数据字段\r\n参与�
 
                 // 修改后的模式选项
                 mode_combined_label: "计算与加权模式选择:", // NEW
-                mode_squared_additive: "平方累加 (P + C + R & R² / ΣR) - 默认", // NEW
-                mode_linear_multiplicative: "线性相乘 (P × C × R & R / ΣR)", // NEW
+                mode_squared_additive: "平方累加 (P + C + R & Score² / ΣScore) - 默认", // NEW
+                mode_linear_multiplicative: "线性相乘 (P × C × R & Score / ΣScore)", // NEW
                 
                 // 保留比例分配模式
                 mode_ratio_label: "比例分配模式:",
@@ -1432,8 +1432,8 @@ const EXAMPLE_CSV_CONTENT = `# 二、 贡献计算基础数据字段\r\n参与�
         return mode;
     };
     const getWeightingText = (weighting) => {
-        if (weighting === 'squared') return "平方加权 (R²/ΣR²)";
-        if (weighting === 'linear') return "线性加权 (R/ΣR)";
+        if (weighting === 'squared') return "平方加权 (Score²/ΣScore²)";
+        if (weighting === 'linear') return "线性加权 (Score/ΣScore)";
         return weighting;
     }
     const getRatioText = (ratio) => {
