@@ -321,8 +321,8 @@ const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: C
 
                 // 修改后的模式选项
                 mode_combined_label: "计算与加权模式选择 Calculation & Weighting Mode:", // NEW
-                mode_squared_additive: "平方累加 Squared Accumulation (P + C + R & R² / ΣR) - 默认 Default", // NEW
-                mode_linear_multiplicative: "线性相乘 Linear Multiplication (P × C × R & R / ΣR)", // NEW
+                mode_squared_additive: "平方累加 Squared Accumulation (P + C + R & Score² / ΣScore) - 默认 Default", // NEW
+                mode_linear_multiplicative: "线性相乘 Linear Multiplication (P × C × R & Score / ΣScore)", // NEW
                 
                 // 保留比例分配模式
                 mode_ratio_label: "比例分配模式 Ratio Computation Mode:",
@@ -1426,8 +1426,8 @@ const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: C
         if (mode === 'linear') return "线性加权 Linear"; 
         if (mode === 'hierarchical') return keys.mode_hierarchical.replace(' - 默认 Default', '').replace(' - Default', ''); 
         if (mode === 'global') return keys.mode_global; 
-        if (mode === 'squaredAdditive') return "平方累加 Squared Accumulation (S+C+B & R²/ΣR)"; 
-        if (mode === 'linearMultiplicative') return "线性相乘 Linear Multiplication (Seff×Ceff×Beff & R/ΣR)"; 
+        if (mode === 'squaredAdditive') return "平方累加 Squared Accumulation (S+C+B & Score²/ΣScore)"; 
+        if (mode === 'linearMultiplicative') return "线性相乘 Linear Multiplication (Seff×Ceff×Beff & Score/ΣScore)"; 
         return mode;
     };
     const getWeightingText = (weighting) => {
