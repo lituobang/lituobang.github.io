@@ -177,7 +177,8 @@
         // --- Data Model and Rendering Functions ---
         // CSV 示例文件的内容，使用符合导入格式的中文内容
         // 最后一个字段 "组数量 (Group Multi)" 对应代码中的 factor_group_multi 变量。
-const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: Contribution Data Fields\r\n参与者/小组/子参与者 Participant/Group/Sub-Participant,是否属于某一小组 Belongs to a Group,小组名 Group Name,主要贡献项 Major Roles,小贡献项 Minor Roles,概率 Probability (P),因果关系 Causality (C),距离 Remoteness (R),数量 Multi,组数量 Group Multi\r\n张三 John Doe,否 No,,组织 Organization,数据管理 Data Curation,5,4,3,1,1\r\n李四 Tom,否 No,,组织 Organization,写作 - 初稿 Writing - Original Draft,4,3,2,1,1\r\n王五 Jane Doe,是 Yes,研发团队 Development Team,技术 Technology,软件 Software,3,2,1,1,1\r\n赵六 Michael,是 Yes,研发团队 Development Team,创新 Innovation,概念化 Conceptualization,2,2,2,1,5\r\n`;
+// CSV 示例文件的内容，已更新包含“具体贡献行为”字段
+const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: Contribution Data Fields\r\n参与者/小组/子参与者 Participant/Group/Sub-Participant,是否属于某一小组 Belongs to a Group,小组名 Group Name,具体贡献行为 Specific Contribution,主要贡献项 Major Roles,小贡献项 Minor Roles,概率 Probability (P),因果关系 Causality (C),距离 Remoteness (R),数量 Multi,组数量 Group Multi\r\n张三 John Doe,否 No,,编写了数据清洗脚本 Wrote data cleaning scripts,组织 Organization,数据管理 Data Curation,5,4,3,1,1\r\n李四 Tom,否 No,,完成了初稿撰写 Drafted the manuscript,组织 Organization,写作 - 初稿 Writing - Original Draft,4,3,2,1,1\r\n王五 Jane Doe,是 Yes,研发团队 Development Team,设计了核心架构 Designed core architecture,技术 Technology,软件 Software,3,2,1,1,1\r\n赵六 Michael,是 Yes,研发团队 Development Team,提出了创新概念 Proposed novel concept,创新 Innovation,概念化 Conceptualization,2,2,2,1,5\r\n`;
         let largeOrgs = []; // Global array to hold the entire hierarchical structure
         let nextParticipantId = 10000; // For individual participants (P) and sub-participants (S)
         let nextGroupId = 1000;        // For groups (G)
@@ -290,6 +291,7 @@ const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: C
                 small_org_name_placeholder: "小贡献项名称 (例如: 数据管理) Minor Role (e.g.: Data Curation)",
                 
                 participant_name_placeholder: "个体参与者姓名 (例如: 张三) Individual Participant (e.g.: John Doe)", // Updated
+                participant_behavior_placeholder: "具体贡献行为 (例如: 编写了代码核心模块) Specific Contribution", // NEW
                 group_name_placeholder: "小组名称 (例如: 研发团队) Group Name (e.g.: R&D Team)", // NEW
                 sub_participant_name_placeholder: "子参与者姓名 (例如: 成员A) Sub-Participant (e.g.: Member A)", // NEW
                 
@@ -406,18 +408,26 @@ const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: C
             const removeFunc = isSub ? `removeSubParticipant(${orgId}, ${subOrgId}, ${groupId}, ${contributor.id})` : `removeContributor(${orgId}, ${subOrgId}, ${contributor.id})`;
             const placeholder = isSub ? keys.sub_participant_name_placeholder : keys.participant_name_placeholder;
             const scoreLabel = isSub ? keys.sub_participant_effective_score : keys.group_effective_score; // Note: for individual participant, A_P is the score
+            
+            // NEW: Behavior placeholder
+            const behaviorPlaceholder = keys.participant_behavior_placeholder || "具体贡献行为 Specific Contribution";
 
             return `
                 <div id="participant-${contributor.id}" class="${cardClass} p-3 rounded-lg mb-2 relative">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between gap-2">
                         <input type="text" value="${contributor.name}" 
                             oninput="updateParticipantData(${orgId}, ${subOrgId}, ${parentId}, '${parentType}', ${contributor.id}, 'name', this.value)"
                             placeholder="${placeholder}" 
                             class="font-medium text-secondary text-sm w-1/4 p-1 rounded-md border-gray-300 border focus:ring-primary focus:border-primary">
                         
-                        <div class="flex items-center space-x-4 text-xs text-gray-500">
-                            <span class="mr-4">Score: <strong>${currentRawScore}</strong></span> 
-                            <span class="mr-4">${scoreLabel.split(':')[0]} (<span class="text-blue-600">Score * M</span>): <strong>${currentEffectiveScore}</strong></span>
+                        <input type="text" value="${contributor.contributionBehavior || ''}" 
+                            oninput="updateParticipantData(${orgId}, ${subOrgId}, ${parentId}, '${parentType}', ${contributor.id}, 'contributionBehavior', this.value)"
+                            placeholder="${behaviorPlaceholder}" 
+                            class="font-normal text-gray-600 text-xs w-1/3 p-1 rounded-md border-gray-300 border focus:ring-primary focus:border-primary">
+
+                        <div class="flex items-center space-x-2 text-xs text-gray-500 whitespace-nowrap">
+                            <span class="mr-2">Score: <strong>${currentRawScore}</strong></span> 
+                            <span class="mr-2">${scoreLabel.split(':')[0]} (<span class="text-blue-600">S*M</span>): <strong>${currentEffectiveScore}</strong></span>
                         </div>
 
                         <div class="flex space-x-2">
@@ -726,6 +736,7 @@ const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: C
                 id: newId,
                 type: 'individual',
                 name: defaultName,
+                contributionBehavior: "", // NEW FIELD
                 scarcity: 0, 
                 causality: 0, 
                 breakthrough: 0,
@@ -809,6 +820,7 @@ const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: C
             const newSubParticipant = {
                 id: newId,
                 name: defaultName,
+                contributionBehavior: "", // NEW FIELD
                 scarcity: 0, 
                 causality: 0, 
                 breakthrough: 0,
@@ -839,8 +851,10 @@ const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: C
             }
 
             if (contributor) {
-                if (key === 'name') {
+                if (key === 'name' || key === 'contributionBehavior') { // Updated to include behavior
                     contributor[key] = value;
+                    if (key === 'contributionBehavior') return; // Don't trigger recalc for behavior change
+                    // Name change doesn't require recalc either, but let's just return
                     return; 
                 } else if (key === 'multi') {
                     let numericValue = parseFloat(value) || 1;
@@ -1276,6 +1290,7 @@ const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: C
                                 smallOrgName: smallOrg.name,
                                 groupName: null,
                                 name: contributor.name,
+                                contributionBehavior: contributor.contributionBehavior || '', // Pass behavior
                                 finalRatio: contributorFinalRatio,
                                 type: 'Individual', // For report
                                 scarcity: contributor.scarcity,
@@ -1310,6 +1325,7 @@ const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: C
                                         smallOrgName: smallOrg.name,
                                         groupName: contributor.name,
                                         name: sub.name,
+                                        contributionBehavior: sub.contributionBehavior || '', // Pass behavior
                                         finalRatio: subParticipantRatio,
                                         type: 'Sub-Participant', // For report
                                         scarcity: sub.scarcity,
@@ -1463,17 +1479,17 @@ const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: C
 
     // --- Section 2: Contribution Base Data Fields (User Requested) ---
     csvContent += `#二、 贡献计算基础数据字段 Section 2: Contribution Data Fields\n`;
-    // 修改后的表头：将“是否是小组”修改为“是否属于某一小组”，并删除了“是否是子参与者”
-    csvContent += `参与者/小组/子参与者 Participant/Group/Sub-Participant,是否属于某一小组 Belongs to a Group,小组名 Group Name,主要贡献项 Major Roles,小贡献项 Minor Roles,概率 Probability (P),因果关系 Causality (C),距离 Remoteness (R),数量 Multi,组数量 Group Multi\n`;
+    // 【修改点】：在表头中加入了 '具体贡献行为 Specific Contribution'
+    csvContent += `参与者/小组/子参与者 Participant/Group/Sub-Participant,是否属于某一小组 Belongs to a Group,小组名 Group Name,具体贡献行为 Specific Contribution,主要贡献项 Major Roles,小贡献项 Minor Roles,概率 Probability (P),因果关系 Causality (C),距离 Remoteness (R),数量 Multi,组数量 Group Multi\n`;
+    
     currentDetailedResults.forEach(item => {
         // '是否属于某一小组': '是' if Sub-Participant
         const belongsToGroup = item.type === 'Sub-Participant' ? '是 Yes' : '否 No'; 
         // '小组名': Use groupName if Sub-Participant, else empty
         const groupName = item.type === 'Sub-Participant' ? item.groupName : ''; 
-        // '是否是子参与者' 已删除
         
-        // Construct the row, outputting the updated fields
-        csvContent += `${escapeCsv(item.name)},${belongsToGroup},${escapeCsv(groupName)},${escapeCsv(getDisplayableName(item.largeOrgName))},${escapeCsv(getDisplayableName(item.smallOrgName))},${item.scarcity.toFixed(0)},${item.causality.toFixed(0)},${item.breakthrough.toFixed(0)},${item.multi.toFixed(0)},${item.factorGroupMulti.toFixed(0)}\n`;
+        // 【修改点】：在输出数据行时加入了 item.contributionBehavior
+        csvContent += `${escapeCsv(item.name)},${belongsToGroup},${escapeCsv(groupName)},${escapeCsv(item.contributionBehavior)},${escapeCsv(getDisplayableName(item.largeOrgName))},${escapeCsv(getDisplayableName(item.smallOrgName))},${item.scarcity.toFixed(0)},${item.causality.toFixed(0)},${item.breakthrough.toFixed(0)},${item.multi.toFixed(0)},${item.factorGroupMulti.toFixed(0)}\n`;
     });
     csvContent += `\n`;
 
@@ -1520,8 +1536,22 @@ const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: C
     });
     csvContent += `\n`;
 
-    // --- Section 4: Footer & Disclaimer (Modified from original Section 4) ---
-    csvContent += `# 四、 报告落款与声明 Section 4: Footer & Disclaimer\n`;
+    // --- NEW Section 4: Contribution Behavior Summary ---
+    csvContent += `# 四、贡献行为汇总 Section 4: Contribution Behavior Summary\n`;
+    csvContent += `参与者/子参与者名称 Participant/Sub-Participant Name,是否属于某一小组 Belongs to a Group,小组名 Group Name,具体贡献行为 Specific Contribution,主要贡献项 Major Roles,小贡献项 Minor Roles,最终贡献比例 Final Contribution Ratio (%)\n`;
+    
+    currentDetailedResults.forEach(p => {
+        // '是否属于某一小组': '是' if Sub-Participant
+        const belongsToGroup = p.type === 'Sub-Participant' ? '是 Yes' : '否 No'; 
+        // '小组名': Use groupName if Sub-Participant, else empty
+        const groupName = p.type === 'Sub-Participant' ? p.groupName : ''; 
+        
+        csvContent += `${escapeCsv(p.name)},${belongsToGroup},${escapeCsv(groupName)},${escapeCsv(p.contributionBehavior)},${escapeCsv(getDisplayableName(p.largeOrgName))},${escapeCsv(getDisplayableName(p.smallOrgName))},${p.finalRatio.toFixed(4)}\n`;
+    });
+    csvContent += `\n`;
+
+    // --- Section 5: Footer & Disclaimer (Renamed from Section 4) ---
+    csvContent += `# 五、 报告落款与声明 Section 5: Footer & Disclaimer\n`;
     csvContent += `落款描述 Endorsement Description,报告生成于 QuIReC 研究贡献量化法 V5.2 Report generated by QuIReC V5.2\n`;
     csvContent += `声明 Statement,本报告基于 QuIReC (三因素分档法) 规则生成。结果旨在提供客观的贡献参考，其准确性完全取决于用户输入数据的合理性。This report is generated based on the QuIReC (Three-Factor Tiering Method) rules. The results aim to provide an objective reference for contribution, and their accuracy is entirely dependent on the reasonableness of the data input by the user.\n`;
     csvContent += `\n`;
@@ -1612,28 +1642,100 @@ const EXAMPLE_CSV_CONTENT = `#二、 贡献计算基础数据字段 Section 2: C
         // --- NEW CSV IMPORT LOGIC (Replaces old simple hierarchy parser) ---
 
 /**
- * 通用 CSV 解析器，用于查找特定的“贡献计算基础数据字段”部分并将其解析为对象数组。
+ * 通用 CSV 解析器 (增强版)
+ * 用于查找特定的“贡献计算基础数据字段”部分并将其解析为对象数组。
+ * 兼容带引号的字段和 UTF-8 BOM。
  * @param {string} csvText - 完整的 CSV 文件内容。
  * @returns {Array<Object>|null} 解析出的数据行，或 null。
  */
 function parseCsvData(csvText) {
-    const lines = csvText.split(/\r\n|\n/);
+    // 统一处理换行符，防止 \r\n 和 \n 混用导致的问题
+    const lines = csvText.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
     const data = [];
     let headers = [];
     let startParsing = false;
 
-    // 严格匹配导出的表头行
-    const targetHeaderLine = '参与者/小组/子参与者 Participant/Group/Sub-Participant,是否属于某一小组 Belongs to a Group,小组名 Group Name,主要贡献项 Major Roles,小贡献项 Minor Roles,概率 Probability (P),因果关系 Causality (C),距离 Remoteness (R),数量 Multi,组数量 Group Multi';
+    // 预期的表头字段数组 (顺序必须一致)
+    const expectedHeaders = [
+        '参与者/小组/子参与者 Participant/Group/Sub-Participant',
+        '是否属于某一小组 Belongs to a Group',
+        '小组名 Group Name',
+        '具体贡献行为 Specific Contribution',
+        '主要贡献项 Major Roles',
+        '小贡献项 Minor Roles',
+        '概率 Probability (P)',
+        '因果关系 Causality (C)',
+        '距离 Remoteness (R)',
+        '数量 Multi',
+        '组数量 Group Multi'
+    ];
+
+    // 辅助函数：清洗字段值（去除首尾空格、去除首尾引号、去除BOM）
+    const cleanField = (val) => {
+        if (!val) return '';
+        let s = val.trim();
+        // 去除 BOM
+        if (s.charCodeAt(0) === 0xFEFF) {
+            s = s.slice(1);
+        }
+        // 去除首尾引号 (如果成对出现)
+        if (s.startsWith('"') && s.endsWith('"')) {
+            s = s.slice(1, -1).replace(/""/g, '"'); // 处理转义的双引号
+        }
+        return s.trim();
+    };
+
+    // 辅助函数：解析 CSV 单行（处理引号内的逗号）
+    const parseLine = (line) => {
+        const result = [];
+        let current = '';
+        let inQuote = false;
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (char === '"') {
+                inQuote = !inQuote;
+                current += char;
+            } else if (char === ',' && !inQuote) {
+                result.push(current);
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+        result.push(current);
+        return result.map(cleanField); // 解析后立即清洗每个字段
+    };
+
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
-        // 查找特定的报告章节起始标记
+        
+        // 1. 查找章节起始标记
         if (line.startsWith('#二、 贡献计算基础数据字段 Section 2: Contribution Data Fields')) {
-            // 找到章节标记，下一行应该是表头
+            // 找到章节标记，尝试读取下一行作为表头
             if (i + 1 < lines.length) {
-                const headerLine = lines[i + 1].trim();
-                // 严格匹配表头
-                if (headerLine === targetHeaderLine) {
-                    headers = headerLine.split(',').map(h => h.trim());
+                const headerLine = lines[i + 1];
+                const parsedHeaders = parseLine(headerLine);
+
+                // 2. 校验表头是否包含所有必要字段
+                // 我们检查解析出的表头是否包含我们预期的所有字段（允许顺序一致，或者至少包含关键字段）
+                // 这里使用严格位置匹配，因为 importData 依赖列的含义
+                let match = true;
+                if (parsedHeaders.length < expectedHeaders.length) {
+                    match = false;
+                } else {
+                    for (let j = 0; j < expectedHeaders.length; j++) {
+                        if (parsedHeaders[j] !== expectedHeaders[j]) {
+                            // 允许一点容错，比如 Excel 可能加了引号，cleanField 已经处理了
+                            // 如果真的不匹配，打印日志方便调试
+                            console.warn(`Header mismatch at index ${j}: Expected '${expectedHeaders[j]}', Got '${parsedHeaders[j]}'`);
+                            match = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (match) {
+                    headers = parsedHeaders;
                     startParsing = true;
                     i++; // 跳过表头行
                     continue;
@@ -1641,32 +1743,12 @@ function parseCsvData(csvText) {
             }
         }
 
+        // 3. 解析数据行
         if (startParsing && line.length > 0 && !line.startsWith('#')) {
-            // 简单的 CSV 解析，处理引号和逗号分隔
-            const values = [];
-            let inQuote = false;
-            let currentField = '';
-            for (let j = 0; j < line.length; j++) {
-                const char = line[j];
+            const values = parseLine(line);
 
-                if (char === '"') {
-                    // 处理转义引号（例如："" 变成了 "）
-                    if (j + 1 < line.length && line[j + 1] === '"' && inQuote) {
-                        currentField += '"';
-                        j++; // 跳过下一个引号
-                    } else {
-                        inQuote = !inQuote;
-                    }
-                } else if (char === ',' && !inQuote) {
-                    values.push(currentField);
-                    currentField = '';
-                } else {
-                    currentField += char;
-                }
-            }
-            values.push(currentField); // 最后一个字段
-
-            if (values.length === headers.length) {
+            // 确保数据列数与表头列数基本一致（允许最后一列为空等情况，只要不缺太多）
+            if (values.length >= headers.length) {
                 const rowData = {};
                 headers.forEach((header, index) => {
                     rowData[header] = values[index];
@@ -1677,12 +1759,12 @@ function parseCsvData(csvText) {
     }
 
     if (!startParsing || data.length === 0) {
-        return null; // 如果未找到特定章节或数据为空，则返回 null
+        console.error("CSV Parsing Failed: Could not find section header or valid data.");
+        return null;
     }
 
     return data;
 }
-
 /**
  * 将解析出的贡献基础数据导入到全局 largeOrgs 结构中。
  * @param {Array<Object>} data - 从 CSV 解析出的贡献数据行。
@@ -1708,6 +1790,7 @@ function importContributionData(data) {
     const FIELD_NAME = '参与者/小组/子参与者 Participant/Group/Sub-Participant';
     const FIELD_IS_GROUP = '是否属于某一小组 Belongs to a Group';
     const FIELD_GROUP_NAME = '小组名 Group Name';
+    const FIELD_BEHAVIOR = '具体贡献行为 Specific Contribution'; // 新增字段
     const FIELD_MAJOR_ROLE = '主要贡献项 Major Roles';
     const FIELD_MINOR_ROLE = '小贡献项 Minor Roles';
     const FIELD_S = '概率 Probability (P)';
@@ -1759,6 +1842,7 @@ function importContributionData(data) {
         const contributorData = {
             id: nextParticipantId++,
             name: participantName,
+            contributionBehavior: row[FIELD_BEHAVIOR] || "", // 读取并赋值新字段
             scarcity: parseFloat(row[FIELD_S]) || 0,
             causality: parseFloat(row[FIELD_C]) || 0,
             breakthrough: parseFloat(row[FIELD_B]) || 0,
