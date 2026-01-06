@@ -36,19 +36,21 @@
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Institutional Tuning / 制度参数</h3>
                     <div class="space-y-6">
                         <div>
-                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Average History Price / 历史平均参考价</label>
+                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Average History Price / 历史平均价</label>
                             <div class="relative">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-600 font-bold">¥</span>
                                 <input type="number" id="param_phist" value="23.5" step="0.1" class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-10 pr-4 font-mono text-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
                             </div>
                         </div>
                         <div>
-                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">History Price Weight / 权重系数 (α)</label>
-                            <input type="number" id="param_alpha" value="0.8" step="0.05" min="0" max="1" class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-4 font-mono text-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Historical Average Days / 历史平均天数 (Days)</label>
+                            <input type="number" id="param_days" value="4" step="1" min="0" class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-4 font-mono text-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                            <p class="text-[10px] text-slate-400 mt-2 italic">Note: α = 1 / (Days + 1)</p>
                         </div>
                         <div>
-                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Liquidity Threshold / 流动性阈值 (τ)</label>
-                            <input type="number" id="param_tau" value="50" step="1" class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-4 font-mono text-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Liquidity Coefficient / 流动性系数 (γ)</label>
+                            <input type="number" id="param_gamma" value="0.2" step="0.01" class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-4 font-mono text-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                            <p class="text-[10px] text-slate-400 mt-2 italic">$\tau = \gamma \times \frac{\sum Q_D + \sum Q_S}{2}$</p>
                         </div>
                     </div>
                 </div>
@@ -73,12 +75,20 @@
                             <p id="matchVol" class="text-2xl font-black text-slate-800 tracking-tighter">0</p>
                         </div>
                         <div id="statusCard" class="p-5 rounded-[1.5rem] shadow-sm border-2 flex flex-col justify-center transition-all">
-                            <p class="text-[10px] font-black uppercase opacity-60">Liquidiity Status / 流动性状态</p>
+                            <p class="text-[10px] font-black uppercase opacity-60">Liquidity Status / 流动性状态</p>
                             <p id="tierValue" class="text-xl font-black tracking-tighter italic">Waiting...</p>
                         </div>
-                        <div class="bg-rose-50 p-5 rounded-[1.5rem] border border-rose-100 col-span-2 shadow-sm">
-                            <p class="text-[10px] font-black text-rose-500 uppercase">Demand-Gap / 需求缺口 (订单未匹配)</p>
-                            <p id="unmatchedMAbs" class="text-3xl font-black text-rose-600 tracking-tighter">0</p>
+                        <div class="bg-indigo-50 p-4 rounded-[1.5rem] border border-indigo-100 shadow-sm">
+                            <p class="text-[10px] font-black text-indigo-500 uppercase">Total Demand / 总需求量</p>
+                            <p id="totalDemandVal" class="text-xl font-black text-indigo-600 tracking-tighter">0</p>
+                        </div>
+                        <div class="bg-emerald-50 p-4 rounded-[1.5rem] border border-emerald-100 shadow-sm">
+                            <p class="text-[10px] font-black text-emerald-500 uppercase">Total Supply / 总供给量</p>
+                            <p id="totalSupplyVal" class="text-xl font-black text-emerald-600 tracking-tighter">0</p>
+                        </div>
+                        <div class="bg-rose-50 p-5 rounded-[1.5rem] border border-rose-100 shadow-sm col-span-2">
+                            <p class="text-[10px] font-black text-rose-500 uppercase">Demand-Gap / 需求缺口 (总需求 - 成交)</p>
+                            <p id="unmatchedMAbs" class="text-2xl font-black text-rose-600 tracking-tighter">0</p>
                         </div>
                     </div>
                 </div>
@@ -112,40 +122,31 @@
 
         <div class="space-y-2">
             <h3 class="text-indigo-600 font-black uppercase tracking-wider">4. 开放成交机制 / Overflow Execution</h3>
-            <p class="text-slate-700"><strong>溢出成交：</strong>未在清算时匹配的参与者若愿意接受已确定的清算价，只要市场仍有容量，可按该价格后续成交。但不保证可以成交。</p>
-            <p class="text-slate-500 italic"><strong>Open Fulfillment:</strong> Unmatched participants willing to accept the finalized clearing price may still execute trades as long as market capacity remains. However, there is no mandatory. </p>
+            <p class="text-slate-700"><strong>溢出成交：</strong>未在清算时匹配的参与者若愿意接受已确定的清算价，只要市场仍有容量，可按该价格后续成交。根据清算时的报价高低享有优先排队权，但不保证可以成交。</p>
+            <p class="text-slate-500 italic"><strong>Open Fulfillment:</strong> Unmatched participants willing to accept the finalized clearing price may still execute trades as long as market capacity remains. Priority is granted based on the price level of bids submitted during the auction, but fulfillment is not guaranteed.</p>
         </div>
     </div>
-
-
 
     <div class="mt-8 p-6 bg-slate-50 rounded-2xl border border-slate-200">
         <h4 class="text-xs font-black text-slate-400 uppercase mb-3">建议 / Strategic Recommendations</h4>
         <ul class="list-disc ml-5 space-y-2 text-xs text-slate-600">
             <li><strong>流动性激励 / Incentives:</strong> 建议对提供长期流动性的职业参与者实施“平台佣金减免”。 / Recommend commission discounts for long-term liquidity providers. </li>
-            <li><strong>动态阈值 / Adaptive τ:</strong> 建议根据高峰/低谷时段动态调整流动性阈值 τ。 / Suggest dynamically adjusting liquidity threshold τ based on peak/off-peak periods.</li>
+            <li><strong>动态阈值 / Adaptive τ:</strong> 建议根据高峰/低谷时段动态调整流动性系数 γ。 / Suggest dynamically adjusting liquidity coefficient γ based on peak/off-peak periods.</li>
             <li><strong>公共流动性储备 / Public Liquidity Reserve:</strong> 在长期流动性短缺的市场（如网约车市场）中，政府应组织大型企事业提供基础流动性支撑。 / In markets with chronic liquidity shortage, such as ride-hailing, the government should organize large enterprises to provide baseline liquidity.</li>
-            <li><strong>集体抱团报价 / Collective Demand Poolin:</strong> 在外卖市场中，需求不稳定的中小型商家可以组成“需求联盟”共同下单。当某一家商铺订单不足时，联盟内其他商铺的冗余订单可以共享该清算头寸，从而确保整体需求的稳定性并降低违约风险。 / In the delivery market, small merchants with volatile demand can form "Demand Alliances" to bid collectively. If one merchant lacks orders, the redundant demand from others within the alliance fills the slot, ensuring overall stability and minimizing default risks.</li>
-            <li><strong>订单无条件转让 / Unconditional Order Transfer:</strong> 商家在清算后若发现实际单量低于预期，可将已匹配的需求订单在二级市场进行无条件转让。这允许流动性在商家之间二次分配，避免供给的浪费。 / Merchants can unconditionally transfer their matched positions in a secondary market if actual order volume is lower than expected. This enables the redistribution of liquidity among merchants and prevents the waste of supply.</li>
+            <li><strong>集体抱团报价 / Collective Demand Pooling:</strong> 在外卖市场中，需求不稳定的中小型商家可以组成“需求联盟”共同下单。当某一家商铺订单不足时，联盟内其他商铺的冗余订单可以共享该清算头寸，从而确保整体需求的稳定性并降低违约风险。 / In the delivery market, small merchants with volatile demand can form "Demand Alliances" to bid collectively. If one merchant lacks orders, the redundant demand from others within the alliance fills the slot, ensuring overall stability and minimizing default risks.</li>
+            <li><strong>订单无条件转让 / Unconditional Order Transfer:</strong> 商家在清算后若发现实际单量低于预期，可将已匹配的需求订单在二级市场进行无条件转让。这允许供给在商家之间二次分配，避免浪费。 / Merchants can unconditionally transfer their matched positions in a secondary market if actual order volume is lower than expected. This enables the redistribution of supply among merchants and prevents the waste.</li>
         </ul>
     </div>
-
-
-
-
-
         </div>
     </div>
 
     <script>
         let chartInstance = null;
-        // Adjusted preset data: D for Demand, S for Supply
         const presetData = "D 18.5 40\nD 16.0 100\nD 14.5 60\nS 12.0 80\nS 15.0 70\nS 17.5 50";
         window.onload = () => { 
             document.getElementById('rawInput').value = presetData; 
             runAuction(); 
             
-            // Excel Upload Listener 修复部分
             document.getElementById('excelUpload').addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -158,7 +159,6 @@
                     const json = XLSX.utils.sheet_to_json(worksheet, {header: 1});
                     
                     let formattedInput = "";
-                    // Skip header row and process data
                     for(let i = 1; i < json.length; i++) {
                         if(json[i][0] && json[i][1] && json[i][2]) {
                             formattedInput += `${json[i][0]} ${json[i][1]} ${json[i][2]}\n`;
@@ -176,58 +176,94 @@
         function runAuction() {
             const input = document.getElementById('rawInput').value.trim();
             const pHist = parseFloat(document.getElementById('param_phist').value) || 0;
-            const alpha = parseFloat(document.getElementById('param_alpha').value) || 0;
-            const tau = parseFloat(document.getElementById('param_tau').value) || 0;
+            const days = parseFloat(document.getElementById('param_days').value) || 0;
+            const gamma = parseFloat(document.getElementById('param_gamma').value) || 0;
+            
+            const alpha = 1 / (days + 1);
 
             let buys = [], sells = [];
+            let totalD = 0, totalS = 0;
+
             input.split('\n').forEach(line => {
                 const parts = line.split(/\s+/);
                 if(parts.length < 3) return;
                 const [role, p, q] = [parts[0].toUpperCase(), parseFloat(parts[1]), parseFloat(parts[2])];
-                if(role === 'D' && !isNaN(p)) buys.push({p, q});
-                if(role === 'S' && !isNaN(p)) sells.push({p, q});
+                if(role === 'D' && !isNaN(p)) {
+                    buys.push({p, q});
+                    totalD += q;
+                }
+                if(role === 'S' && !isNaN(p)) {
+                    sells.push({p, q});
+                    totalS += q;
+                }
             });
 
-            const allPrices = [...new Set([...buys.map(b=>b.p), ...sells.map(s=>s.p), pHist])].sort((a,b)=>a-b);
+            const tau = gamma * ((totalD + totalS) / 2);
+
+            const allPrices = [...new Set([...buys.map(b=>b.p), ...sells.map(s=>s.p)])].sort((a,b)=>a-b);
             let curveData = allPrices.map(price => {
                 const demand = buys.filter(b => b.p >= price).reduce((sum, b) => sum + b.q, 0);
                 const supply = sells.filter(s => s.p <= price).reduce((sum, s) => sum + s.q, 0);
                 return { price, demand, supply, matched: Math.min(demand, supply) };
             });
 
-            let maxMatched = Math.max(...curveData.map(d => d.matched));
+            let maxMatched = curveData.length > 0 ? Math.max(...curveData.map(d => d.matched)) : 0;
             let pBidding = pHist;
+            
             if (maxMatched > 0) {
                 let candidates = curveData.filter(d => d.matched === maxMatched);
-                pBidding = candidates.reduce((prev, curr) => Math.abs(curr.price - pHist) < Math.abs(prev.price - pHist) ? curr : prev).price;
+                const midIdx = Math.floor(candidates.length / 2);
+                pBidding = candidates[midIdx].price;
             }
 
-            let effectiveAlpha = (maxMatched < tau) ? (alpha * (maxMatched / Math.max(tau, 1))) : alpha;
-            let pFinal = (effectiveAlpha * pBidding) + ((1 - effectiveAlpha) * pHist);
-
-            const activeM = buys.filter(m => m.p >= pFinal).reduce((sum, m) => sum + m.q, 0);
-            const activeR = sells.filter(r => r.p <= pFinal).reduce((sum, r) => sum + r.q, 0);
-            const actualMatched = Math.min(activeM, activeR);
-
-            document.getElementById('pStar').innerText = "¥" + pFinal.toFixed(2);
-            document.getElementById('matchVol').innerText = actualMatched.toFixed(0);
-            document.getElementById('unmatchedMAbs').innerText = Math.max(0, activeM - actualMatched).toFixed(0);
-
+            let pFinal;
             const statusCard = document.getElementById('statusCard');
             const tierValue = document.getElementById('tierValue');
-            if (actualMatched >= tau) {
+
+            if (maxMatched >= tau) {
+                pFinal = pBidding;
                 statusCard.className = "p-5 rounded-[1.5rem] shadow-sm border-2 border-emerald-500 bg-emerald-50 text-emerald-700";
                 tierValue.innerText = "Tier 1: Stable 稳定";
             } else {
+                pFinal = (alpha * pBidding) + ((1 - alpha) * pHist);
                 statusCard.className = "p-5 rounded-[1.5rem] shadow-sm border-2 border-amber-500 bg-amber-50 text-amber-700";
                 tierValue.innerText = "Tier 2: Fragile 短缺";
             }
-            renderChart(allPrices, curveData, pFinal);
+
+            const finalD = buys.filter(b => b.p >= pFinal).reduce((sum, b) => sum + b.q, 0);
+            const finalS = sells.filter(s => s.p <= pFinal).reduce((sum, s) => sum + s.q, 0);
+            const actualMatched = Math.min(finalD, finalS);
+
+            document.getElementById('pStar').innerText = "¥" + pFinal.toFixed(2);
+            document.getElementById('matchVol').innerText = actualMatched.toFixed(0);
+            document.getElementById('totalDemandVal').innerText = totalD.toFixed(0);
+            document.getElementById('totalSupplyVal').innerText = totalS.toFixed(0);
+            document.getElementById('unmatchedMAbs').innerText = Math.max(0, totalD - actualMatched).toFixed(0);
+
+            renderChart(allPrices, curveData, pFinal, tau);
         }
 
-        function renderChart(prices, data, pFinal) {
+        function renderChart(prices, data, pFinal, tau) {
             const ctx = document.getElementById('auctionChart').getContext('2d');
             if(chartInstance) chartInstance.destroy();
+            
+            const tauLinePlugin = {
+                id: 'tauLine',
+                beforeDraw: (chart) => {
+                    const { ctx, chartArea: { left, right }, scales: { y } } = chart;
+                    ctx.save();
+                    ctx.setLineDash([5, 5]);
+                    ctx.strokeStyle = 'rgba(244, 63, 94, 0.6)';
+                    ctx.lineWidth = 2;
+                    const yPos = y.getPixelForValue(tau);
+                    ctx.beginPath();
+                    ctx.moveTo(left, yPos);
+                    ctx.lineTo(right, yPos);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            };
+
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -241,9 +277,14 @@
                     responsive: true,
                     scales: {
                         x: { type: 'linear', title: { display: true, text: 'Price (¥)' } },
-                        y: { min: 0 }
+                        y: { min: 0, title: { display: true, text: 'Volume' } }
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: { mode: 'index', intersect: false }
                     }
-                }
+                },
+                plugins: [tauLinePlugin]
             });
         }
         
