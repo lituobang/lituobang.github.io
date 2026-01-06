@@ -96,6 +96,8 @@
             <h3 class="text-indigo-600 font-black uppercase tracking-wider">1. 时间分片集合竞价 / Time-Slotted Auction</h3>
             <p class="text-slate-700"><strong>模块化清算：</strong>全天划分为 12/24 个离散的竞价模块，每小时/每两小时进行一次定时集合竞价清算。</p>
             <p class="text-slate-500 italic"><strong>Slotted Clearing:</strong> The day is divided into 12/24 discrete auction modules, with scheduled collective clearing performed hourly or two hourly.</p>
+            <p class="text-slate-700"><strong>长周期集合竞价：</strong>在流动性极其稀缺的市场中，传统的每小时清算无法形成有效规模。系统应支持将清算周期延长至每周甚至每月，针对不同时段进行远期集合竞价。这种时间上的深度整合能汇聚分散的需求与供给，产生具备指导意义的基准清算价。</p>
+            <p class="text-slate-500 italic mt-2"><strong>Long-Cycle Collective Auction:</strong> In markets with extreme liquidity scarcity where hourly clearing is ineffective, the system supports extending the clearing cycle to a weekly or monthly basis. By conducting forward collective auctions for specific time slots, the protocol aggregates fragmented supply and demand to generate a meaningful benchmark price.</p>
         </div>
 
         <div class="space-y-2">
@@ -127,7 +129,6 @@
             <li><strong>公共流动性储备 / Public Liquidity Reserve:</strong> 在长期流动性短缺的市场（如网约车市场）中，政府应组织大型企事业提供基础流动性支撑。 / In markets with chronic liquidity shortage, such as ride-hailing, the government should organize large enterprises to provide baseline liquidity.</li>
             <li><strong>集体抱团报价 / Collective Demand Poolin:</strong> 在外卖市场中，需求不稳定的中小型商家可以组成“需求联盟”共同下单。当某一家商铺订单不足时，联盟内其他商铺的冗余订单可以共享该清算头寸，从而确保整体需求的稳定性并降低违约风险。 / In the delivery market, small merchants with volatile demand can form "Demand Alliances" to bid collectively. If one merchant lacks orders, the redundant demand from others within the alliance fills the slot, ensuring overall stability and minimizing default risks.</li>
             <li><strong>订单无条件转让 / Unconditional Order Transfer:</strong> 商家在清算后若发现实际单量低于预期，可将已匹配的需求订单在二级市场进行无条件转让。这允许流动性在商家之间二次分配，避免供给的浪费。 / Merchants can unconditionally transfer their matched positions in a secondary market if actual order volume is lower than expected. This enables the redistribution of liquidity among merchants and prevents the waste of supply.</li>
-
         </ul>
     </div>
 
