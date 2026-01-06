@@ -141,7 +141,37 @@
         let chartInstance = null;
         // Adjusted preset data: D for Demand, S for Supply
         const presetData = "D 18.5 40\nD 16.0 100\nD 14.5 60\nS 12.0 80\nS 15.0 70\nS 17.5 50";
-        window.onload = () => { document.getElementById('rawInput').value = presetData; runAuction(); };
+        window.onload = () => { 
+            document.getElementById('rawInput').value = presetData; 
+            runAuction(); 
+            
+            // Excel Upload Listener 修复部分
+            document.getElementById('excelUpload').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const json = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+                    
+                    let formattedInput = "";
+                    // Skip header row and process data
+                    for(let i = 1; i < json.length; i++) {
+                        if(json[i][0] && json[i][1] && json[i][2]) {
+                            formattedInput += `${json[i][0]} ${json[i][1]} ${json[i][2]}\n`;
+                        }
+                    }
+                    if(formattedInput) {
+                        document.getElementById('rawInput').value = formattedInput.trim();
+                        runAuction();
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            });
+        };
 
         function runAuction() {
             const input = document.getElementById('rawInput').value.trim();
@@ -154,7 +184,6 @@
                 const parts = line.split(/\s+/);
                 if(parts.length < 3) return;
                 const [role, p, q] = [parts[0].toUpperCase(), parseFloat(parts[1]), parseFloat(parts[2])];
-                // M changed to D, R changed to S
                 if(role === 'D' && !isNaN(p)) buys.push({p, q});
                 if(role === 'S' && !isNaN(p)) sells.push({p, q});
             });
@@ -219,7 +248,6 @@
         }
         
         function downloadExcelTemplate() {
-            // M/R changed to D/S in template header
             const data = [["Type (D/S)", "Price", "Quantity"],["D", 18.5, 40],["D", 16.0, 100],["S", 12.0, 80],["S", 15.0, 70]];
             const ws = XLSX.utils.aoa_to_sheet(data);
             const wb = XLSX.utils.book_new();
