@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>ALRCA: Adaptive Liquidity-Robust Collective Auction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        .doc-section h2 { border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+        .doc-section h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; font-weight: 700; color: #334155; }
+        .formula-box { background: #f8fafc; border-left: 4px solid #6366f1; padding: 1rem; margin: 1rem 0; font-family: 'Courier New', Courier, monospace; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen pb-20">
+
+    <div class="max-w-7xl mx-auto py-10 px-6">
+        <div class="mb-10 flex justify-between items-end">
+            <div>
+                <h1 class="text-4xl font-black text-slate-900 tracking-tighter italic uppercase">ALR-CA Clearing Engine</h1>
+                <p class="text-slate-500 font-bold tracking-tight">Adaptive Liquidity-Robust Collective Auction Clearing Engine / 可适应流动性紧缺的集合竞价清算引擎</p>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+                <button onclick="downloadExcelTemplate()" class="text-[10px] font-bold text-indigo-600 bg-white px-3 py-1 rounded-full border border-indigo-200 hover:bg-indigo-50 transition shadow-sm uppercase tracking-wider">Download Excel Template</button>
+                <input type="file" id="excelUpload" accept=".xlsx, .xls, .csv" class="text-xs text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-slate-900 file:text-white hover:file:bg-indigo-700 cursor-pointer shadow-sm">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-12 gap-8 mb-20">
+            <div class="col-span-12 lg:col-span-4 space-y-6">
+                <div class="bg-white p-8 rounded-3xl shadow-xl border-t-8 border-indigo-600">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Institutional Tuning / 制度参数</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Average History Price / 历史平均参考价</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-600 font-bold">¥</span>
+                                <input type="number" id="param_phist" value="13.5" step="0.1" class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-10 pr-4 font-mono text-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">History Price Weight / 权重系数 (α)</label>
+                            <input type="number" id="param_alpha" value="0.8" step="0.05" min="0" max="1" class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-4 font-mono text-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Liquidity Threshold / 流动性阈值 (τ)</label>
+                            <input type="number" id="param_tau" value="50" step="1" class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-4 font-mono text-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-4">Manual Input / 报价流 (D Demand 需求 / S Supply 供给)</label>
+                    <textarea id="rawInput" rows="8" class="w-full p-4 bg-slate-50 rounded-2xl font-mono text-xs border border-slate-100 outline-none focus:ring-2 focus:ring-indigo-500" placeholder="D 15 100&#10;D 14 50&#10;S 12 80&#10;S 16 60"></textarea>
+                    <button onclick="runAuction()" class="w-full mt-4 bg-slate-900 text-white py-4 rounded-2xl font-black uppercase hover:bg-indigo-600 transition shadow-lg">Run Clearing / 执行清算结算</button>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-8 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-2xl flex flex-col justify-center">
+                        <p class="text-[10px] font-bold opacity-60 uppercase tracking-widest text-indigo-300">Equilibrium Price / 清算价 (P*)</p>
+                        <p id="pStar" class="text-6xl font-black mt-2 tracking-tighter">¥0.0</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white p-5 rounded-[1.5rem] shadow-sm border border-slate-200">
+                            <p class="text-[10px] font-black text-slate-400 uppercase">Match Vol / 成交量</p>
+                            <p id="matchVol" class="text-2xl font-black text-slate-800 tracking-tighter">0</p>
+                        </div>
+                        <div id="statusCard" class="p-5 rounded-[1.5rem] shadow-sm border-2 flex flex-col justify-center transition-all">
+                            <p class="text-[10px] font-black uppercase opacity-60">Liquidiity Status / 流动性状态</p>
+                            <p id="tierValue" class="text-xl font-black tracking-tighter italic">Waiting...</p>
+                        </div>
+                        <div class="bg-rose-50 p-5 rounded-[1.5rem] border border-rose-100 col-span-2 shadow-sm">
+                            <p class="text-[10px] font-black text-rose-500 uppercase">Demand-Gap / 需求缺口 (订单未匹配)</p>
+                            <p id="unmatchedMAbs" class="text-3xl font-black text-rose-600 tracking-tighter">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-200">
+                    <canvas id="auctionChart" height="140"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-12 rounded-[3rem] shadow-sm border border-slate-200 max-w-5xl mx-auto doc-section text-slate-800 leading-relaxed">
+            <h2 class="text-2xl font-black mb-6 text-slate-900 uppercase tracking-tight italic">ALR-CA基本规则 / ALR-CA Core Rules Summary</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+        <div class="space-y-2">
+            <h3 class="text-indigo-600 font-black uppercase tracking-wider">1. 时间分片集合竞价 / Time-Slotted Auction</h3>
+            <p class="text-slate-700"><strong>模块化清算：</strong>全天划分为 12/24 个离散的竞价模块，每小时/每两小时进行一次定时集合竞价清算。</p>
+            <p class="text-slate-500 italic"><strong>Slotted Clearing:</strong> The day is divided into 12/24 discrete auction modules, with scheduled collective clearing performed hourly or two hourly.</p>
+        </div>
+
+        <div class="space-y-2">
+            <h3 class="text-indigo-600 font-black uppercase tracking-wider">2. 报价与匹配逻辑 / Bidding & Matching</h3>
+            <p class="text-slate-700"><strong>义务与优先权：</strong>成功匹配的订单必须按清算价履行交易，且享有最高级别的派单与结算优先权。职业参与者可挂设长期单以提供基础流动性。</p>
+            <p class="text-slate-500 italic"><strong>Obligation & Priority:</strong> Matched orders are mandatory to fulfill at the clearing price and hold top-tier priority. Professional participants may place standing orders to provide base liquidity.</p>
+        </div>
+
+        <div class="space-y-2">
+            <h3 class="text-indigo-600 font-black uppercase tracking-wider">3. 自适应定价保障 / Robust Pricing</h3>
+            <p class="text-slate-700"><strong>分级处理：</strong>流动性充足时执行稳定清算；流动性不足时自动通过历史价格加权平滑以防止价格畸变。</p>
+            <p class="text-slate-500 italic"><strong>Tier-based Logic:</strong> Tier 1 (Stable) clearing for high liquidity; Tier 2 (Fragile) invokes historical weighting to prevent price distortion in thin markets.</p>
+        </div>
+
+        <div class="space-y-2">
+            <h3 class="text-indigo-600 font-black uppercase tracking-wider">4. 开放成交机制 / Overflow Execution</h3>
+            <p class="text-slate-700"><strong>溢出成交：</strong>未在清算时匹配的参与者若愿意接受已确定的清算价，只要市场仍有容量，可按该价格后续成交。但不保证可以成交。</p>
+            <p class="text-slate-500 italic"><strong>Open Fulfillment:</strong> Unmatched participants willing to accept the finalized clearing price may still execute trades as long as market capacity remains. However, there is no mandatory. </p>
+        </div>
+    </div>
+
+
+
+    <div class="mt-8 p-6 bg-slate-50 rounded-2xl border border-slate-200">
+        <h4 class="text-xs font-black text-slate-400 uppercase mb-3">建议 / Strategic Recommendations</h4>
+        <ul class="list-disc ml-5 space-y-2 text-xs text-slate-600">
+            <li><strong>流动性激励 / Incentives:</strong> 建议对提供长期流动性的职业参与者实施“平台佣金减免”。 / Recommend commission discounts for long-term liquidity providers. </li>
+            <li><strong>动态阈值 / Adaptive τ:</strong> 建议根据高峰/低谷时段动态调整流动性阈值 τ。 / Suggest dynamically adjusting liquidity threshold τ based on peak/off-peak periods.</li>
+            <li><strong>公共流动性储备 / Public Liquidity Reserve:</strong> 在长期流动性短缺的市场（如网约车市场）中，政府应组织大型企事业提供基础流动性支撑。 / In markets with chronic liquidity shortage, such as ride-hailing, the government should organize large enterprises to provide baseline liquidity.</li>
+            <li><strong>集体抱团报价 / Collective Demand Poolin:</strong> 需求不稳定的中小型商家可以组成“需求联盟”共同下单。当某一家商铺订单不足时，联盟内其他商铺的冗余订单可以共享该清算头寸，从而确保整体需求的稳定性并降低违约风险。 / Small merchants with volatile demand can form "Demand Alliances" to bid collectively. If one merchant lacks orders, the redundant demand from others within the alliance fills the slot, ensuring overall stability and minimizing default risks.</li>
+            <li><strong>订单无条件转让 / Unconditional Order Transfer:</strong> 商家在清算后若发现实际单量低于预期，可将已匹配的配送需求订单在二级市场进行无条件转让。这允许流动性在商家之间二次分配，避免配送资源的浪费。 / Merchants can unconditionally transfer their matched delivery positions in a secondary market if actual order volume is lower than expected. This enables the redistribution of liquidity among merchants and prevents the waste of delivery capacity.</li>
+
+        </ul>
+    </div>
+
+
+
+
+
+        </div>
+    </div>
+
+    <script>
+        let chartInstance = null;
+        // Adjusted preset data: D for Demand, S for Supply
+        const presetData = "D 18.5 40\nD 16.0 100\nD 14.5 60\nS 12.0 80\nS 15.0 70\nS 17.5 50";
+        window.onload = () => { document.getElementById('rawInput').value = presetData; runAuction(); };
+
+        function runAuction() {
+            const input = document.getElementById('rawInput').value.trim();
+            const pHist = parseFloat(document.getElementById('param_phist').value) || 0;
+            const alpha = parseFloat(document.getElementById('param_alpha').value) || 0;
+            const tau = parseFloat(document.getElementById('param_tau').value) || 0;
+
+            let buys = [], sells = [];
+            input.split('\n').forEach(line => {
+                const parts = line.split(/\s+/);
+                if(parts.length < 3) return;
+                const [role, p, q] = [parts[0].toUpperCase(), parseFloat(parts[1]), parseFloat(parts[2])];
+                // M changed to D, R changed to S
+                if(role === 'D' && !isNaN(p)) buys.push({p, q});
+                if(role === 'S' && !isNaN(p)) sells.push({p, q});
+            });
+
+            const allPrices = [...new Set([...buys.map(b=>b.p), ...sells.map(s=>s.p), pHist])].sort((a,b)=>a-b);
+            let curveData = allPrices.map(price => {
+                const demand = buys.filter(b => b.p >= price).reduce((sum, b) => sum + b.q, 0);
+                const supply = sells.filter(s => s.p <= price).reduce((sum, s) => sum + s.q, 0);
+                return { price, demand, supply, matched: Math.min(demand, supply) };
+            });
+
+            let maxMatched = Math.max(...curveData.map(d => d.matched));
+            let pBidding = pHist;
+            if (maxMatched > 0) {
+                let candidates = curveData.filter(d => d.matched === maxMatched);
+                pBidding = candidates.reduce((prev, curr) => Math.abs(curr.price - pHist) < Math.abs(prev.price - pHist) ? curr : prev).price;
+            }
+
+            let effectiveAlpha = (maxMatched < tau) ? (alpha * (maxMatched / Math.max(tau, 1))) : alpha;
+            let pFinal = (effectiveAlpha * pBidding) + ((1 - effectiveAlpha) * pHist);
+
+            const activeM = buys.filter(m => m.p >= pFinal).reduce((sum, m) => sum + m.q, 0);
+            const activeR = sells.filter(r => r.p <= pFinal).reduce((sum, r) => sum + r.q, 0);
+            const actualMatched = Math.min(activeM, activeR);
+
+            document.getElementById('pStar').innerText = "¥" + pFinal.toFixed(2);
+            document.getElementById('matchVol').innerText = actualMatched.toFixed(0);
+            document.getElementById('unmatchedMAbs').innerText = Math.max(0, activeM - actualMatched).toFixed(0);
+
+            const statusCard = document.getElementById('statusCard');
+            const tierValue = document.getElementById('tierValue');
+            if (actualMatched >= tau) {
+                statusCard.className = "p-5 rounded-[1.5rem] shadow-sm border-2 border-emerald-500 bg-emerald-50 text-emerald-700";
+                tierValue.innerText = "Tier 1: Stable 稳定";
+            } else {
+                statusCard.className = "p-5 rounded-[1.5rem] shadow-sm border-2 border-amber-500 bg-amber-50 text-amber-700";
+                tierValue.innerText = "Tier 2: Fragile 短缺";
+            }
+            renderChart(allPrices, curveData, pFinal);
+        }
+
+        function renderChart(prices, data, pFinal) {
+            const ctx = document.getElementById('auctionChart').getContext('2d');
+            if(chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: prices,
+                    datasets: [
+                        { label: 'Demand (D)', data: data.map(d=>d.demand), borderColor: '#6366f1', borderWidth: 3, pointRadius: 2, tension: 0, fill: false },
+                        { label: 'Supply (S)', data: data.map(d=>d.supply), borderColor: '#10b981', borderWidth: 3, pointRadius: 2, tension: 0, fill: false }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'Price (¥)' } },
+                        y: { min: 0 }
+                    }
+                }
+            });
+        }
+        
+        function downloadExcelTemplate() {
+            // M/R changed to D/S in template header
+            const data = [["Type (D/S)", "Price", "Quantity"],["D", 18.5, 40],["D", 16.0, 100],["S", 12.0, 80],["S", 15.0, 70]];
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "ALRCA_Template");
+            XLSX.writeFile(wb, "ALRCA_Template.xlsx");
+        }
+    </script>
+</body>
+</html>
