@@ -58,14 +58,14 @@
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-4">Manual Input / 报价流 (D Demand 需求 / S Supply 供给)</label>
                     <textarea id="rawInput" rows="8" class="w-full p-4 bg-slate-50 rounded-2xl font-mono text-xs border border-slate-100 outline-none focus:ring-2 focus:ring-indigo-500" placeholder="D 15 100&#10;D 14 50&#10;S 12 80&#10;S 16 60"></textarea>
-                    <button onclick="runAuction()" class="w-full mt-4 bg-slate-900 text-white py-4 rounded-2xl font-black uppercase hover:bg-indigo-600 transition shadow-lg">Run Clearing / 执行清算结算</button>
+                    <button onclick="runAuction()" class="w-full mt-4 bg-slate-900 text-white py-4 rounded-2xl font-black uppercase hover:bg-indigo-600 transition shadow-lg">Run Clearing / 执行清算</button>
                 </div>
             </div>
 
             <div class="col-span-12 lg:col-span-8 space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-2xl flex flex-col justify-center">
-                        <p class="text-[10px] font-bold opacity-60 uppercase tracking-widest text-indigo-300">Equilibrium Price / 清算价 (P*)</p>
+                        <p class="text-[10px] font-bold opacity-60 uppercase tracking-widest text-indigo-300">Equilibrium Price / 均衡价 (P*)</p>
                         <p id="pStar" class="text-6xl font-black mt-2 tracking-tighter">¥0.0</p>
                     </div>
                     
@@ -110,8 +110,8 @@
 
         <div class="space-y-2">
             <h3 class="text-indigo-600 font-black uppercase tracking-wider">2. 报价与匹配逻辑 / Bidding & Matching</h3>
-            <p class="text-slate-700"><strong>义务与优先权：</strong>成功匹配的订单必须按清算价履行交易，且享有最高级别的派单与结算优先权。职业参与者可挂设长期单以提供基础流动性。</p>
-            <p class="text-slate-500 italic"><strong>Obligation & Priority:</strong> Matched orders are mandatory to fulfill at the clearing price and hold top-tier priority. Professional participants may place standing orders to provide base liquidity.</p>
+            <p class="text-slate-700"><strong>义务与优先权：</strong>成功匹配的订单必须按均衡价履行交易，且享有最高级别的派单与结算优先权。职业参与者可挂设长期单以提供基础流动性。</p>
+            <p class="text-slate-500 italic"><strong>Obligation & Priority:</strong> Matched orders are mandatory to fulfill at the equilibrium price and hold top-tier priority. Professional participants may place standing orders to provide base liquidity.</p>
         </div>
 
         <div class="space-y-2">
@@ -122,8 +122,8 @@
 
         <div class="space-y-2">
             <h3 class="text-indigo-600 font-black uppercase tracking-wider">4. 开放成交机制 / Overflow Execution</h3>
-            <p class="text-slate-700"><strong>溢出成交：</strong>未在清算时匹配的参与者若愿意接受已确定的清算价，只要市场仍有容量，可按该价格后续成交。根据清算时的报价高低享有优先排队权，但不保证可以成交。</p>
-            <p class="text-slate-500 italic"><strong>Open Fulfillment:</strong> Unmatched participants willing to accept the finalized clearing price may still execute trades as long as market capacity remains. Priority is granted based on the price level of bids submitted during the auction, but fulfillment is not guaranteed.</p>
+            <p class="text-slate-700"><strong>溢出成交：</strong>未在清算时匹配的参与者若愿意接受已确定的均衡价，只要市场仍有容量，可按该价格后续成交。根据清算时的报价高低享有优先排队权，但不保证可以成交。</p>
+            <p class="text-slate-500 italic"><strong>Open Fulfillment:</strong> Unmatched participants willing to accept the finalized equilibrium price may still execute trades as long as market capacity remains. Priority is granted based on the price level of bids submitted during the auction, but fulfillment is not guaranteed.</p>
         </div>
     </div>
 
