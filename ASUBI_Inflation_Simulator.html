@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>AS-UBI Coupled Simulation Dashboard v4.3</title>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; --success: #10b981; --warn: #fbbf24; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .app-container { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { width: 360px; min-width: 360px; background: var(--card); padding: 20px; border-right: 1px solid #334155; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+        .main-display { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 15px; overflow-y: auto; }
+        .top-row { display: flex; gap: 15px; height: 45%; min-height: 350px; }
+        .bottom-row { display: flex; gap: 15px; height: 35%; min-height: 250px; }
+        .view-panel { background: var(--card); border-radius: 12px; border: 1px solid #334155; padding: 12px; display: flex; flex-direction: column; flex: 1; min-width: 0; }
+        .panel-title { font-size: 0.8rem; color: #94a3b8; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; border-bottom: 1px solid #334155; padding-bottom: 4px; }
+        .formula-card { background: var(--bg); padding: 12px; border-radius: 8px; border-left: 4px solid var(--accent); font-size: 0.85em; margin-bottom: 5px; }
+        .formula-card b { color: var(--accent); display: block; margin-bottom: 5px; }
+        canvas { background: #000; border-radius: 4px; width: 100% !important; height: 100% !important; }
+        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .stat-card { background: var(--bg); padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #334155; }
+        .stat-label { font-size: 0.65rem; color: #94a3b8; }
+        .stat-value { font-size: 1.1rem; font-weight: bold; }
+        input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
+        button { padding: 8px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-size: 0.85rem; transition: opacity 0.2s; }
+        button:active { opacity: 0.7; }
+        .btn-sync { background: #ef4444; color: white; }
+        .btn-asubi { background: var(--success); color: white; }
+        .theory-footer { background: #1e293b; padding: 20px; border-top: 1px solid #334155; font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; }
+        .theory-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .theory-item h4 { color: var(--accent); margin-top: 0; margin-bottom: 8px; border-bottom: 1px solid #334155; }
+        .active-mode { outline: 2px solid white; box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="sidebar">
+        <h3 style="margin:0; color:var(--accent);">AS-UBI Formulas / 演算公式</h3>
+        <div class="formula-card">
+            <b>Fisher Equation / 费雪方程:</b>
+            $$P = \frac{(M + \Delta M_{eff}) \cdot V}{Y_{max}(1-\gamma) + \sigma_{tech}}$$
+        </div>
+        <div class="formula-card">
+            <b>SNR Theory / 信噪比理论:</b>
+            $$SNR = \frac{\Delta D_{ubi}}{\sigma_{noise}} \implies Pricing$$
+        </div>
+
+        <div class="metrics-grid">
+            <div class="stat-card">
+                <div class="stat-label">Price Index / 物价 P</div>
+                <div id="p-val" class="stat-value" style="color:var(--accent)">100.0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total ΣM / 累计发放</div>
+                <div id="total-m-val" class="stat-value" style="color:var(--warn)">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Capacity / 产能 γ</div>
+                <div id="gap-val" class="stat-value" style="color:#a78bfa">20.0%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Growth / 通胀率 π</div>
+                <div id="inf-val" class="stat-value" style="color:#f87171">0.0%</div>
+            </div>
+        </div>
+
+        <div style="font-size: 0.8em; margin-top: 5px;">
+            <label>Tech Dividend / 自动化红利 (σ): <span id="sigma-txt">1.5</span></label>
+            <input type="range" id="sigma" min="0" max="5" step="0.1" value="1.5">
+            <label style="margin-top:8px; display:block;">Feedback / 反馈调节 (λ) （To simplify the model, there is no tax self-compensation mechanism. / 为简化模型，没有税收自补偿机制） : <span id="lambda-txt">0.1</span></label>
+            <input type="range" id="lambda" min="0" max="0.5" step="0.01" value="0.1">
+        </div>
+
+        <div class="btn-group">
+            <button id="btn-sync" class="btn-sync" onclick="setMode('sync')">1. Sync / 同步模式</button>
+            <button id="btn-asubi" class="btn-asubi" onclick="setMode('as-ubi')">1. AS-UBI / 异步模式</button>
+        </div>
+        
+        <div class="btn-group" style="margin-top: 5px;">
+            <button id="btn-auto" onclick="toggleAuto()" style="background:#6366f1; color:white;">2. Auto Start/Stop</button>
+            <button onclick="manualStep()" style="background:var(--accent); color:var(--bg);">2. Step / 手动一步</button>
+        </div>
+        
+        <button onclick="resetSim()" style="background:#475569; color:white; margin-top: 5px;">Reset / 系统重置</button>
+    </div>
+
+    <div class="main-display">
+        <div class="top-row">
+            <div class="view-panel">
+                <div class="panel-title">Spatial Price Heatmap / 空间价格热力图 (Cellular Automata)</div>
+                <div style="flex:1; display:flex; justify-content:center;">
+                    <canvas id="caCanvas"></canvas>
+                </div>
+            </div>
+            <div class="view-panel">
+                <div class="panel-title">Real-time Price Index / 实时物价走势 (P)</div>
+                <canvas id="pChart"></canvas>
+            </div>
+        </div>
+        <div class="bottom-row">
+            <div class="view-panel" style="flex:2;">
+                <div class="panel-title">Cumulative Distribution / 累计货币发放 (ΣM)</div>
+                <canvas id="mChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="theory-footer">
+            <div class="theory-grid">
+                <div class="theory-item">
+                    <h4>Micro-Agent Rules / 元胞微观规则</h4>
+                    每个元胞代表一个“本地商家”。其价格决策基于“局部共识”：<br>
+                    Each cell represents a "local merchant." Its pricing decisions are based on "local consensus":<br>
+                    • <b>Signal Reception / 接收信号</b>：商家实时监控局部需求流量 $\Delta D$。<br>
+                    Merchants monitor local demand flow $\Delta D$ in real-time.<br>
+                    • <b>Game Logic / 博弈逻辑</b>：若周围 $3\times3$ 邻域内提价商家占比超过临界值，商家判定通胀非随机，转为提价策略。<br>
+                   If the proportion of price-hiking merchants within the surrounding $3\times3$ neighborhood exceeds a critical threshold, the merchant determines that inflation is non-random and switches to a price-increase strategy.<br>
+                    • <b>AS-UBI Advantage / AS-UBI 优势</b>：异步发放增加了需求的“空间熵”，使得单店销量波动看起来像随机噪音，无法触发提价共识。
+                    Asynchronous distribution increases the "spatial entropy" of demand, making individual store sales fluctuations appear as random noise, thereby failing to trigger a price-increase consensus.
+                </div>
+                <div class="theory-item">
+                    <h4>Macro Control / 宏观调控逻辑</h4>
+                    系统模拟了一个基于“通胀目标制”的算法控制中心：<br>
+                    The system simulates an algorithmic control center based on "inflation targeting":<br>
+                    • <b>Feedback Adjustment / 反馈调节</b>：根据 $\pi_{gap}$ 实时修正发放速率 $\lambda$。当 P 上涨过快时，算法会自动收缩异步流的强度。<br>
+                    The distribution rate $\lambda$ is corrected in real-time based on $\pi_{gap}$. When P rises too rapidly, the algorithm automatically contracts the intensity of the asynchronous flow.<br>
+                    • <b>Automatic Hedging / 自动对冲</b>：模拟自动化红利 $\sigma_{tech}$ 如何通过降低单位生产成本，为 $\Delta M$ 创造物理层面的承载空间（分母扩张）。<br>
+                    Simulates how the automation dividend $\sigma_{tech}$ creates physical capacity for $\Delta M$ (denominator expansion) by reducing unit production costs.<br>
+                    • <b>No Tax Self-compensation Mechanism / 没有税收自补偿机制</b>：为简化模型，没有税收自补偿机制。所以在自动化红利较低时，AS-UBI模式下仍然可能触发恶性通胀，但在如果自动化红利较高。即使没有税收自补偿机制，仍然可以维持物价稳定。<br>
+                    To simplify the model, there is no tax self-compensation mechanism. Therefore, when the automation dividend is low, hyperinflation may still be triggered under the AS-UBI mode; however, when the automation dividend is high, price stability can still be maintained even without a tax self-compensation mechanism.
+                </div>
+                <div class="theory-item">
+                    <h4>Information Entropy / 信息熵解释</h4>
+                    通胀除了货币供应和总产出，还是一种“信息同步”的产物：<br>
+                    Beyond money supply and total output, inflation is also a product of "information synchronization":<br>
+                    • <b>Synchronized UBI / 同步 UBI</b>：是“高相干性信号”，极易穿透市场噪声。<br>
+                   A "high-coherence signal" that easily penetrates market noise.<br>
+                    • <b>AS-UBI</b>：通过“时空去相干”，将货币购买力降级为背景噪声。根据卢卡斯孤岛模型，只要信息不对称性足够高，名义货币增加就不会立刻转化为物价上涨。<br>
+                   Through "spatiotemporal decoherence," purchasing power is downgraded to background noise. According to the Lucas Islands Model, as long as information asymmetry is high enough, an increase in nominal money will not immediately translate into price hikes.
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('caCanvas');
+    const ctx = canvas.getContext('2d');
+    const gridDim = 50;
+    let cellSize;
+
+    function resizeCanvas() {
+        const wrapper = canvas.parentElement;
+        cellSize = Math.floor(Math.min(wrapper.clientWidth, wrapper.clientHeight) / gridDim);
+        canvas.width = gridDim * cellSize; canvas.height = gridDim * cellSize;
+    }
+
+    let grid = Array(gridDim).fill().map(() => Array(gridDim).fill(0));
+    let mode = 'idle', macroP = 100, deltaM = 0, totalM = 0, stepCount = 0;
+    let autoInterval = null;
+
+    const chartConfig = (label, color) => ({
+        type: 'line',
+        data: { labels: [], datasets: [{ label: label, data: [], borderColor: color, borderWidth: 2, pointRadius: 0, fill: true, backgroundColor: color + '22' }] },
+        options: { maintainAspectRatio: false, animation: false, scales: { x: { display: false }, y: { ticks: { color: '#94a3b8', font: {size: 10} }, grid: { color: '#334155' } } }, plugins: { legend: { display: false } } }
+    });
+
+    const pChart = new Chart(document.getElementById('pChart'), chartConfig('Price P', '#38bdf8'));
+    const mChart = new Chart(document.getElementById('mChart'), chartConfig('Total M', '#fbbf24'));
+
+    function setMode(m) { 
+        mode = m; 
+        document.getElementById('btn-sync').classList.toggle('active-mode', m === 'sync');
+        document.getElementById('btn-asubi').classList.toggle('active-mode', m === 'as-ubi');
+    }
+
+    function toggleAuto() {
+        if (autoInterval) {
+            clearInterval(autoInterval);
+            autoInterval = null;
+            document.getElementById('btn-auto').innerText = "2. Auto Start";
+        } else {
+            if (mode === 'idle') { alert("Please select a mode (Sync or AS-UBI) first!"); return; }
+            autoInterval = setInterval(runStep, 100);
+            document.getElementById('btn-auto').innerText = "2. Auto Stop";
+        }
+    }
+
+    function manualStep() {
+        if (mode === 'idle') { alert("Please select a mode (Sync or AS-UBI) first!"); return; }
+        runStep();
+    }
+
+    function resetSim() {
+        if (autoInterval) toggleAuto();
+        grid = Array(gridDim).fill().map(() => Array(gridDim).fill(0));
+        macroP = 100; totalM = 0; stepCount = 0; mode = 'idle';
+        document.getElementById('btn-sync').classList.remove('active-mode');
+        document.getElementById('btn-asubi').classList.remove('active-mode');
+        [pChart, mChart].forEach(c => { c.data.labels = []; c.data.datasets[0].data = []; c.update(); });
+        updateUI();
+        draw();
+    }
+
+    function runStep() {
+        if(mode === 'idle') return;
+        stepCount++;
+        const sigma = parseFloat(document.getElementById('sigma').value);
+        const lambda = parseFloat(document.getElementById('lambda').value);
+
+        deltaM = Math.max(0, 20 + lambda * (102 - macroP)); 
+        let stepM = 0;
+        let nextGrid = JSON.parse(JSON.stringify(grid));
+
+        if(mode === 'sync') {
+            if(stepCount % 50 === 0) {
+                stepM = 5000;
+                for(let i=0; i<gridDim; i++) for(let j=0; j<gridDim; j++) nextGrid[i][j] += 95;
+            }
+        } else {
+            stepM = deltaM * 15;
+            for(let k=0; k < stepM/5; k++) {
+                nextGrid[Math.floor(Math.random()*gridDim)][Math.floor(Math.random()*gridDim)] += 45;
+            }
+        }
+        totalM += stepM;
+
+        let totalHeat = 0;
+        for(let i=0; i<gridDim; i++) {
+            for(let j=0; j<gridDim; j++) {
+                let neighbors = getNeighborsAvg(i, j);
+                if(neighbors > 38) nextGrid[i][j] += (neighbors * 0.42); 
+                nextGrid[i][j] -= (sigma * 3.2); 
+                nextGrid[i][j] = Math.min(255, Math.max(0, nextGrid[i][j]));
+                totalHeat += nextGrid[i][j];
+            }
+        }
+        grid = nextGrid;
+        macroP = 100 + (totalHeat / 3500);
+
+        updateUI();
+        draw();
+    }
+
+    function getNeighborsAvg(x, y) {
+        let sum = 0, count = 0;
+        for(let i=-1; i<=1; i++) {
+            for(let j=-1; j<=1; j++) {
+                if(i===0 && j===0) continue;
+                let nx = (x+i+gridDim)%gridDim, ny = (y+j+gridDim)%gridDim;
+                sum += grid[nx][ny]; count++;
+            }
+        }
+        return sum / count;
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for(let i=0; i<gridDim; i++) {
+            for(let j=0; j<gridDim; j++) {
+                let v = grid[i][j];
+                ctx.fillStyle = `rgb(${v}, ${Math.max(0, 120-v)}, ${220-v/2})`;
+                ctx.fillRect(i*cellSize, j*cellSize, cellSize-1, cellSize-1);
+            }
+        }
+    }
+
+    function updateUI() {
+        document.getElementById('p-val').innerText = macroP.toFixed(1);
+        document.getElementById('total-m-val').innerText = Math.floor(totalM).toLocaleString();
+        document.getElementById('gap-val').innerText = Math.max(0, 25 - (macroP-100)*0.5).toFixed(1) + "%";
+        document.getElementById('inf-val').innerText = (macroP - 100).toFixed(1) + "%";
+        document.getElementById('sigma-txt').innerText = document.getElementById('sigma').value;
+        document.getElementById('lambda-txt').innerText = document.getElementById('lambda').value;
+
+        pChart.data.labels.push(""); pChart.data.datasets[0].data.push(macroP);
+        mChart.data.labels.push(""); mChart.data.datasets[0].data.push(totalM);
+        if(pChart.data.labels.length > 100) { [pChart, mChart].forEach(c => { c.data.labels.shift(); c.data.datasets[0].data.shift(); }); }
+        pChart.update(); mChart.update();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    draw(); // Initial draw
+</script>
+</body>
+</html>
