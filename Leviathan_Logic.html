@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>利维坦演化模型 - 论文绘图版</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body { margin: 0; background: #ffffff; color: #333; font-family: 'Times New Roman', serif; overflow: hidden; }
+        #overlay { 
+            position: absolute; left: 20px; top: 20px; width: 280px; 
+            background: rgba(255,255,255,0.95); padding: 20px; 
+            border-radius: 4px; border: 1px solid #ccc; z-index: 100; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        .btn-evolve { width: 100%; padding: 12px; background: #444; color: #fff; border: none; cursor: pointer; margin-bottom: 10px; font-weight: bold; border-radius: 4px; transition: 0.2s; }
+        .btn-evolve:hover { background: #000; }
+        .btn-export { width: 100%; padding: 10px; background: #27ae60; color: #fff; border: none; cursor: pointer; font-weight: bold; border-radius: 4px; }
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px; border-top: 1px solid #eee; margin-top: 15px; padding-top: 10px; }
+        .val { font-weight: bold; color: #d32f2f; }
+        svg { width: 100vw; height: 100vh; background: #fafafa; }
+        .node { stroke: #333; stroke-width: 1px; }
+        .link { stroke-opacity: 0.3; stroke-width: 1.2px; stroke: #666; }
+        #stage-label { position: absolute; bottom: 20px; right: 30px; font-size: 24px; color: #999; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div id="overlay">
+    <h3 style="margin:0 0 10px 0; border-bottom: 2px solid #333;">Institutional Evolution Model 制度演化博弈模型</h3>
+    <div id="stage-title" style="font-weight:bold; color:#d32f2f;">Tier 1: Atomized Jungle 原始丛林</div>
+    <p id="stage-desc" style="font-size: 12px; color: #666; margin: 10px 0;">Atomized individuals collide randomly; the system is in a state of high disorder. 原子化个体随机碰撞，系统处于高度无序状态。</p>
+    
+    <button class="btn-evolve" id="evolve-btn" onclick="nextStep()">Push to Next Evolutionary Stage 推向下一演化阶段</button>
+    <button class="btn-export" onclick="exportImg()">Export Illustration 导出论文插图 (PNG)</button>
+
+    <div class="data-grid">
+        <div>Total Output 总产出 α: <span class="val" id="v-alpha">100</span></div>
+        <div>Info Entropy 信息熵 H: <span class="val" id="v-h">0.99</span></div>
+        <div>Hierarchy Level 层级 k: <span class="val" id="v-k">0</span></div>
+        <div>Survival Rate 生存率: <span class="val" id="v-survive">100%</span></div>
+    </div>
+</div>
+
+<div id="stage-label">Phase: Chaos</div>
+<div id="capture-area">
+    <svg id="canvas"></svg>
+</div>
+
+<script>
+    const width = window.innerWidth, height = window.innerHeight;
+    const svg = d3.select("#canvas");
+    let nodes = [], links = [], sim, step = 1;
+
+    function init() {
+        nodes = Array.from({length: 60}, (_, i) => ({
+            id: i, type: 'producer',
+            x: Math.random() * width, y: Math.random() * height
+        }));
+        updateSim(-30, 0);
+    }
+
+    function updateSim(charge, dist) {
+        if(sim) sim.stop();
+        sim = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id).distance(dist))
+            .force("charge", d3.forceManyBody().strength(charge))
+            .force("center", d3.forceCenter(width/2 + 100, height/2))
+            .on("tick", () => {
+                svg.selectAll(".link").attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+                                     .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+                svg.selectAll(".node").attr("cx", d => d.x).attr("cy", d => d.y);
+            });
+        render();
+    }
+
+    function render() {
+        svg.selectAll(".link").data(links).join("line").attr("class", "link");
+        
+        svg.selectAll(".node").data(nodes, d => d.id).join("circle")
+           .attr("class", "node")
+           .attr("r", d => d.type === 'strongman' ? 15 : 7)
+           .attr("fill", d => {
+               if(d.type === 'strongman') return "#fbc02d"; // 金色强人
+               return d.type === 'looter' ? '#ef9a9a' : '#a5d6a7'; // 红掠夺，绿生产
+           });
+    }
+
+    function nextStep() {
+        if(step === 1) {
+            step = 2;
+            d3.select("#stage-title").text("Tier 2: Recursive Predation 多层递归掠夺");
+            d3.select("#stage-desc").text("Agency entropy explodes; intermediate layers engage in double-sided misreporting for rent maximization. 代理熵爆表，中间层级为了租金最大化进行双向瞒报。");
+            d3.select("#stage-label").text("Phase: Hierarchy");
+            
+            // 生成递归链接
+            for(let i=0; i<45; i++) {
+                let s = Math.floor(Math.random()*60), t = Math.floor(Math.random()*60);
+                if(s !== t) { links.push({source: s, target: t}); nodes[s].type = 'looter'; }
+            }
+            updateSim(-100, 50);
+            updateData(55, 1.62, "38%", 4);
+        } else if(step === 2) {
+            step = 3;
+            d3.select("#stage-title").text("Tier 3: Leviathan Equilibrium 利维坦稳态");
+            d3.select("#stage-desc").text("Systemic phase transition. The Strongman compresses entropy via disintermediation; society enters a static deadlock. 系统相位转变。强人通过去中介化压缩熵值，社会陷入静态死锁。");
+            d3.select("#stage-label").text("Phase: Leviathan");
+            d3.select("#evolve-btn").attr("disabled", true).text("Evolution Ends (Deadlock) 演化已达终点 (死锁)");
+            
+            // 清理中间层，向心收缩
+            nodes.push({id: 'L-CORE', type: 'strongman'});
+            links = nodes.filter(n => n.id !== 'L-CORE').map(n => ({source: 'L-CORE', target: n.id}));
+            updateSim(-80, 220);
+            updateData(82, 0.18, "82%", 1);
+        }
+    }
+
+    function updateData(a, h, s, k) {
+        document.getElementById("v-alpha").innerText = a;
+        document.getElementById("v-h").innerText = h;
+        document.getElementById("v-survive").innerText = s;
+        document.getElementById("v-k").innerText = k;
+    }
+
+    function exportImg() {
+        const stageName = d3.select("#stage-label").text();
+        html2canvas(document.body).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `Leviathan_Logic_${stageName}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+
+    init();
+</script>
+</body>
+</html>
