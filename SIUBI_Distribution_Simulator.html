@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Discrete Markov UBI Simulator v3.5</title>
+    <title>Discrete Markov UBI Simulator v3.6 - Stochastic Amount</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: -apple-system, system-ui, sans-serif; background: #f8f9fa; padding: 20px; color: #333; }
@@ -55,7 +55,7 @@
             </p>
         </div>
         <div>
-            <label><strong>单次发放金额 / Unit Amount:</strong></label>
+            <label><strong>最高发放限额 / Max Unit Amount:</strong></label>
             <input type="number" id="unitAmount" value="50" style="width:80px; padding:5px;">
             <div style="margin-top:15px; display:flex; gap:10px;">
                 <button onclick="simulateStep()" style="background:#007bff; color:white; border:none; padding:10px 15px; border-radius:4px; cursor:pointer; flex:1;">执行抽样 / Step</button>
@@ -105,14 +105,13 @@
     function simulateStep() {
         t++;
         const quota = parseInt(document.getElementById('quotaRange').value);
-        const unitAmt = parseFloat(document.getElementById('unitAmount').value);
+        const maxUnitAmt = parseFloat(document.getElementById('unitAmount').value);
         const L_max = Math.max(...data.map(d => d.cumulative), 1);
         
         // 1. Calculate Markov Weights (Probability Hedging)
         let weights = data.map(indiv => {
             const phi = indiv.cumulative / (t || 1); // Frequency of receipt
             const waterGap = L_max - indiv.cumulative; // Distance from leader
-            // Penalty for continuity (phi) and Reward for lagging (waterGap)
             return Math.exp(1.5 * (waterGap / 10) - 2.5 * phi);
         });
 
@@ -136,10 +135,12 @@
             }
         }
 
-        // 3. Update State
+        // 3. Update State with RANDOM AMOUNT
         data = data.map((indiv, i) => {
             if (winners.includes(i)) {
-                return { cumulative: indiv.cumulative + unitAmt, count: indiv.count + 1 };
+                // 每个人的发放金额在 0 到 maxUnitAmt 之间随机
+                const stochasticAmt = Math.random() * maxUnitAmt;
+                return { cumulative: indiv.cumulative + stochasticAmt, count: indiv.count + 1 };
             }
             return indiv;
         });
@@ -156,8 +157,6 @@
         const mean = data.reduce((a, b) => a + b.cumulative, 0) / N;
         const variance = data.reduce((a, b) => a + Math.pow(b.cumulative - mean, 2), 0) / N;
         
-        // Use Coeff of Variation (CV) to represent relative inequality
-        // It should drop as time goes on, showing long-term convergence
         const cv = mean > 0 ? (Math.sqrt(variance) / mean) : 0;
 
         document.getElementById('current-t').innerText = t;
